@@ -1,5 +1,4 @@
 <template>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" />
     <div class="dashboard ma-4">
         <v-banner lines="one" color="warning">
             <template v-slot:text>
@@ -20,20 +19,71 @@
                         label="Rechercher une catégorie" single-line flat hide-details variant="solo-filled"></v-text-field>
                 </v-card-title>
                 <v-divider class="mt-5"></v-divider>
-                <v-data-table v-model:search="search" :headers="headers" :items="categories" 
-                :loading="categorieLength >0 ? false:true"
-                    :sort-by="[{ key: 'libelle', order: 'asc' }]" items-per-page="10">
-                      <template v-slot:item.statut="{item}">
-                            <v-chip
-                            :color="item.statut == 1 ? 'green':'red'"
-                            :text="item.statut ==1 ? 'Activée':'Desactivée'"
-                            class="text-uppercase"
-                            label
-                            size="small"
-                            >
-                            </v-chip>
+                <v-data-table v-model:search="search" :headers="headers" :items="categories"
+                    :loading="categorieLength > 0 ? false : true" :sort-by="[{ key: 'libelle', order: 'asc' }]"
+                    items-per-page="10">
+
+                    <template v-slot:top>
+                        <v-spacer></v-spacer>
+                        <v-dialog v-model="dialog" max-width="500px">
+                            <v-card>
+                                <v-card-title>
+                                    <span class="text-h5">{{ formTitle }}</span>
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-form class="px-3" ref="form">
+                                        <v-text-field label="Libellé" color="primary" clearable variant="outlined"
+                                            v-model="editedItem.libelle" :rules="inputRules"></v-text-field>
+                                        <v-select label="Parent" class="mt-2" color="primary" variant="outlined"
+                                            v-model="editedItem.parent" :items="parents" item-title="libelle"
+                                           ></v-select>
+                                        <v-text-field label="Code" class="mt-2" color="primary" clearable variant="outlined"
+                                            v-model="editedItem.code" :rules="inputCdRules"></v-text-field>
+                                        <v-text-field label="Position" class="mt-2" type="number" color="primary" clearable
+                                            variant="outlined" v-model="editedItem.position"></v-text-field>
+                                        <v-select label="statut" class="mt-2" color="primary" variant="outlined"
+                                            v-model="editedItem.statut" :items="['Activée', 'Desactivée']"></v-select>
+                                    </v-form>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn variant="elevated" size="small" @click="close">
+                                        Annuler
+                                    </v-btn>
+                                    <v-btn color="green-darken-3" variant="elevated" size="small" @click="save">
+                                        Valider
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        <v-dialog v-model="dialogDelete" max-width="500px">
+                            <v-card max-height="500px">
+                                <div class="text-center mt-4">
+                                    <v-icon icon="delete_forever" color="red" size="large"></v-icon>
+                                </div>
+
+                                <v-card-title class="text-h5 text-center">&Ecirc;tes-vous s&ucirc;re de supprimer
+                                    ?</v-card-title>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn variant="elevated" size="x-small" @click="closeDelete">Annuler</v-btn>
+                                    <v-btn color="red-darken-3" size="x-small" variant="elevated"
+                                        @click="deleteItemConfirm">Confirmer</v-btn>
+                                    <v-spacer></v-spacer>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
                     </template>
-                 
+                    <template v-slot:item.statut="{ item }">
+                        <template v-if="item.statut == 'Activée'">
+                            <v-chip color="green" text="Activée" class="text-uppercase" label size="small">
+                            </v-chip>
+                        </template>
+                        <template v-if="item.statut == 'Desactivée'">
+                            <v-chip color="red" text="Desactivée" class="text-uppercase" label size="small">
+                            </v-chip>
+                        </template>
+                    </template>
                     <template v-slot:item.actions="{ item }">
                         <v-icon size="small" class="me-2" @click="editItem(item)">
                             edit_note
@@ -41,19 +91,25 @@
                         <v-icon size="small" @click="deleteItem(item)">
                             delete
                         </v-icon>
-
                     </template>
+
                 </v-data-table>
             </v-card>
         </v-container>
     </div>
 </template>
 <script>
-definePageMeta({
-    layout: 'master'
-})
+
 export default {
+    setup() {
+        definePageMeta({
+            layout: 'master'
+        })
+        return {}
+    },
     data: () => ({
+        dialog: false,
+        dialogDelete: false,
         search: "",
         headers: [
             {
@@ -68,8 +124,48 @@ export default {
             { title: "Statut", key: "statut" },
             { title: "Actions", key: "actions", sortable: false }
         ],
-        categories: []
+        inputRules: [
+            v => (v && v.length >= 3) || "La longueur minimale est de 3 caractères"
+        ],
+        inputCdRules: [
+            v => (v && v.length >= 2) || "La longueur minimale est de 2 caractères"
+        ],
+        parents: [
+            { libelle: 'Veuillez selectionner'},
+            { libelle: 'Florida' },
+            { libelle: 'Georgia' },
+            { libelle: 'Nebraska'},
+            { libelle: 'California'},
+            { libelle: 'New York' },
+        ],
+        categories: [],
+        editedIndex: -1,
+        editedItem: {
+            id: 0,
+            libelle: '',
+            parent: '',
+            code: '',
+            position: 0,
+            statut: "Activée",
+        },
+        defaultItem: {
+            id: 0,
+            libelle: '',
+            parent: '',
+            code: '',
+            position: 0,
+            statut: "Activée",
+        }
     }),
+
+    watch: {
+        dialog(val) {
+            val || this.close()
+        },
+        dialogDelete(val) {
+            val || this.closeDelete()
+        }
+    },
     created() {
         this.initialize()
     },
@@ -77,45 +173,77 @@ export default {
         initialize() {
             this.categories = [
                 {
+                    id: 1,
                     libelle: "Frozen Yogurt",
                     parent: "",
                     code: "FRZ",
                     position: 2,
-                    statut: 1,
+                    statut: "Activée",
                 },
                 {
+                    id: 2,
                     libelle: 'Ice cream sandwich',
                     parent: "",
                     code: "ICE",
                     position: 2,
-                    statut: 0,
+                    statut: "Desactivée",
                 },
                 {
+                    id: 3,
                     libelle: 'Eclair',
                     parent: "ICE",
                     code: "ICE",
                     position: 2,
-                    statut: 1,
+                    statut: "Activée",
                 },
 
             ]
         },
         editItem(item) {
-            console.log(item)
+            this.editedIndex = this.categories.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.dialog = true
         },
         deleteItem(item) {
-            console.log(item)
-        }
+            this.editedItem = this.categories.indexOf(item)
+            this.editedIndex = Object.assign({}, item)
+            this.dialogDelete = true
+        },
+        deleteItemConfirm() {
+            this.categories.splice(this.editedIndex, 1)
+            this.closeDelete()
+        },
+        close() {
+            this.dialog = false
+            this.$nextTick(() => {
+                this.editedIndex = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
+            })
+        },
+        save() {
+            if (this.editedIndex > -1) {
+                Object.assign(this.categories[this.editedIndex], this.editedItem)
+            } else {
+                this.categories.push(this.editedItem)
+            }
+            this.close()
+        },
+        closeDelete() {
+            this.dialogDelete = false
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
+            })
+        },
     },
-    computed:{
+    computed: {
         categorieLength() {
             return this.categories.length;
         },
+        formTitle() {
+            return this.editedIndex === -1 ? "Nouvelle catégorie" : "Modifier une catégorie"
+        }
     }
 }
 </script>
-<style scoped>
-.v-pagination {
-    background: rgba(12, 185, 245, 0.8);
-}
-</style>
+<style scoped></style>
