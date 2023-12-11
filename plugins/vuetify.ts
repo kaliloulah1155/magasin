@@ -11,10 +11,10 @@ import { mdi } from "vuetify/iconsets/mdi";
 // Translations provided by Vuetify
 import { en, fr } from "vuetify/locale";
 import DateFnsAdapter from "@date-io/date-fns";
-import enUS from "date-fns/locale/en-US/index";
+import enUS from "date-fns/locale/en-US/index.js";
 //import enUS from "date-fns/locale/en-US";
 //import frFr from "date-fns/locale/fr";
-import frFr from "date-fns/locale/fr/index";
+import frFr from "date-fns/locale/fr/index.js";
 
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
