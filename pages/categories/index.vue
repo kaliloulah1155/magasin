@@ -1,7 +1,6 @@
 <template>
     <div class="dashboard ma-4">
         <NuxtPage  title="Categorie" />
-
         <v-banner lines="one" color="warning">
             <template v-slot:text>
                 <h1 class="text-subtitle-1 text-grey">Catégories</h1>
@@ -117,7 +116,7 @@ export default {
             {
                 title: "Libellé",
                 align: "start",
-                sortable: false,
+                sortable: true,
                 key: 'libelle'
             },
             { title: "Parent", key: "parent" },
