@@ -1,11 +1,13 @@
 <template>
     <div class="dashboard ma-4">
+        <NuxtPage  title="Categorie" />
+
         <v-banner lines="one" color="warning">
             <template v-slot:text>
                 <h1 class="text-subtitle-1 text-grey">Catégories</h1>
             </template>
             <template v-slot:actions>
-                <popup-categorie />
+                <popup-categorie @saveItem="getItem" />
             </template>
         </v-banner>
         <v-container class="my-5">
@@ -35,14 +37,14 @@
                                         <v-text-field label="Libellé" color="primary" clearable variant="outlined"
                                             v-model="editedItem.libelle" :rules="inputRules"></v-text-field>
                                         <v-select label="Parent" class="mt-2" color="primary" variant="outlined"
-                                            v-model="editedItem.parent" :items="parents" item-title="libelle"
-                                           ></v-select>
+                                            v-model="editedItem.parent" :items="parents" item-title="libelle"></v-select>
                                         <v-text-field label="Code" class="mt-2" color="primary" clearable variant="outlined"
                                             v-model="editedItem.code" :rules="inputCdRules"></v-text-field>
                                         <v-text-field label="Position" class="mt-2" type="number" color="primary" clearable
                                             variant="outlined" v-model="editedItem.position"></v-text-field>
                                         <v-select label="statut" class="mt-2" color="primary" variant="outlined"
-                                            v-model="editedItem.statut" :items="['Activée', 'Desactivée']"></v-select>
+                                            v-model="editedItem.statut" :items="item_statut" item-title="state"
+                                            item-value="abbr" return-object></v-select>
                                     </v-form>
                                 </v-card-text>
                                 <v-card-actions>
@@ -75,11 +77,12 @@
                         </v-dialog>
                     </template>
                     <template v-slot:item.statut="{ item }">
-                        <template v-if="item.statut == 'Activée'">
+
+                        <template v-if="item.statut == 1">
                             <v-chip color="green" text="Activée" class="text-uppercase" label size="small">
                             </v-chip>
                         </template>
-                        <template v-if="item.statut == 'Desactivée'">
+                        <template v-if="item.statut == 0">
                             <v-chip color="red" text="Desactivée" class="text-uppercase" label size="small">
                             </v-chip>
                         </template>
@@ -99,7 +102,6 @@
     </div>
 </template>
 <script>
-
 export default {
     setup() {
         definePageMeta({
@@ -131,22 +133,28 @@ export default {
             v => (v && v.length >= 2) || "La longueur minimale est de 2 caractères"
         ],
         parents: [
-            { libelle: 'Veuillez selectionner'},
+            { libelle: 'Veuillez selectionner' },
             { libelle: 'Florida' },
             { libelle: 'Georgia' },
-            { libelle: 'Nebraska'},
-            { libelle: 'California'},
+            { libelle: 'Nebraska' },
+            { libelle: 'California' },
             { libelle: 'New York' },
         ],
         categories: [],
         editedIndex: -1,
+        statut: { state: 'Activée', abbr: 1 },
+        item_statut: [
+            { state: 'Activée', abbr: 1 },
+            { state: 'Désactivée', abbr: 0 },
+
+        ],
         editedItem: {
             id: 0,
             libelle: '',
             parent: '',
             code: '',
             position: 0,
-            statut: "Activée",
+            statut: 1,
         },
         defaultItem: {
             id: 0,
@@ -154,7 +162,7 @@ export default {
             parent: '',
             code: '',
             position: 0,
-            statut: "Activée",
+            statut: 1,
         }
     }),
 
@@ -178,7 +186,7 @@ export default {
                     parent: "",
                     code: "FRZ",
                     position: 2,
-                    statut: "Activée",
+                    statut: 1,
                 },
                 {
                     id: 2,
@@ -186,7 +194,7 @@ export default {
                     parent: "",
                     code: "ICE",
                     position: 2,
-                    statut: "Desactivée",
+                    statut: 1,
                 },
                 {
                     id: 3,
@@ -194,7 +202,7 @@ export default {
                     parent: "ICE",
                     code: "ICE",
                     position: 2,
-                    statut: "Activée",
+                    statut: 0,
                 },
 
             ]
@@ -221,12 +229,45 @@ export default {
             })
         },
         save() {
+
             if (this.editedIndex > -1) {
-                Object.assign(this.categories[this.editedIndex], this.editedItem)
-            } else {
-                this.categories.push(this.editedItem)
+                if (
+                    this.editedItem.statut &&
+                    this.editedItem.statut.hasOwnProperty('state')
+                ) {
+                    let updatedObject = {
+                        ...this.editedItem,
+                        statut: this.editedItem.statut.abbr
+                    }
+                    Object.assign(this.categories[this.editedIndex], updatedObject)
+                    // console.log('The key "state" exists in this.editedItem.statut.');
+                } else {
+                    Object.assign(this.categories[this.editedIndex], this.editedItem)
+                    //console.log('The key "state" does not exist in this.editedItem.statut.');
+                }
             }
+
+            /*else {
+                this.categories.push(this.editedItem)
+            }*/
             this.close()
+        },
+        getItem(fromPopup) {
+            
+              if (
+                fromPopup.statut &&
+                fromPopup.statut.hasOwnProperty('state') &&
+                 fromPopup.parent &&
+                fromPopup.parent.hasOwnProperty('libelle')
+            ){
+               let updatedItem = {
+                    ...fromPopup,
+                    statut: fromPopup.statut.abbr,
+                    parent: fromPopup.parent.libelle
+                }
+                 this.categories.push(updatedItem)
+            }
+           
         },
         closeDelete() {
             this.dialogDelete = false

@@ -1,7 +1,7 @@
 import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   css: [
     "vuetify/dist/vuetify.css",
     "@mdi/font/css/materialdesignicons.min.css",

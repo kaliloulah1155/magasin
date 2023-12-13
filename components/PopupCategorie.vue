@@ -11,14 +11,16 @@
             <v-text-field label="Libellé" color="primary" clearable variant="outlined" v-model="libelle"
               :rules="inputRules"></v-text-field>
             <v-select label="Parent" class="mt-2" color="primary" variant="outlined" v-model="parent" :items="parents"
-              item-title="libelle" item-value="id"></v-select>
+              item-title="libelle" item-value="id" persistent-hint return-object></v-select>
             <v-text-field label="Code" class="mt-2" color="primary" clearable variant="outlined" v-model="code"
               :rules="inputCdRules"></v-text-field>
             <v-text-field label="Position" class="mt-2" type="number" color="primary" clearable variant="outlined"
               v-model="position"></v-text-field>
-            <v-select label="statut" class="mt-2"  color="primary" variant="outlined"
-            v-model="statut"
-              :items="['Activée', 'Desactivée']"></v-select>
+
+
+            <v-select label="Statut" class="mt-2" color="primary" variant="outlined" v-model="statut" :items="item_statut"
+              item-title="state" item-value="abbr" return-object></v-select>
+
 
           </v-form>
         </v-card-text>
@@ -31,15 +33,37 @@
       </v-card>
     </template>
   </v-dialog>
+  <v-snackbar v-model="snackbar">
+    {{ text }}
+    <template v-slot:actions>
+      <v-btn color="pink" variant="text" @click="snackbar = false">
+        Close
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>
 
 <script>
 export default {
   data: () => ({
+    snackbar: false,
+    text: "message du snackbar",
     libelle: '',
     code: '',
-    parent: '',
-    statut:'activée',
+    statut: { state: 'Activée', abbr: 1 },
+    item_statut: [
+      { state: 'Activée', abbr: 1 },
+      { state: 'Désactivée', abbr: 0 },
+
+    ],
+    editedItem: {
+      id: 0,
+      libelle: '',
+      parent: '',
+      code: '',
+      position: 0,
+      statut: 1,
+    },
     position: 0,
     loading: false,
     inputRules: [
@@ -64,8 +88,18 @@ export default {
       this.loading = true
       if (this.$refs.form.validate()) {
 
+        this.editedItem.libelle = this.libelle
+        this.editedItem.parent = this.parent
+        this.editedItem.code = this.code
+        this.editedItem.position = this.position
+        this.editedItem.statut = this.statut
+        this.snackbar = true
+        this.$emit('saveItem', this.editedItem);
+
+
+
       }
-      console.log("valider")
+
       this.loading = false
     }
   }
