@@ -1,7 +1,8 @@
 import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
-  devtools: { enabled: false },
+  devtools: { enabled: true },
+  modules: ["@pinia/nuxt"],
   css: [
     "vuetify/dist/vuetify.css",
     "@mdi/font/css/materialdesignicons.min.css",
@@ -36,6 +37,6 @@ export default defineNuxtConfig({
     /**
      * see: https://v3.nuxtjs.org/api/configuration/nuxt.config#inlinessrstyles
      */
-    inlineSSRStyles: false
+    inlineSSRStyles: false,
   },
 });

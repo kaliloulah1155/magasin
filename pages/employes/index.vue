@@ -6,7 +6,7 @@
                 <h1 class="text-subtitle-1 text-grey">Employés</h1>
             </template>
             <template v-slot:actions>
-                <!--<popup-employe @saveItem="getItem" />  -->
+                 <popup-employe @saveItem="getItem" /> 
             </template>
         </v-banner>
         <v-container class="my-5">
@@ -43,7 +43,7 @@
                                         <v-text-field label="Téléphone" class="mt-2" color="primary" clearable
                                             variant="outlined" v-model="editedItem.telephone"></v-text-field>
                                         <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
-                                            variant="outlined" prepend-inner-icon="file"></v-file-input>
+                                            variant="outlined" ></v-file-input>
                                         <v-select label="Profil" class="mt-2" color="primary" variant="outlined"
                                             v-model="editedItem.profil" :items="profils" item-title="libelle"
                                             item-value="code" return-object></v-select>
@@ -65,7 +65,6 @@
                                 <div class="text-center mt-4">
                                     <v-icon icon="delete_forever" color="red" size="large"></v-icon>
                                 </div>
-
                                 <v-card-title class="text-h5 text-center">&Ecirc;tes-vous s&ucirc;re de supprimer
                                     ?</v-card-title>
                                 <v-card-actions>
@@ -226,6 +225,9 @@ export default {
             }
             this.close()
         },
+         getItem(fromPopup) {
+                console.log("fromPopup ", fromPopup)
+         },
         closeDelete() {
             this.dialogDelete = false
             this.$nextTick(() => {

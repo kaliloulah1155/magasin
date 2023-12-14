@@ -8,18 +8,18 @@
       <v-card title="Ajouter un nouvel employé">
         <v-card-text>
           <v-form class="px-3" ref="form">
-            <v-text-field label="Libellé" color="primary" clearable variant="outlined" v-model="libelle"
+            <v-text-field label="Nom complet" color="primary" clearable variant="outlined" v-model="editedItem.fullname"
               :rules="inputRules"></v-text-field>
-            <v-select label="Parent" class="mt-2" color="primary" variant="outlined" v-model="parent" :items="parents"
-              item-title="libelle" item-value="id" persistent-hint return-object></v-select>
-            <v-text-field label="Code" class="mt-2" color="primary" clearable variant="outlined" v-model="code"
-              :rules="inputCdRules"></v-text-field>
-            <v-text-field label="Position" class="mt-2" type="number" color="primary" clearable variant="outlined"
-              v-model="position"></v-text-field>
-
-
-            <v-select label="Statut" class="mt-2" color="primary" variant="outlined" v-model="statut" :items="item_statut"
-              item-title="state" item-value="abbr" return-object></v-select>
+            <v-text-field label="E-mail" class="mt-2" color="primary" clearable variant="outlined"
+              v-model="editedItem.email" :rules="inputRules"></v-text-field>
+            <v-text-field label="Adresse" class="mt-2" color="primary" clearable variant="outlined"
+              v-model="editedItem.adresse" :rules="inputCdRules"></v-text-field>
+            <v-text-field label="Téléphone" class="mt-2" color="primary" clearable variant="outlined"
+              v-model="editedItem.telephone"></v-text-field>
+            <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
+              variant="outlined"></v-file-input>
+            <v-select label="Profil" class="mt-2" color="primary" variant="outlined" v-model="editedItem.profil"
+              :items="profils" item-title="libelle" item-value="code" return-object></v-select>
 
 
           </v-form>
@@ -48,64 +48,43 @@ export default {
   data: () => ({
     snackbar: false,
     text: "message du snackbar",
-    libelle: '',
-    code: '',
-     photo: "",
-    statut: { state: 'Activée', abbr: 1 },
-    item_statut: [
-      { state: 'Activée', abbr: 1 },
-      { state: 'Désactivée', abbr: 0 },
-
-    ],
+    photo: null,
     editedItem: {
       id: 0,
-      libelle: '',
-      parent: '',
-      code: '',
-      position: 0,
-      statut: 1,
+      fullname: "",
+      email: "",
+      adresse: "",
+      telephone: "",
+      photo: null,
+      profil: "",
     },
-    position: 0,
     loading: false,
     inputRules: [
-      v => (v && v.length >= 3) || "La longueur minimale est de 3 caractères"
+      (v) => (v && v.length >= 3) || "La longueur minimale est de 3 caractères",
     ],
     inputCdRules: [
-      v => (v && v.length >= 2) || "La longueur minimale est de 2 caractères"
+      (v) => (v && v.length >= 2) || "La longueur minimale est de 2 caractères",
     ],
-    //Select parent
-    parent: { libelle: 'Veuillez selectionner', id: 0 },
-    parents: [
-      { libelle: 'Veuillez selectionner', id: 0 },
-      { libelle: 'Florida', id: 1 },
-      { libelle: 'Georgia', id: 2 },
-      { libelle: 'Nebraska', id: 3 },
-      { libelle: 'California', id: 4 },
-      { libelle: 'New York', id: 5 },
+    // Select parent
+    profils: [
+      { libelle: 'Caissier', code: "CSS" },
+      { libelle: 'Admin', code: "ADM" },
+      { libelle: 'Designer', code: "DSG" },
     ],
   }),
   methods: {
     async submit() {
-      this.loading = true
+      this.loading = true;
       if (this.$refs.form.validate()) {
-
-        this.editedItem.libelle = this.libelle
-        this.editedItem.parent = this.parent
-        this.editedItem.code = this.code
-        this.editedItem.position = this.position
-        this.editedItem.statut = this.statut
-        this.snackbar = true
+        this.editedItem.photo="/img/profil.png"
+        this.snackbar = true;
         this.$emit('saveItem', this.editedItem);
-
-
-
       }
-
-      this.loading = false
-    }
-  }
-}
-
+      this.loading = false;
+    },
+  },
+};
 </script>
+
 
 <style scoped></style>
