@@ -59,6 +59,7 @@ const links = ref([
     { text: "CATEGORIES", icon: "collections_bookmark", route: "/categories" },
     { text: "PRODUITS", icon: "add_chart", route: "/produits" },
     { text: "DEPENSES", icon: "account_balance", route: "/depenses" },
-    { text: "STOCKS", icon: "store", route: "/stocks" }
+    { text: "STOCKS", icon: "store", route: "/stocks" },
+      { text: "SALAIRES", icon: "payments", route: "/salaire" }
 ])
 </script>
