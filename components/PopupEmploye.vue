@@ -11,11 +11,11 @@
             <v-text-field label="Nom complet" color="primary" clearable variant="outlined" v-model="editedItem.fullname"
               :rules="inputRules"></v-text-field>
             <v-text-field label="E-mail" class="mt-2" color="primary" clearable variant="outlined"
-              v-model="editedItem.email" :rules="inputRules"></v-text-field>
+              v-model="editedItem.email" :rules="emailRules"></v-text-field>
             <v-text-field label="Adresse" class="mt-2" color="primary" clearable variant="outlined"
-              v-model="editedItem.adresse" :rules="inputCdRules"></v-text-field>
+              v-model="editedItem.adresse" :rules="inputRules"></v-text-field>
             <v-text-field label="Téléphone" class="mt-2" color="primary" clearable variant="outlined"
-              v-model="editedItem.telephone"></v-text-field>
+              v-model="editedItem.telephone"  :rules="telephoneRules"></v-text-field>
             <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
               variant="outlined"></v-file-input>
             <v-select label="Profil" class="mt-2" color="primary" variant="outlined" v-model="editedItem.profil"
@@ -62,8 +62,11 @@ export default {
     inputRules: [
       (v) => (v && v.length >= 3) || "La longueur minimale est de 3 caractères",
     ],
-    inputCdRules: [
-      (v) => (v && v.length >= 2) || "La longueur minimale est de 2 caractères",
+    telephoneRules: [
+      v => (v && /^\d+$/.test(v) && v.length === 10) || 'Entrez un nombre valide de 10 chiffres',
+    ],
+    emailRules: [
+      v => (v && /.+@.+\..+/.test(v)) || 'Entrer une adresse e-mail valide',
     ],
     // Select parent
     profils: [
