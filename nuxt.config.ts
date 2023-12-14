@@ -2,14 +2,13 @@ import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  //modules: ["@pinia/nuxt"],
   css: [
     "vuetify/dist/vuetify.css",
     "@mdi/font/css/materialdesignicons.min.css",
     "material-design-icons-iconfont/dist/material-design-icons.css",
   ],
   build: {
-    transpile: ["vuetify"],
+    transpile: ["vuetify","mysql"],
   },
   app: {
     head: {
