@@ -5,7 +5,7 @@
     </template>
 
     <template v-slot:default="{ isActive }">
-      <v-card title="Ajouter une nouvelle catégorie">
+      <v-card title="Ajouter un nouvel employé">
         <v-card-text>
           <v-form class="px-3" ref="form">
             <v-text-field label="Libellé" color="primary" clearable variant="outlined" v-model="libelle"
@@ -50,6 +50,7 @@ export default {
     text: "message du snackbar",
     libelle: '',
     code: '',
+     photo: "",
     statut: { state: 'Activée', abbr: 1 },
     item_statut: [
       { state: 'Activée', abbr: 1 },

@@ -6,7 +6,7 @@
                 <h1 class="text-subtitle-1 text-grey">Employés</h1>
             </template>
             <template v-slot:actions>
-                <!-- <popup-categorie @saveItem="getItem" />-->
+                <!--<popup-employe @saveItem="getItem" />  -->
             </template>
         </v-banner>
         <v-container class="my-5">
@@ -20,7 +20,7 @@
                 </v-card-title>
                 <v-divider class="mt-5"></v-divider>
                 <v-data-table v-model:search="search" :headers="headers" :items="employes"
-                    :loading="employeLength > 0 ? false : true" :sort-by="[{ key: 'libelle', order: 'asc' }]"
+                    :loading="employeLength > 0 ? false : true" :sort-by="[{ key: 'fullname', order: 'asc' }]"
                     items-per-page="10">
 
                     <template v-slot:top>
@@ -32,17 +32,21 @@
                                 </v-card-title>
                                 <v-card-text>
                                     <v-form class="px-3" ref="form">
-                                        <v-text-field label="Libellé" color="primary" clearable variant="outlined"
-                                            v-model="editedItem.libelle" :rules="inputRules"></v-text-field>
-                                        <v-select label="Parent" class="mt-2" color="primary" variant="outlined"
-                                            v-model="editedItem.parent" :items="parents" item-title="libelle"></v-select>
-                                        <v-text-field label="Code" class="mt-2" color="primary" clearable variant="outlined"
-                                            v-model="editedItem.code" :rules="inputCdRules"></v-text-field>
-                                        <v-text-field label="Position" class="mt-2" type="number" color="primary" clearable
-                                            variant="outlined" v-model="editedItem.position"></v-text-field>
-                                        <v-select label="statut" class="mt-2" color="primary" variant="outlined"
-                                            v-model="editedItem.statut" :items="item_statut" item-title="state"
-                                            item-value="abbr" return-object></v-select>
+                                        <v-text-field label="Nom complet" color="primary" clearable variant="outlined"
+                                            v-model="editedItem.fullname" :rules="inputRules"></v-text-field>
+                                        <v-text-field label="E-mail" class="mt-2" color="primary" clearable
+                                            variant="outlined" v-model="editedItem.email"
+                                            :rules="inputRules"></v-text-field>
+                                        <v-text-field label="Adresse" class="mt-2" color="primary" clearable
+                                            variant="outlined" v-model="editedItem.adresse"
+                                            :rules="inputCdRules"></v-text-field>
+                                        <v-text-field label="Téléphone" class="mt-2" color="primary" clearable
+                                            variant="outlined" v-model="editedItem.telephone"></v-text-field>
+                                        <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
+                                            variant="outlined" prepend-inner-icon="file"></v-file-input>
+                                        <v-select label="Profil" class="mt-2" color="primary" variant="outlined"
+                                            v-model="editedItem.profil" :items="profils" item-title="libelle"
+                                            item-value="code" return-object></v-select>
                                     </v-form>
                                 </v-card-text>
                                 <v-card-actions>
@@ -79,17 +83,7 @@
                             <v-img :src="item.photo ? `${item.photo}` : '/img/profil.png'" height="64" cover></v-img>
                         </v-card>
                     </template>
-                    <template v-slot:item.statut="{ item }">
 
-                        <template v-if="item.statut == 1">
-                            <v-chip color="green" text="Activée" class="text-uppercase" label size="small">
-                            </v-chip>
-                        </template>
-                        <template v-if="item.statut == 0">
-                            <v-chip color="red" text="Desactivée" class="text-uppercase" label size="small">
-                            </v-chip>
-                        </template>
-                    </template>
                     <template v-slot:item.actions="{ item }">
                         <v-icon size="small" class="me-2" @click="editItem(item)">
                             edit_note
@@ -116,6 +110,7 @@ export default {
         dialog: false,
         dialogDelete: false,
         search: "",
+        photo: null,
         headers: [
             { title: "Nom complet", align: "start", key: 'fullname' },
             { title: "E-mail", key: "email" },
@@ -144,7 +139,7 @@ export default {
             email: "",
             adresse: "",
             telephone: "",
-            photo: "",
+            photo: null,
             profil: "",
         },
         defaultItem: {
@@ -153,7 +148,7 @@ export default {
             email: "",
             adresse: "",
             telephone: "",
-            photo: "",
+            photo: null,
             profil: "",
         },
     }),
@@ -190,13 +185,13 @@ export default {
                     photo: "https://cdn.pixabay.com/photo/2016/08/20/05/38/avatar-1606916_1280.png",
                     profil: "Graphiste",
                 },
-                 {
+                {
                     id: 3,
                     fullname: "Kone Awa",
                     email: "awakon@gmail.com",
                     adresse: "Treichville",
                     telephone: "0173062978",
-                    photo: "",
+                    photo: null,
                     profil: "Caissier(e)",
                 },
 
