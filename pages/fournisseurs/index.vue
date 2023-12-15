@@ -33,7 +33,7 @@
                                 </v-card-title>
                                 <v-card-text>
                                     <v-form class="px-3" ref="form">
-                                        <v-text-field label="Nom complet" color="primary" clearable variant="outlined"
+                                        <v-text-field label="Fournisseur" color="primary" clearable variant="outlined"
                                             v-model="editedItem.fullname" :rules="inputRules"></v-text-field>
                                         <v-text-field label="E-mail" class="mt-2" color="primary" clearable
                                             variant="outlined" v-model="editedItem.email"
@@ -78,11 +78,7 @@
                             </v-card>
                         </v-dialog>
                     </template>
-                    <template v-slot:item.photo="{ item }">
-                        <v-card class="my-2" elevation="2" rounded>
-                            <v-img :src="item.photo ? `${item.photo}` : '/img/profil.png'" height="64" cover></v-img>
-                        </v-card>
-                    </template>
+                   
 
                     <template v-slot:item.actions="{ item }">
                         <v-icon size="small" class="me-2" @click="editItem(item)">

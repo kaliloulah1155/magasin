@@ -8,7 +8,7 @@
       <v-card title="Ajouter un nouveau fournisseur">
         <v-card-text>
           <v-form class="px-3" ref="form">
-            <v-text-field label="Nom complet" color="primary" clearable variant="outlined" v-model="editedItem.fullname"
+            <v-text-field label="Fournisseur" color="primary" clearable variant="outlined" v-model="editedItem.fullname"
               :rules="inputRules"></v-text-field>
             <v-text-field label="E-mail" class="mt-2" color="primary" clearable variant="outlined"
               v-model="editedItem.email" :rules="emailRules"></v-text-field>
