@@ -20,9 +20,8 @@
                 </v-card-title>
                 <v-divider class="mt-5"></v-divider>
                 <v-data-table v-model:search="search" :headers="headers" :items="salaires"
-                    :loading="salaireLength > 0 ? false : true" :sort-by="[{ key: 'salaries.fullname', order: 'asc' }]"
+                    :loading="salaireLength > 0 ? false : true" :sort-by="[{ key: 'fullname', order: 'asc' }]"
                     items-per-page="10">
-
                     <template v-slot:top>
                         <v-spacer></v-spacer>
                         <v-dialog v-model="dialog" max-width="500px">
