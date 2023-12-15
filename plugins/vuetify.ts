@@ -48,7 +48,7 @@ export default defineNuxtPlugin((app) => {
         en: enUS,
         fr: frFr,
       },
-    }, */
+    }, */   
   });
   app.vueApp.use(vuetify);
 });

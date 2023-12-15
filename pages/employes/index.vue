@@ -6,7 +6,7 @@
                 <h1 class="text-subtitle-1 text-grey">Employés</h1>
             </template>
             <template v-slot:actions>
-                <popup-employe @saveItem="getItem" />
+                 <popup-employe @saveItem="getItem" /> 
             </template>
         </v-banner>
         <v-container class="my-5">
@@ -41,10 +41,9 @@
                                             variant="outlined" v-model="editedItem.adresse"
                                             :rules="inputRules"></v-text-field>
                                         <v-text-field label="Téléphone" class="mt-2" color="primary" clearable
-                                            variant="outlined" v-model="editedItem.telephone"
-                                            :rules="telephoneRules"></v-text-field>
+                                            variant="outlined" v-model="editedItem.telephone" :rules="telephoneRules"></v-text-field>
                                         <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
-                                            variant="outlined"></v-file-input>
+                                            variant="outlined" ></v-file-input>
                                         <v-select label="Profil" class="mt-2" color="primary" variant="outlined"
                                             v-model="editedItem.profil" :items="profils" item-title="libelle"
                                             item-value="code" return-object></v-select>
@@ -123,10 +122,10 @@ export default {
         inputRules: [
             v => (v && v.length >= 3) || "La longueur minimale est de 3 caractères"
         ],
-        telephoneRules: [
-            v => (v && /^\d+$/.test(v) && v.length === 10) || 'Entrez un nombre valide de 10 chiffres',
-        ],
-        emailRules: [
+          telephoneRules: [
+      v => (v && /^\d+$/.test(v) && v.length === 10) || 'Entrez un nombre valide de 10 chiffres',
+    ],
+       emailRules: [
             v => (v && /.+@.+\..+/.test(v)) || 'Entrer une adresse e-mail valide',
         ],
         profils: [
@@ -222,14 +221,14 @@ export default {
             })
         },
         save() {
-            if (this.editedIndex > -1) {
+           if (this.editedIndex > -1) {
                 if (
-                    this.editedItem.profil &&
-                    this.editedItem.profil.hasOwnProperty('libelle')
+                      this.editedItem.profil &&
+                     this.editedItem.profil.hasOwnProperty('libelle')
                 ) {
                     let updatedObject = {
                         ...this.editedItem,
-                        profil: this.editedItem.profil.libelle
+                        profil:  this.editedItem.profil.libelle
                     }
                     Object.assign(this.employes[this.editedIndex], updatedObject)
                     // console.log('The key "state" exists in this.editedItem.statut.');
@@ -240,20 +239,20 @@ export default {
             }
             this.close()
         },
-        getItem(fromPopup) {
-
+         getItem(fromPopup) {
+ 
             if (
                 fromPopup.profil &&
-                fromPopup.profil.hasOwnProperty('libelle')
+                fromPopup.profil.hasOwnProperty('libelle')  
             ) {
-                let updatedItem = {
+                 let updatedItem = {
                     ...fromPopup,
-                    profil: fromPopup.profil.libelle
+                    profil: fromPopup.profil.libelle 
                 }
                 this.employes.push(updatedItem)
 
             }
-        },
+         },
         closeDelete() {
             this.dialogDelete = false
             this.$nextTick(() => {
