@@ -85,7 +85,7 @@
                     </template>
                     <template v-slot:item.image="{ item }">
                         <v-card class="my-2" elevation="2" rounded>
-                            <v-img :src="item.image ? `${item.image}` : '/img/profil.png'" height="64" cover></v-img>
+                            <v-img :src="item.image ? `${item.image}` : '/img/product.png'" height="64" cover></v-img>
                         </v-card>
                     </template>
 
@@ -192,7 +192,7 @@ export default {
                     selling_price: 5100,
                      fournisseur: "Awa",
                     categorie: "Lait",
-                    image: "https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584_1280.png",
+                    image: "https://cdn.pixabay.com/photo/2016/06/14/04/51/bag-1455765_1280.jpg",
                     quantite: 2,
                 },
                 {
@@ -203,7 +203,7 @@ export default {
                     selling_price: 5100,
                     fournisseur: "Awa",
                     categorie: "Lait",
-                    image: "https://cdn.pixabay.com/photo/2016/08/20/05/38/avatar-1606916_1280.png",
+                    image: "https://cdn.pixabay.com/photo/2018/10/16/23/48/milkshake-3752840_1280.png",
                     quantite: 1,
                 },
                 {
