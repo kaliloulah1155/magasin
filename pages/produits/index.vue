@@ -140,7 +140,7 @@ export default {
         ],
         fournisseurs: [
             { libelle: "Awa", id: 1 },
-            { libelle: 'Moye', id: 2 },
+            { libelle: 'Movern', id: 2 },
             { libelle: 'Autre', id: 3 },
         ],
         produits: [],
@@ -243,10 +243,10 @@ export default {
         },
         save() {
             if (this.editedIndex > -1) {
-                console.log(" this.editedItem : ", this.editedItem)
+               
                 if (
                     this.editedItem.fournisseur &&
-                    this.editedItem.fournisseur.hasOwnProperty('libelle') &&
+                    this.editedItem.fournisseur.hasOwnProperty('libelle') ||
                     this.editedItem.categorie &&
                      this.editedItem.categorie.hasOwnProperty('libelle') 
                 ) {
@@ -268,7 +268,7 @@ export default {
 
             if (
                 fromPopup.fournisseur &&
-                fromPopup.fournisseur.hasOwnProperty('libelle') &&
+                fromPopup.fournisseur.hasOwnProperty('libelle') ||
                 fromPopup.categorie &&
                 fromPopup.categorie.hasOwnProperty('libelle')
             ) {
