@@ -5,7 +5,7 @@
     </template>
 
     <template v-slot:default="{ isActive }">
-      <v-card title="Ajouter un nouvel employé">
+      <v-card title="Ajouter un nouveau client">
         <v-card-text>
           <v-form class="px-3" ref="form">
             <v-text-field label="Nom complet" color="primary" clearable variant="outlined" v-model="editedItem.fullname"
@@ -18,9 +18,7 @@
               v-model="editedItem.telephone"  :rules="telephoneRules"></v-text-field>
             <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
               variant="outlined"></v-file-input>
-            <v-select label="Profil" class="mt-2" color="primary" variant="outlined" v-model="editedItem.profil"
-              :items="profils" item-title="libelle" item-value="code" return-object></v-select>
-
+            
 
           </v-form>
         </v-card-text>
@@ -57,7 +55,7 @@ export default {
       adresse: "",
       telephone: "",
       photo: null,
-      profil: "",
+     
     },
     loading: false,
     inputRules: [
@@ -70,11 +68,7 @@ export default {
       v => (v && /.+@.+\..+/.test(v)) || 'Entrer une adresse e-mail valide',
     ],
     // Select parent
-    profils: [
-      { libelle: 'Caissier', code: "CSS" },
-      { libelle: 'Admin', code: "ADM" },
-      { libelle: 'Designer', code: "DSG" },
-    ],
+   
   }),
   methods: {
     async submit() {

@@ -53,6 +53,7 @@
 
 <script>
 export default {
+    emits: ['saveItem'],
   data: () => ({
     snackbar: false,
     text: "message du snackbar",
