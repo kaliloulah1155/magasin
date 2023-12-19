@@ -13,60 +13,55 @@
                                     </v-card-title>
                                 </v-card-item>
                                 <v-card-text class="d-flex justify-center">
-                                   Ajouter un client
+                                    Ajouter un client
                                 </v-card-text>
                             </v-card>
                         </v-col>
                         <v-col cols="auto">
-                                <v-card class="mx-auto"  @click="printTicket" max-width="344" hover>
-                                    <v-card-item class="d-flex justify-center">
-                                        <v-card-title>
-                                            <v-icon>print</v-icon>
-                                        </v-card-title>
-                                    </v-card-item>
-                                    <v-card-text class="d-flex justify-center">
-                                        Imprimer Ticket
-                                    </v-card-text>
-                                </v-card>
-                            </v-col>
+                            <v-card class="mx-auto" @click="printTicket" max-width="344" hover>
+                                <v-card-item class="d-flex justify-center">
+                                    <v-card-title>
+                                        <v-icon>print</v-icon>
+                                    </v-card-title>
+                                </v-card-item>
+                                <v-card-text class="d-flex justify-center">
+                                    Imprimer Ticket
+                                </v-card-text>
+                            </v-card>
+                        </v-col>
                     </v-row>
-                   
+
                     <div class="d-flex justify-center mt-6">
                         <v-badge bordered overlap color="error" content="10">
                             <v-icon size="x-large">shopping_cart</v-icon>
                         </v-badge>
                     </div>
                 </v-list>
-                <v-container>
-                     <v-divider></v-divider>
-                    <!--Begin::Article 1-->
-                    <v-row v-for="article in articles" :key="article.id">
-                        <v-col cols="12" sm="3">
-                            <v-img :src="article.image" max-height="50" max-width="50" contain class="mt-1 mr-1"></v-img>
-                        </v-col>
-                        <v-col cols="12" sm="3">
-                            <h6 class="ml-n6 text-grey text-dark text-subtitle-2 font-weight-bold"> {{ article.libelle }}
-                                <br />
-                                <v-btn class="ml-2 mt-1" color="red" size="small" variant="flat" density="compact"
-                                    icon="cancel"></v-btn>
-                            </h6>
-                        </v-col>
-                        <v-col cols="12" sm="6">
-                            <v-btn class="ml-n6" color="green" size="small" variant="flat" density="compact"
-                                icon="add"></v-btn>
-                            <v-divider vertical inset class="mr-1 mt-2"></v-divider> {{ article.quantite }} <v-divider
-                                vertical inset class="mr-1"></v-divider>
-                            <v-btn class="mx-1" color="red" size="small" variant="flat" density="compact"
-                                icon="remove"></v-btn>
-                            <strong class="ml-1 mr-1">{{ article.price }} F CFA</strong>
 
-                        </v-col>
-                         <v-divider></v-divider>
-                    </v-row>
-                   
-                    <!--END::Article 1-->
+                <v-divider class="mb-2"></v-divider>
+                <!--Begin::Article 1-->
+                <v-row v-for="article in articles" :key="article.id">
+                    <v-col   sm="6" md="4" lg="3" xl="2">
+                        <v-img :src="article.image" max-height="50" max-width="50" contain class="mt-1 mr-1 px-1"></v-img>
+                    </v-col>
+                    <v-col   sm="6" md="4" lg="3" xl="2">
+                        <h6 class="ml-n6 text-grey text-dark text-subtitle-2 font-weight-bold">{{ article.libelle }}
+                            <br />
+                            <v-btn class="ml-2 mt-1" color="red" size="small" variant="flat" density="compact"
+                                icon="cancel"></v-btn>
+                        </h6>
+                    </v-col>
+                    <v-col   sm="12" md="4" lg="6" xl="8">
+                        <v-btn class="ml-n6" color="green" size="small" variant="flat" density="compact" icon="add"></v-btn>
+                        <v-divider vertical inset class="mr-1 mt-2"></v-divider> {{ article.quantite }} <v-divider vertical
+                            inset class="mr-1"></v-divider>
+                        <v-btn class="mx-1" color="red" size="small" variant="flat" density="compact" icon="remove"></v-btn>
+                        <strong class="ml-1 mr-1">{{ article.price }} F CFA</strong>
+                    </v-col>
+                    <v-divider></v-divider>
+                </v-row>
+                <!--END::Article 1-->
 
-                </v-container>
             </v-navigation-drawer>
         </v-container>
     </div>
@@ -103,7 +98,7 @@ export default {
                     price: 200,
                     image: "/img/croissant.jpg"
                 },
-                  {
+                {
                     id: 2,
                     libelle: "Prod 303",
                     quantite: 1,
@@ -112,11 +107,11 @@ export default {
                 }
             ]
         },
-        addCustomer(){
+        addCustomer() {
             alert('add client')
         },
-        printTicket(){
-               alert('print ticket')
+        printTicket() {
+            alert('print ticket')
         }
 
     }
