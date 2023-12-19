@@ -106,7 +106,7 @@ export default {
                     libelle: "Prod 303",
                     quantite: 1,
                     price: 320,
-                    image: "/img/product.jpg"
+                    image: "/img/product.png"
                 }
             ]
         },
