@@ -38,7 +38,7 @@
                     </div>
                 </v-list>
                 <v-container>
-
+                     <v-divider></v-divider>
                     <!--Begin::Article 1-->
                     <v-row v-for="article in articles" :key="article.id">
                         <v-col cols="12" sm="3">
@@ -61,7 +61,9 @@
                             <strong class="ml-1 mr-1">{{ article.price }} F CFA</strong>
 
                         </v-col>
+                         <v-divider></v-divider>
                     </v-row>
+                   
                     <!--END::Article 1-->
 
                 </v-container>
