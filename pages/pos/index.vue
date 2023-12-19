@@ -96,10 +96,17 @@ export default {
                 },
                 {
                     id: 2,
-                    libelle: "Lait 1",
+                    libelle: "Croissant",
                     quantite: 1,
                     price: 200,
-                    image: "/img/bread.jpg"
+                    image: "/img/croissant.jpg"
+                },
+                  {
+                    id: 2,
+                    libelle: "Prod 303",
+                    quantite: 1,
+                    price: 320,
+                    image: "/img/product.jpg"
                 }
             ]
         },
