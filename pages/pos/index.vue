@@ -4,7 +4,7 @@
         <v-container class="my-5">
             <!-- BEGIN:: ALL PRODUCT-->
             <v-card flat>
-                <v-data-iterator :items="games" :items-per-page="6" :search="search">
+                <v-data-iterator :items="produits" :items-per-page="6" :search="search">
                     <template v-slot:header>
                         <v-toolbar class="px-2">
                             <v-text-field v-model="search" clearable density="comfortable" hide-details
@@ -33,7 +33,7 @@
                                                 <div class="text-truncate">{{ item.raw.duration }}</div>
                                             </div>
 
-                                            <v-btn border flat size="small" class="text-none" text="Read">
+                                            <v-btn border flat size="small" class="text-none" icon="add">
                                             </v-btn>
                                         </div>
                                     </v-card>
@@ -48,7 +48,7 @@
                                 @click="prevPage"></v-btn>
 
                             <div class="mx-2 text-caption">
-                                Page {{ page }} of {{ pageCount }}
+                                Page {{ page }} sur {{ pageCount }}
                             </div>
 
                             <v-btn :disabled="page >= pageCount" icon="arrow_forward" density="comfortable" variant="tonal"
@@ -120,18 +120,18 @@
                     <v-col class="ma-1">
                         <v-row>
                             <v-col sm="12" md="4" lg="6" xl="8">
-                                TVA
+                                 <span>TVA(%)</span>
                             </v-col>
                             <v-col sm="12" md="4" lg="6" xl="8">
-                                18 %
+                               <input type="number" class="" value="0" style="width: 3rem;" />
                             </v-col>
                         </v-row>
                          <v-row>
                                 <v-col sm="12" md="4" lg="6" xl="8">
-                                    REMISE
+                                    REMISE(F CFA)
                                 </v-col>
                                 <v-col sm="12" md="4" lg="6" xl="8">
-                                    2 %
+                                    <input type="number" class="" value="0" style="width: 10rem;" />
                                 </v-col>
                             </v-row>
                              <v-row>
@@ -139,7 +139,9 @@
                                     CLIENT
                                 </v-col>
                                 <v-col sm="12" md="4" lg="6" xl="8">
-                                    AGL
+                                     <v-select  color="primary" variant="outlined"
+                                                  :items="clients" item-title="fullname"
+                                                item-value="id" return-object></v-select>
                                 </v-col>
                             </v-row>
                               <v-row>
@@ -147,7 +149,9 @@
                                         MOYEN DE PAIEMENT
                                     </v-col>
                                     <v-col sm="12" md="4" lg="6" xl="8">
-                                        ESPECE
+                                        <v-select  color="primary" variant="outlined"
+                                                      :items="moyen_payments" item-title="libelle"
+                                                    item-value="id" return-object></v-select>
                                     </v-col>
                                 </v-row>
                              <v-row>
@@ -184,7 +188,18 @@ export default {
     data: () => ({
         search: '',
         articles: [],
-        games: [
+        clients: [
+            { fullname: "KONATE Ibrahima", id: 1 },
+            { fullname: "KONE Issouf", id:2 },
+            { fullname: "KOUYATE Idriss", id: 3 },
+        ],
+         moyen_payments: [
+            { libelle: "ESPECE", id: 1 },
+            { libelle: "CHEQUE", id: 2 },
+            { libelle: "CREDIT", id: 3 },
+            { libelle: "MOBILE MONEY", id: 3 },
+        ],
+        produits: [
             {
                 img: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/4.png',
                 title: 'The Sci-Fi Shooter Experience',
