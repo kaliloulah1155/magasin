@@ -123,7 +123,7 @@
                                  <span>TVA(%)</span>
                             </v-col>
                             <v-col sm="12" md="4" lg="6" xl="8">
-                               <input type="number" class="" value="0" style="width: 3rem;" />
+                               <v-text-field type="number" class="" value="0" style="width:10rem;" />
                             </v-col>
                         </v-row>
                          <v-row>
@@ -131,7 +131,7 @@
                                     REMISE(F CFA)
                                 </v-col>
                                 <v-col sm="12" md="4" lg="6" xl="8">
-                                    <input type="number" class="" value="0" style="width: 10rem;" />
+                                    <v-text-field type="number" class="" value="0" style="width: 10rem;" />
                                 </v-col>
                             </v-row>
                              <v-row>
@@ -141,7 +141,7 @@
                                 <v-col sm="12" md="4" lg="6" xl="8">
                                      <v-select  color="primary" variant="outlined"
                                                   :items="clients" item-title="fullname"
-                                                item-value="id" return-object></v-select>
+                                                item-value="id" return-object style="width:10rem;"></v-select>
                                 </v-col>
                             </v-row>
                               <v-row>
@@ -151,7 +151,7 @@
                                     <v-col sm="12" md="4" lg="6" xl="8">
                                         <v-select  color="primary" variant="outlined"
                                                       :items="moyen_payments" item-title="libelle"
-                                                    item-value="id" return-object></v-select>
+                                                    item-value="id" return-object style="width:10rem;"></v-select>
                                     </v-col>
                                 </v-row>
                              <v-row>
