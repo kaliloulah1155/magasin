@@ -2,6 +2,27 @@
     <div class="dashboard ma-4">
         <h1 class="text-subtitle-1 text-grey">Point of sales</h1>
         <v-container class="my-5">
+
+            <!-- RECHERCHE PAR CATEGORIE-->
+            <v-item-group mandatory>
+                <v-container>
+                    <v-row>
+                        <v-col v-for="n in 6" :key="n" cols="12" md="4">
+                            <v-item v-slot="{ isSelected, toggle }">
+                                <v-card :color="isSelected ? 'primary' : ''" class="d-flex align-center" dark height="50"
+                                    @click="toggle">
+                                    <v-scroll-y-transition>
+                                        <div class="text-subtitle-1 flex-grow-1 text-center">
+                                            {{ isSelected ? 'Selected' : 'Click Me!' }}
+                                        </div>
+                                    </v-scroll-y-transition>
+                                </v-card>
+                            </v-item>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-item-group>
+            <!-- END RECHERCHE PAR CATEGORIE-->
             <!-- BEGIN:: ALL PRODUCT-->
             <v-card flat>
                 <v-data-iterator :items="produits" :items-per-page="6" :search="search">
@@ -16,8 +37,8 @@
                     <template v-slot:default="{ items }">
                         <v-container class="pa-2" fluid>
                             <v-row dense>
-                                <v-col v-for="item in items" :key="item.libelle" cols="auto" md="4">
-                                    <v-card class="pb-3" border flat>
+                                <v-col v-for="item in items" :key="item.libelle" sm="6" md="4" lg="3" xl="2"  >
+                                    <v-card class="pb-3" border flat  >
                                         <v-img :src="item.raw.image" height="200" cover></v-img>
 
                                         <v-list-item class="mb-2 text-center" :subtitle="`${item.raw.selling_price} F CFA`">
@@ -30,7 +51,8 @@
                                             <div class="d-flex align-center text-caption text-medium-emphasis me-1">
 
                                                 <div class="text-truncate">
-                                                    <v-badge :color="item.raw.quantite > 0 ? 'info' : 'error'" :content="item.raw.quantite" inline></v-badge>
+                                                    <v-badge :color="item.raw.quantite > 0 ? 'info' : 'error'"
+                                                        :content="item.raw.quantite" inline></v-badge>
                                                     &nbsp;
                                                     <v-chip :color="item.raw.quantite > 0 ? 'green' : 'red'">{{
                                                         item.raw.statut }}</v-chip>
