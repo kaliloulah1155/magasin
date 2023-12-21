@@ -1,7 +1,7 @@
 <template>
     <div class="dashboard ma-4">
         <h1 class="text-subtitle-1 text-grey">Point of sales</h1>
-        <v-container class="my-5">
+        <v-container>
 
             <!-- RECHERCHE PAR CATEGORIE-->
             <v-item-group mandatory>
@@ -9,8 +9,8 @@
                     <v-row>
                         <v-col v-for="n in 6" :key="n" cols="12" md="4">
                             <v-item v-slot="{ isSelected, toggle }">
-                                <v-card :color="isSelected ? 'primary' : ''" class="d-flex align-center" dark height="50"
-                                    @click="toggle">
+                                <v-card :color="isSelected ? 'rgba(249, 232, 232, 0.8)' : ''" class="d-flex align-center"
+                                    dark height="30" @click="toggle">
                                     <v-scroll-y-transition>
                                         <div class="text-subtitle-1 flex-grow-1 text-center">
                                             {{ isSelected ? 'Selected' : 'Click Me!' }}
@@ -25,11 +25,11 @@
             <!-- END RECHERCHE PAR CATEGORIE-->
             <!-- BEGIN:: ALL PRODUCT-->
             <v-card flat>
-                <v-data-iterator :items="produits" :items-per-page="6" :search="search">
+                <v-data-iterator :items="produits" :items-per-page="13" :search="search">
                     <template v-slot:header>
                         <v-toolbar class="px-2">
                             <v-text-field v-model="search" clearable density="comfortable" hide-details
-                                placeholder="Recherche" prepend-inner-icon="magnify" style="max-width: 300px;"
+                                placeholder="Rechercher un produit" prepend-inner-icon="magnify" style="max-width: 300px;"
                                 variant="solo"></v-text-field>
                         </v-toolbar>
                     </template>
@@ -37,33 +37,34 @@
                     <template v-slot:default="{ items }">
                         <v-container class="pa-2" fluid>
                             <v-row dense>
-                                <v-col v-for="item in items" :key="item.libelle" sm="6" md="4" lg="3" xl="2" xs="2"  >
-                                    <v-card class="pb-3" border flat  >
-                                        <v-img :src="item.raw.image" height="200" cover></v-img>
-
-                                        <v-list-item class="mb-2 text-center" :subtitle="`${item.raw.selling_price} F CFA`">
-                                            <template v-slot:title>
-                                                <strong class="text-h6 mb-2 ">{{ item.raw.libelle }}</strong>
-                                            </template>
-                                        </v-list-item>
-
-                                        <div class="d-flex justify-space-between px-4">
-                                            <div class="d-flex align-center text-caption text-medium-emphasis me-1">
-
-                                                <div class="text-truncate">
-                                                    <v-badge :color="item.raw.quantite > 0 ? 'info' : 'error'"
-                                                        :content="item.raw.quantite" inline></v-badge>
-                                                    &nbsp;
-                                                    <v-chip :color="item.raw.quantite > 0 ? 'green' : 'red'">{{
-                                                        item.raw.statut }}</v-chip>
-
+                                <v-col v-for="item in items" :key="item.libelle" sm="6" md="5" lg="2" xl="2" xs="2">
+                                    <v-tooltip :text="item.raw.libelle"  activator="parent"
+            location="top">
+                                        <template v-slot:activator="{ props }">
+                                        <v-card class="pb-3" v-bind="props" border flat>
+                                            <v-img :src="item.raw.image" height="100" cover></v-img>
+                                            <v-list-item class="mb-2 text-center"
+                                                :subtitle="`${item.raw.selling_price} F CFA`">
+                                                <template v-slot:title>
+                                                    <strong class="text-h6 mb-2 ">{{ item.raw.libelle }}</strong>
+                                                </template>
+                                            </v-list-item>
+                                            <div class="d-flex justify-space-between px-4">
+                                                <div class="d-flex align-center text-caption text-medium-emphasis me-1">
+                                                    <div class="text-truncate">
+                                                        <v-badge :color="item.raw.quantite > 0 ? 'info' : 'error'"
+                                                            :content="item.raw.quantite" inline></v-badge>
+                                                        &nbsp;
+                                                        <v-chip :color="item.raw.quantite > 0 ? 'green' : 'red'">{{
+                                                            item.raw.statut }}</v-chip>
+                                                    </div>
                                                 </div>
+                                                <v-btn border flat size="small" class="text-none" icon="add">
+                                                </v-btn>
                                             </div>
-
-                                            <v-btn border flat size="small" class="text-none" icon="add">
-                                            </v-btn>
-                                        </div>
-                                    </v-card>
+                                        </v-card>
+                                    </template>
+                                    </v-tooltip>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -230,77 +231,77 @@ export default {
                 libelle: "Lait",
                 selling_price: 2000,
                 quantite: 2,
-                statut: "En stock",
+                statut: "Stock",
             },
             {
                 image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/2.png',
                 libelle: "Bonbon",
                 selling_price: 1000,
                 quantite: 0,
-                statut: 'En rupture',
+                statut: 'Rupture',
             },
             {
                 image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/3.png',
                 libelle: "Pomme",
                 selling_price: 2300,
                 quantite: 1,
-                statut: "En stock",
+                statut: "Stock",
             },
             {
                 image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/5.png',
                 libelle: "Ananas",
                 selling_price: 600,
                 quantite: 5,
-                statut: "En stock",
+                statut: "Stock",
             },
             {
                 image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/6.png',
                 libelle: "Prume",
                 selling_price: 780,
                 quantite: 2,
-                statut: "En stock",
+                statut: "Stock",
             },
             {
                 image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/7.png',
                 libelle: "Mangue",
                 selling_price: 850,
                 quantite: 3,
-                statut: "En stock",
+                statut: "Stock",
             },
             {
                 image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/1.png',
                 libelle: "Palme",
                 selling_price: 4120,
                 quantite: true,
-                statut: "En stock",
+                statut: "Stock",
             },
             {
                 image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/8.png',
                 libelle: "Oignon",
                 selling_price: 1250,
                 quantite: 2,
-                statut: "En stock",
+                statut: "Stock",
             },
             {
                 image: '/img/bread.jpg',
                 libelle: 'Pain de miche',
                 selling_price: 200,
                 quantite: 1,
-                statut: "En stock",
+                statut: "Stock",
             },
             {
                 image: '/img/croissant.jpg',
                 libelle: 'Croissant',
                 selling_price: 1200,
                 quantite: 4,
-                statut: "En stock",
+                statut: "Stock",
             },
             {
                 image: '/img/jaune_doeuf.jpg',
                 libelle: "Jaune d'oeuf",
                 selling_price: 570,
                 quantite: 3,
-                statut: "En stock",
+                statut: "Stock",
             },
         ],
     }),
