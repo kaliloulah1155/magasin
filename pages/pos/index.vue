@@ -12,8 +12,8 @@
                                 <v-card :color="isSelected ? 'rgba(249, 232, 232, 0.8)' : ''" class="d-flex align-center"
                                     dark height="30" @click="toggle">
                                     <v-scroll-y-transition>
-                                        <div class="text-subtitle-1 flex-grow-1 text-center">
-                                            {{ isSelected ? 'Selected' : 'Click Me!' }}
+                                        <div class="text-subtitle-1 flex-grow-1 text-center" @click.prevent="getCategorie(n)">
+                                            {{ isSelected ? 'Selected ' : 'Click Me! ' }}
                                         </div>
                                     </v-scroll-y-transition>
                                 </v-card>
@@ -38,8 +38,7 @@
                         <v-container class="pa-2" fluid>
                             <v-row dense>
                                 <v-col v-for="item in items" :key="item.libelle" sm="6" md="5" lg="2" xl="2" xs="2">
-                                    <v-tooltip :text="item.raw.libelle"  activator="parent"
-            location="top">
+                                    <v-tooltip :text="item.raw.libelle"  activator="parent" location="top">
                                         <template v-slot:activator="{ props }">
                                         <v-card class="pb-3" v-bind="props" border flat>
                                             <v-img :src="item.raw.image" height="100" cover></v-img>
@@ -344,10 +343,13 @@ export default {
             ]
         },
         addCustomer() {
-            alert('add client')
+            console.log('add client')
         },
         printTicket() {
-            alert('print ticket')
+            console.log('print ticket')
+        },
+        getCategorie(n){
+            console.log(n)
         }
 
     }
