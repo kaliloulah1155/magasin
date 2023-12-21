@@ -37,7 +37,7 @@
                     <template v-slot:default="{ items }">
                         <v-container class="pa-2" fluid>
                             <v-row dense>
-                                <v-col v-for="item in items" :key="item.libelle" sm="6" md="4" lg="3" xl="2"  >
+                                <v-col v-for="item in items" :key="item.libelle" sm="6" md="4" lg="3" xl="2" xs="2"  >
                                     <v-card class="pb-3" border flat  >
                                         <v-img :src="item.raw.image" height="200" cover></v-img>
 
