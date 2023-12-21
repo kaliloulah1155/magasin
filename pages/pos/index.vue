@@ -123,7 +123,7 @@
                                  <span>TVA(%)</span>
                             </v-col>
                             <v-col sm="12" md="4" lg="6" xl="8">
-                               <v-text-field type="number" class="" value="0" style="width:10rem;" />
+                               <v-text-field type="number" class=""  style="width:10rem;" />
                             </v-col>
                         </v-row>
                          <v-row>
@@ -131,7 +131,7 @@
                                     REMISE(F CFA)
                                 </v-col>
                                 <v-col sm="12" md="4" lg="6" xl="8">
-                                    <v-text-field type="number" class="" value="0" style="width: 10rem;" />
+                                    <v-text-field type="number" class=""  style="width: 10rem;" />
                                 </v-col>
                             </v-row>
                              <v-row>
@@ -139,9 +139,10 @@
                                     CLIENT
                                 </v-col>
                                 <v-col sm="12" md="4" lg="6" xl="8">
-                                     <v-select  color="primary" variant="outlined"
+                                     <v-combobox  color="primary" variant="outlined"
+                                     clearable
                                                   :items="clients" item-title="fullname"
-                                                item-value="id" return-object style="width:10rem;"></v-select>
+                                                item-value="id" return-object style="width:10rem;"></v-combobox>
                                 </v-col>
                             </v-row>
                               <v-row>
