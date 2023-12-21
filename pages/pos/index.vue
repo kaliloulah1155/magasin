@@ -58,8 +58,7 @@
                                                             item.raw.statut }}</v-chip>
                                                     </div>
                                                 </div>
-                                                <v-btn border flat size="small" class="text-none" icon="add">
-                                                </v-btn>
+                                                <v-btn border flat size="small" class="text-none float-end" icon="add" ></v-btn>
                                             </div>
                                         </v-card>
                                     </template>
