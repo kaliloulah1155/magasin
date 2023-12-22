@@ -103,8 +103,8 @@
                                     Ajouter un client
                                 </v-card-text>
                             </v-card>
-                            <v-dialog v-model="dialog_client" width="auto">
-                                <v-card title="Ajouter un nouveau client" width="500">
+                            <v-dialog v-model="dialog_client" max-width="500px">
+                                <v-card title="Ajouter un nouveau client" >
                                     <v-card-text>
                                         <v-form class="px-3" ref="form">
                                             <v-text-field label="Nom complet" color="primary" clearable variant="outlined"
