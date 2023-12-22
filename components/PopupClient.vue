@@ -18,15 +18,13 @@
               v-model="editedItem.telephone"  :rules="telephoneRules"></v-text-field>
             <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
               variant="outlined"></v-file-input>
-            
-
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text="FERMER" variant="elevated" @click="isActive.value = false" size="small"></v-btn>
           <v-btn color="green-darken-3" variant="elevated" size="small" :loading="loading"
-            @click.prevent="submit">Ajouter</v-btn>
+            @click.prevent="submit">Enregistrer</v-btn>
         </v-card-actions>
       </v-card>
     </template>
@@ -55,7 +53,6 @@ export default {
       adresse: "",
       telephone: "",
       photo: null,
-     
     },
     loading: false,
     inputRules: [

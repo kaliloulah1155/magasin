@@ -12,8 +12,9 @@
                                 <v-card :color="isSelected ? 'rgba(249, 232, 232, 0.8)' : ''" class="d-flex align-center"
                                     dark height="30" @click="toggle">
                                     <v-scroll-y-transition>
-                                        <div class="text-subtitle-1 flex-grow-1 text-center" @click.prevent="getCategorie(cat.id)">
-                                         
+                                        <div class="text-subtitle-1 flex-grow-1 text-center"
+                                            @click.prevent="getCategorie(cat.id)">
+
                                             {{ cat.libelle }}
                                         </div>
                                     </v-scroll-y-transition>
@@ -39,32 +40,32 @@
                         <v-container class="pa-2" fluid>
                             <v-row dense>
                                 <v-col v-for="item in items" :key="item.libelle" sm="6" md="5" lg="2" xl="2" xs="2">
-                                    <v-tooltip :text="item.raw.libelle"  activator="parent" location="top">
+                                    <v-tooltip :text="item.raw.libelle" activator="parent" location="top">
                                         <template v-slot:activator="{ props }">
-                                        <v-card class="pb-3" v-bind="props" border flat>
-                                            <v-img :src="item.raw.image" height="100" cover></v-img>
-                                            <v-list-item class="mb-2 text-center"
-                                                :subtitle="`${item.raw.selling_price} F CFA`">
-                                                <template v-slot:title>
-                                                    <strong class="text-h6 mb-2 ">{{ item.raw.libelle }}</strong>
-                                                </template>
-                                            </v-list-item>
-                                            <div class="d-flex justify-space-between ">
-                                                <div class="d-flex align-center text-caption text-medium-emphasis me-1">
-                                                    <div class="text-truncate">
-                                                        <v-badge :color="item.raw.quantite > 0 ? 'info' : 'error'"
-                                                           
-                                                            :content="Number(item.raw.quantite)" inline>  </v-badge>
-                                                        &nbsp;
-                                                        <v-chip :color="item.raw.quantite > 0 ? 'green' : 'red'">{{
-                                                            item.raw.statut }}</v-chip>
+                                            <v-card class="pb-3" v-bind="props" border flat>
+                                                <v-img :src="item.raw.image" height="100" cover></v-img>
+                                                <v-list-item class="mb-2 text-center"
+                                                    :subtitle="`${item.raw.selling_price} F CFA`">
+                                                    <template v-slot:title>
+                                                        <strong class="text-h6 mb-2 ">{{ item.raw.libelle }}</strong>
+                                                    </template>
+                                                </v-list-item>
+                                                <div class="d-flex justify-space-between ">
+                                                    <div class="d-flex align-center text-caption text-medium-emphasis me-1">
+                                                        <div class="text-truncate">
+                                                            <v-badge :color="item.raw.quantite > 0 ? 'info' : 'error'"
+                                                                :content="Number(item.raw.quantite)" inline> </v-badge>
+                                                            &nbsp;
+                                                            <v-chip :color="item.raw.quantite > 0 ? 'green' : 'red'">{{
+                                                                item.raw.statut }}</v-chip>
+                                                        </div>
                                                     </div>
+                                                    <v-btn border flat size="small" class="text-none mx-1"
+                                                        icon="add"></v-btn>
+
                                                 </div>
-                                                  <v-btn border flat size="small" class="text-none mx-1" icon="add" ></v-btn>
-                                                
-                                            </div>
-                                        </v-card>
-                                    </template>
+                                            </v-card>
+                                        </template>
                                     </v-tooltip>
                                 </v-col>
                             </v-row>
@@ -87,6 +88,7 @@
                 </v-data-iterator>
             </v-card>
             <!-- END::ALL PRODUCT-->
+            <!--BEGIN RIGHT SIDEBAR-->
             <v-navigation-drawer permanent app color="white" location="right" width="400">
                 <v-list subheader lines="two" class="mt-5">
                     <v-row align="center" justify="center">
@@ -101,6 +103,31 @@
                                     Ajouter un client
                                 </v-card-text>
                             </v-card>
+                            <v-dialog v-model="dialog_client" width="auto">
+                                <v-card title="Ajouter un nouveau client" width="500">
+                                    <v-card-text>
+                                        <v-form class="px-3" ref="form">
+                                            <v-text-field label="Nom complet" color="primary" clearable variant="outlined"
+                                                v-model="editedItem.fullname" :rules="inputRules"></v-text-field>
+                                            <v-text-field label="E-mail" class="mt-2" color="primary" clearable
+                                                variant="outlined" v-model="editedItem.email"
+                                                :rules="emailRules"></v-text-field>
+                                            <v-text-field label="Adresse" class="mt-2" color="primary" clearable
+                                                variant="outlined" v-model="editedItem.adresse"
+                                                :rules="inputRules"></v-text-field>
+                                            <v-text-field label="Téléphone" class="mt-2" color="primary" clearable
+                                                variant="outlined" v-model="editedItem.telephone"
+                                                :rules="telephoneRules"></v-text-field>
+                                        </v-form>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text="FERMER" variant="elevated" @click="dialog_client = false"
+                                            size="small"></v-btn>
+                                        <v-btn color="green-darken-3" variant="elevated" size="small">Enregistrer</v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
                         </v-col>
                         <v-col cols="auto">
                             <v-card class="mx-auto" @click="printTicket" max-width="344" hover>
@@ -169,7 +196,8 @@
                             </v-col>
                             <v-col sm="12" md="4" lg="6" xl="8">
                                 <v-autocomplete color="primary" variant="outlined" clearable :items="clients"
-                                    item-title="fullname" item-value="id" return-object style="width:10rem;"></v-autocomplete>
+                                    item-title="fullname" item-value="id" return-object
+                                    style="width:10rem;"></v-autocomplete>
                             </v-col>
                         </v-row>
                         <v-row>
@@ -198,6 +226,7 @@
                 </v-row>
 
             </v-navigation-drawer>
+            <!--END::RIGHT SIDEBAR-->
 
         </v-container>
 
@@ -215,6 +244,24 @@ export default {
         return {}
     },
     data: () => ({
+        dialog_client: false,
+        editedItem: {
+            id: 0,
+            fullname: "",
+            email: "",
+            adresse: "",
+            telephone: "",
+            photo: null,
+        },
+        inputRules: [
+            (v) => (v && v.length >= 3) || "La longueur minimale est de 3 caractères",
+        ],
+        telephoneRules: [
+            v => (v && /^\d+$/.test(v) && v.length === 10) || 'Entrez un nombre valide de 10 chiffres',
+        ],
+        emailRules: [
+            v => (v && /.+@.+\..+/.test(v)) || 'Entrer une adresse e-mail valide',
+        ],
         search: '',
         articles: [],
         clients: [
@@ -228,7 +275,7 @@ export default {
             { libelle: "CREDIT", id: 3 },
             { libelle: "MOBILE MONEY", id: 3 },
         ],
-         categories: [
+        categories: [
             { libelle: "Categorie 1", id: 1 },
             { libelle: "Categorie 2", id: 2 },
             { libelle: "Categorie 3", id: 3 },
@@ -353,19 +400,20 @@ export default {
 
             ]
         },
-        consommer(){
-              const res =    useNuxtApp().$axios.get('https://jsonplaceholder.typicode.com/todos/1')
-              res.then(({data})=>{
+        consommer() {
+            const res = useNuxtApp().$axios.get('todos/1')
+            res.then(({ data }) => {
                 console.log(data)
-              })
+            })
         },
         addCustomer() {
             console.log('add client')
+            this.dialog_client = true
         },
         printTicket() {
             console.log('print ticket')
         },
-        getCategorie(n){
+        getCategorie(n) {
             console.log(n)
         }
 
