@@ -53,7 +53,7 @@
                                                 <div class="d-flex align-center text-caption text-medium-emphasis me-1">
                                                     <div class="text-truncate">
                                                         <v-badge :color="item.raw.quantite > 0 ? 'info' : 'error'"
-                                                            :content="item.raw.quantite" inline></v-badge>
+                                                            :content="8" inline></v-badge>
                                                         &nbsp;
                                                         <v-chip :color="item.raw.quantite > 0 ? 'green' : 'red'">{{
                                                             item.raw.statut }}</v-chip>
@@ -204,6 +204,8 @@
 </template>
 <script>
 
+
+
 export default {
     setup() {
         definePageMeta({
@@ -313,6 +315,7 @@ export default {
     }),
     created() {
         this.initialize()
+        this.consommer()
     },
     methods: {
         initialize() {
@@ -348,6 +351,12 @@ export default {
 
 
             ]
+        },
+        consommer(){
+              const res =    useNuxtApp().$axios.get('https://jsonplaceholder.typicode.com/todos/1')
+              res.then(({data})=>{
+                console.log(data)
+              })
         },
         addCustomer() {
             console.log('add client')

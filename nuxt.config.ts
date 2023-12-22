@@ -1,4 +1,4 @@
-import { defineNuxtConfig } from 'nuxt/config'
+ 
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     "material-design-icons-iconfont/dist/material-design-icons.css",
   ],
   build: {
-    transpile: ["vuetify","pinia"],
+    transpile: ["vuetify","pinia","axios"],
   },
   app: {
     head: {
@@ -33,9 +33,6 @@ export default defineNuxtConfig({
     },
   },
   experimental: {
-    /**
-     * see: https://v3.nuxtjs.org/api/configuration/nuxt.config#inlinessrstyles
-     */
     inlineSSRStyles: false,
   },
 });
