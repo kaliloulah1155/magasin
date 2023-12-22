@@ -53,7 +53,8 @@
                                                 <div class="d-flex align-center text-caption text-medium-emphasis me-1">
                                                     <div class="text-truncate">
                                                         <v-badge :color="item.raw.quantite > 0 ? 'info' : 'error'"
-                                                            :content="8" inline></v-badge>
+                                                           
+                                                            :content="Number(item.raw.quantite)" inline>  </v-badge>
                                                         &nbsp;
                                                         <v-chip :color="item.raw.quantite > 0 ? 'green' : 'red'">{{
                                                             item.raw.statut }}</v-chip>
