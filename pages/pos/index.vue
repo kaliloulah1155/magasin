@@ -103,32 +103,32 @@
                                     Ajouter un client
                                 </v-card-text>
                             </v-card>
-                            <v-dialog v-model="dialog_client" max-width="500px">
-                                <v-card title="Ajouter un nouveau client" >
-                                    <v-card-text>
-                                        <v-form class="px-3" ref="form">
-                                            <v-text-field label="Nom complet" color="primary" clearable variant="outlined"
-                                                v-model="editedItem.fullname" :rules="inputRules"></v-text-field>
-                                            <v-text-field label="E-mail" class="mt-2" color="primary" clearable
-                                                variant="outlined" v-model="editedItem.email"
-                                                :rules="emailRules"></v-text-field>
-                                            <v-text-field label="Adresse" class="mt-2" color="primary" clearable
-                                                variant="outlined" v-model="editedItem.adresse"
-                                                :rules="inputRules"></v-text-field>
-                                            <v-text-field label="Téléphone" class="mt-2" color="primary" clearable
-                                                variant="outlined" v-model="editedItem.telephone"
-                                                :rules="telephoneRules"></v-text-field>
-                                        </v-form>
-                                    </v-card-text>
-                                    <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn text="FERMER" variant="elevated" @click="dialog_client = false"
-                                            size="small"></v-btn>
-                                        <v-btn color="green-darken-3" variant="elevated" size="small">Enregistrer</v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
                         </v-col>
+                          <v-dialog v-model="dialog_client" max-width="300px">
+                                    <v-card title="Ajouter un nouveau client" >
+                                        <v-card-text>
+                                            <v-form class="px-3" ref="form">
+                                                <v-text-field label="Nom complet" color="primary" clearable variant="outlined"
+                                                    v-model="editedItem.fullname" :rules="inputRules"></v-text-field>
+                                                <v-text-field label="E-mail" class="mt-2" color="primary" clearable
+                                                    variant="outlined" v-model="editedItem.email"
+                                                    :rules="emailRules"></v-text-field>
+                                                <v-text-field label="Adresse" class="mt-2" color="primary" clearable
+                                                    variant="outlined" v-model="editedItem.adresse"
+                                                    :rules="inputRules"></v-text-field>
+                                                <v-text-field label="Téléphone" class="mt-2" color="primary" clearable
+                                                    variant="outlined" v-model="editedItem.telephone"
+                                                    :rules="telephoneRules"></v-text-field>
+                                            </v-form>
+                                        </v-card-text>
+                                        <v-card-actions>
+                                            <v-spacer></v-spacer>
+                                            <v-btn text="FERMER" variant="elevated" @click="dialog_client = false"
+                                                size="small"></v-btn>
+                                            <v-btn color="green-darken-3" variant="elevated" size="small">Enregistrer</v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-dialog>
                         <v-col cols="auto">
                             <v-card class="mx-auto" @click="printTicket" max-width="344" hover>
                                 <v-card-item class="d-flex justify-center">
