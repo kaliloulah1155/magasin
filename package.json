@@ -28,6 +28,7 @@
   "dependencies": {
     "@mdi/font": "^7.3.67",
     "@mdi/js": "^7.3.67",
+    "@nuxtjs/axios": "^5.13.6",
     "material-design-icons-iconfont": "^6.7.0",
     "mysql": "^2.18.1",
     "mysql2": "^3.6.5",

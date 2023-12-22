@@ -3,7 +3,7 @@
         <v-navigation-drawer app v-model="drawer" location="left" color="rgba(249, 232, 232, 0.8)">
             <v-col class="text-center">
                 <v-avatar color="grey-lighten-5 " rounded="0" size="100">
-                    <v-img src="https://cdn.pixabay.com/photo/2014/04/02/10/47/red-304573_1280.png"
+                    <v-img src="logo.png"
                         alt="Logo Entreprise"></v-img>
                 </v-avatar>
                 <p class="text-center font-weight-black text-caption text-uppercase text-subtitle-1 mt-1">

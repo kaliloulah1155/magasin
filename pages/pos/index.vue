@@ -7,13 +7,14 @@
             <v-item-group mandatory>
                 <v-container>
                     <v-row>
-                        <v-col v-for="n in 6" :key="n" cols="12" md="4">
+                        <v-col v-for="cat in categories" :key="cat.id" cols="12" md="4">
                             <v-item v-slot="{ isSelected, toggle }">
                                 <v-card :color="isSelected ? 'rgba(249, 232, 232, 0.8)' : ''" class="d-flex align-center"
                                     dark height="30" @click="toggle">
                                     <v-scroll-y-transition>
-                                        <div class="text-subtitle-1 flex-grow-1 text-center" @click.prevent="getCategorie(n)">
-                                            {{ isSelected ? 'Selected ' : 'Click Me! ' }}
+                                        <div class="text-subtitle-1 flex-grow-1 text-center" @click.prevent="getCategorie(cat.id)">
+                                         
+                                            {{ cat.libelle }}
                                         </div>
                                     </v-scroll-y-transition>
                                 </v-card>
@@ -48,7 +49,7 @@
                                                     <strong class="text-h6 mb-2 ">{{ item.raw.libelle }}</strong>
                                                 </template>
                                             </v-list-item>
-                                            <div class="d-flex justify-space-between px-4">
+                                            <div class="d-flex justify-space-between ">
                                                 <div class="d-flex align-center text-caption text-medium-emphasis me-1">
                                                     <div class="text-truncate">
                                                         <v-badge :color="item.raw.quantite > 0 ? 'info' : 'error'"
@@ -58,7 +59,8 @@
                                                             item.raw.statut }}</v-chip>
                                                     </div>
                                                 </div>
-                                                <v-btn border flat size="small" class="text-none float-end" icon="add" ></v-btn>
+                                                  <v-btn border flat size="small" class="text-none mx-1" icon="add" ></v-btn>
+                                                
                                             </div>
                                         </v-card>
                                     </template>
@@ -165,8 +167,8 @@
                                 CLIENT
                             </v-col>
                             <v-col sm="12" md="4" lg="6" xl="8">
-                                <v-combobox color="primary" variant="outlined" clearable :items="clients"
-                                    item-title="fullname" item-value="id" return-object style="width:10rem;"></v-combobox>
+                                <v-autocomplete color="primary" variant="outlined" clearable :items="clients"
+                                    item-title="fullname" item-value="id" return-object style="width:10rem;"></v-autocomplete>
                             </v-col>
                         </v-row>
                         <v-row>
@@ -222,6 +224,12 @@ export default {
             { libelle: "CHEQUE", id: 2 },
             { libelle: "CREDIT", id: 3 },
             { libelle: "MOBILE MONEY", id: 3 },
+        ],
+         categories: [
+            { libelle: "Categorie 1", id: 1 },
+            { libelle: "Categorie 2", id: 2 },
+            { libelle: "Categorie 3", id: 3 },
+            { libelle: "Categorie 4", id: 4 },
         ],
         produits: [
             {
