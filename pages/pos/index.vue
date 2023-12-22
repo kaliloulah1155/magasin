@@ -125,7 +125,7 @@
                                             <v-spacer></v-spacer>
                                             <v-btn text="FERMER" variant="elevated" @click="dialog_client = false"
                                                 size="small"></v-btn>
-                                            <v-btn color="green-darken-3" variant="elevated" size="small">Enregistrer</v-btn>
+                                            <v-btn color="green-darken-3" variant="elevated" size="small">Valider</v-btn>
                                         </v-card-actions>
                                     </v-card>
                                 </v-dialog>

@@ -24,7 +24,7 @@
           <v-spacer></v-spacer>
           <v-btn text="FERMER" variant="elevated" @click="isActive.value = false" size="small"></v-btn>
           <v-btn color="green-darken-3" variant="elevated" size="small" :loading="loading"
-            @click.prevent="submit">Enregistrer</v-btn>
+            @click.prevent="submit">Valider</v-btn>
         </v-card-actions>
       </v-card>
     </template>
