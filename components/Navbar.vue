@@ -13,7 +13,7 @@
             <v-col>
                 <v-list>
                     <v-list-item prepend-avatar="https://cdn.pixabay.com/photo/2016/08/31/11/54/icon-1633249_1280.png"
-                        title="Konate Ibrahima Kaliloulah" subtitle="caissier(e)">
+                       :title="`${authStore.data.nom} ${authStore.data.prenoms}`" subtitle="caissier(e)">
                     </v-list-item>
                 </v-list>
             </v-col>
@@ -49,8 +49,10 @@
 
 <script setup>
 import { ref } from 'vue'
+import {useAuthStore} from '../stores/auth'
 
 const { signOut } = useAuth();
+const authStore = useAuthStore()
 
 const drawer = ref(null)
 const links = ref([
