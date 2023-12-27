@@ -133,6 +133,24 @@
             </v-row>
         </v-container>
     </div>
+     <v-snackbar
+          v-model="snackbar"
+          multi-line
+          location="top"
+          color="red-lighten-3"
+        >
+          {{ error_msg }}
+
+          <template v-slot:actions>
+            <v-btn
+              color="white"
+              variant="text"
+              @click="snackbar = false"
+            >
+              Fermer
+            </v-btn>
+          </template>
+        </v-snackbar>
 </template>
 
 <script  lang="ts">
@@ -156,6 +174,8 @@ export default {
         step: 1,
         visible: false,
         svisible: false,
+         snackbar: false,
+         error_msg:'',
         credentials: {
             login: "",
             password: ""
@@ -172,6 +192,10 @@ export default {
                     { callbackUrl: '/dashboard' } // Where the user will be redirected after a successiful login
                 )
             } catch (error) {
+
+                this.error_msg=  "Une erreur est survenue. Veuillez réessayer !"
+                this.snackbar=true
+              
                 console.log("error", error);
                 console.log("status : ", authStatus);
             }
