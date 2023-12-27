@@ -9,14 +9,18 @@
     </div>
 </template>
 <script setup>
+
+import {useAuthStore} from '../../stores/auth'
 definePageMeta({
     middleware: 'auth',
     layout: 'master'
 })  
 
 //Get Session of user
+const authStore= useAuthStore()
 const { data, status } = useAuth()
     
+authStore.data= data.value
 console.log("data : ",data.value)
 console.log("status : ", status.value)
 </script>
