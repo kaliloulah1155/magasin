@@ -23,14 +23,15 @@
                                             </h6>
                                             <v-row class="text-center d-flex justify-center">
                                                 <v-col cols="12" sm="8">
-                                                    <v-text-field label="Email" v-model="credentials.login" outlined autofocus dense color="blue"
-                                                        autocomplete="false" class="mt-16" prepend-inner-icon="email"
+                                                    <v-text-field label="Email" v-model="credentials.login" outlined
+                                                        autofocus dense color="blue" autocomplete="false" class="mt-16"
+                                                        prepend-inner-icon="email"
                                                         placeholder="Entrer votre email"></v-text-field>
-                                                    <v-text-field v-model="credentials.password" :append-inner-icon="visible ? 'visibility_off' : 'visibility'"
+                                                    <v-text-field v-model="credentials.password"
+                                                        :append-inner-icon="visible ? 'visibility_off' : 'visibility'"
                                                         :type="visible ? 'text' : 'password'" label="Mot de passe " outlined
                                                         dense color="blue" autocomplete="false"
-                                                        placeholder="Entrer votre mot de passe"
-                                                        prepend-inner-icon="lock"
+                                                        placeholder="Entrer votre mot de passe" prepend-inner-icon="lock"
                                                         @click:append-inner="visible = !visible"></v-text-field>
                                                     <v-row>
                                                         <v-col cols="12" sm="8">
@@ -38,7 +39,8 @@
                                                         </v-col>
                                                     </v-row>
                                                     <div class="mt-2">
-                                                        <v-btn to="/dashboard" color="blue" dark block tile>Valider</v-btn>
+                                                        <v-btn to="/dashboard" color="blue" dark block tile
+                                                            @click.prevent="login">Valider</v-btn>
                                                     </div>
                                                     <div
                                                         class="d-flex justify-space-between align-center mx-10 mb-16 mt-10">
@@ -103,22 +105,22 @@
                                                     <v-text-field label="E-mail"
                                                         placeholder="Veuillez renseigner votre email" outlined dense
                                                         color="blue" autocomplete="false"></v-text-field>
-                                                    <v-text-field :append-inner-icon="svisible ? 'visibility_off' : 'visibility'"
+                                                    <v-text-field
+                                                        :append-inner-icon="svisible ? 'visibility_off' : 'visibility'"
                                                         :type="svisible ? 'text' : 'password'" label="Mot de passe "
                                                         outlined dense color="blue" autocomplete="false"
-                                                        placeholder="Entrer votre mot de passe"
-                                                        prepend-inner-icon="lock"
+                                                        placeholder="Entrer votre mot de passe" prepend-inner-icon="lock"
                                                         @click:append-inner="svisible = !svisible"></v-text-field>
                                                 </v-col>
                                             </v-row>
                                             <v-row>
-                                                 <v-col cols="8" style="margin-left: 6rem;margin-bottom:2rem">
+                                                <v-col cols="8" style="margin-left: 6rem;margin-bottom:2rem">
                                                     <div>
-                                                       
-                                                          <v-btn  color="blue" dark block tile>Valider</v-btn>
+
+                                                        <v-btn color="blue" dark block tile>Valider</v-btn>
                                                     </div>
-                                                   
-                                                 </v-col>
+
+                                                </v-col>
                                             </v-row>
                                         </v-card-text>
                                     </v-col>
@@ -134,20 +136,47 @@
 </template>
 
 <script  lang="ts">
-
 export default {
+    setup() {
+        definePageMeta({
+            public: true,
+            auth: {
+                unauthenticatedOnly: true,
+                navigateAuthenticatedTo: '/dashboard',
+            }
+        })
+        return {
+
+        }
+    },
+    props: {
+        source: String
+    },
     data: () => ({
         step: 1,
         visible: false,
         svisible: false,
-        credentials:{
-            login:"",
-            password:""
+        credentials: {
+            login: "",
+            password: ""
         }
     }),
-    props: {
-        source: String
-    },
+    methods: {
+
+        async login() {
+            try {
+                const { signIn } = useAuth();
+
+                await signIn(
+                    { ...this.credentials },
+                    { callbackUrl: '/dashboard' } // Where the user will be redirected after a successiful login
+                )
+            } catch (error) {
+                console.log("error", error);
+            }
+        }
+
+    }
 }
 </script>
 

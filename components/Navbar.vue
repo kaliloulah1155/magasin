@@ -33,7 +33,7 @@
             <!-- Bouton de deconnexion  -->
             <template v-slot:append>
                 <div class="pa-2">
-                    <v-btn to="/" color="rgba(243, 105, 127, 0.8)" block flat size="small" elevation="1">
+                    <v-btn @click.prevent="logout" color="rgba(243, 105, 127, 0.8)" block flat size="small" elevation="1">
                         D&Eacute;CONNEXION
                     </v-btn>
                 </div>
@@ -50,6 +50,8 @@
 <script setup>
 import { ref } from 'vue'
 
+const { signOut } = useAuth();
+
 const drawer = ref(null)
 const links = ref([
     { text: "DASHBOARD", icon: "dashboard", route: "/dashboard" },
@@ -63,4 +65,16 @@ const links = ref([
     { text: "STOCKS", icon: "store", route: "/stocks" },
       { text: "SALAIRES", icon: "payments", route: "/salaires" }
 ])
+
+const logout=async()=>{
+   try {
+        await signOut({
+            callbackUrl: '/',
+            redirect: true
+        })
+        // Add after logout logic here, could be removing the session data from localstorage or whatever
+    } catch (error) {
+       console.log("error", error);
+    }
+}
 </script>

@@ -10,6 +10,12 @@
 </template>
 <script setup>
 definePageMeta({
+    middleware: 'auth',
     layout: 'master'
-})
+})  
+
+//Get Session of user
+const { data } = useAuth()
+
+console.log("data : ",data.value)
 </script>
