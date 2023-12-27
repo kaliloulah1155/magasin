@@ -16,6 +16,6 @@ definePageMeta({
 
 //Get Session of user
 const { data } = useAuth()
-
+    
 console.log("data : ",data.value)
 </script>
