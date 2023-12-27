@@ -23,7 +23,7 @@ export default defineNuxtConfig({
     "material-design-icons-iconfont/dist/material-design-icons.css",
   ],
   build: {
-    transpile: ["vuetify", "axios","pinia"],
+    transpile: ["vuetify", "axios"],
   },
   app: {
     head: {
