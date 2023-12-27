@@ -23,10 +23,10 @@
                                             </h6>
                                             <v-row class="text-center d-flex justify-center">
                                                 <v-col cols="12" sm="8">
-                                                    <v-text-field label="Email" outlined autofocus dense color="blue"
+                                                    <v-text-field label="Email" v-model="credentials.login" outlined autofocus dense color="blue"
                                                         autocomplete="false" class="mt-16" prepend-inner-icon="email"
                                                         placeholder="Entrer votre email"></v-text-field>
-                                                    <v-text-field :append-inner-icon="visible ? 'visibility_off' : 'visibility'"
+                                                    <v-text-field v-model="credentials.password" :append-inner-icon="visible ? 'visibility_off' : 'visibility'"
                                                         :type="visible ? 'text' : 'password'" label="Mot de passe " outlined
                                                         dense color="blue" autocomplete="false"
                                                         placeholder="Entrer votre mot de passe"
@@ -140,10 +140,14 @@ export default {
         step: 1,
         visible: false,
         svisible: false,
+        credentials:{
+            login:"",
+            password:""
+        }
     }),
     props: {
         source: String
-    }
+    },
 }
 </script>
 

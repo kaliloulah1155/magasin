@@ -1,6 +1,21 @@
- 
-
 export default defineNuxtConfig({
+  modules: ["@sidebase/nuxt-auth"],
+  auth: {
+    globalAppMiddleware: true,
+    baseURL: "https://pos789456123.kewoustore.com/api/v1",
+    provider: {
+      type: "local",
+      endpoints: {
+        signIn: { path: "/", method: "post" },
+        signOut: { path: "/logout", method: "post" },
+        signUp: { path: "/register", method: "post" },
+        getSession: { path: "/infoUser", method: "get" },
+      },
+      pages: {
+        login: "/",
+      },
+    },
+  },
   devtools: { enabled: true },
   css: [
     "vuetify/dist/vuetify.css",
@@ -8,7 +23,7 @@ export default defineNuxtConfig({
     "material-design-icons-iconfont/dist/material-design-icons.css",
   ],
   build: {
-    transpile: ["vuetify","axios"],
+    transpile: ["vuetify", "axios"],
   },
   app: {
     head: {
