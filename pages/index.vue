@@ -162,17 +162,18 @@ export default {
         }
     }),
     methods: {
-
         async login() {
+             const { signIn, status } = useAuth();
+             const authStatus = status.value;
             try {
-                const { signIn } = useAuth();
-
+               
                 await signIn(
                     { ...this.credentials },
                     { callbackUrl: '/dashboard' } // Where the user will be redirected after a successiful login
                 )
             } catch (error) {
                 console.log("error", error);
+                console.log("status : ", authStatus);
             }
         }
 

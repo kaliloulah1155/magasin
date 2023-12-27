@@ -15,7 +15,8 @@ definePageMeta({
 })  
 
 //Get Session of user
-const { data } = useAuth()
+const { data, status } = useAuth()
     
 console.log("data : ",data.value)
+console.log("status : ", status.value)
 </script>
