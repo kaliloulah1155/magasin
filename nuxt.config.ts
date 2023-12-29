@@ -1,5 +1,18 @@
 export default defineNuxtConfig({
-  modules: ["@sidebase/nuxt-auth"],
+  modules: [
+    "@sidebase/nuxt-auth",
+    "@pinia/nuxt",
+    "@pinia-plugin-persistedstate/nuxt",
+  ],
+  pinia: {
+    storesDirs: ["./stores/**"],
+  },
+  runtimeConfig: {
+    apiSecret: "", // can be overridden by NUXT_API_SECRET environment variable
+    public: {
+      apiBase: "https://pos789456123.kewoustore.com/api/v1", // can be overridden by NUXT_PUBLIC_API_BASE environment variable
+    },
+  },
   auth: {
     globalAppMiddleware: true,
     baseURL: "https://pos789456123.kewoustore.com/api/v1",

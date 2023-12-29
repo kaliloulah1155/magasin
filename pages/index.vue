@@ -170,6 +170,7 @@ export default {
     props: {
         source: String
     },
+   
     data: () => ({
         step: 1,
         visible: false,
@@ -182,9 +183,9 @@ export default {
         }
     }),
     methods: {
+      
         async login() {
-             const { signIn, status } = useAuth();
-             const authStatus = status.value;
+             const { signIn } = useAuth();
             try {
                
                 await signIn(
@@ -192,12 +193,8 @@ export default {
                     { callbackUrl: '/dashboard' } // Where the user will be redirected after a successiful login
                 )
             } catch (error) {
-
                 this.error_msg=  "Une erreur est survenue. Veuillez réessayer !"
                 this.snackbar=true
-              
-                console.log("error", error);
-                console.log("status : ", authStatus);
             }
         }
 

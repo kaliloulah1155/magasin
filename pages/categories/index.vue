@@ -101,17 +101,25 @@
     </div>
 </template>
 <script>
+ 
+import { useCategorieStore } from '../../stores/categorie'
+import { useAuthStore } from '../../stores/auth'
+
+
 export default {
     setup() {
         definePageMeta({
             layout: 'master'
         })
-        return {}
+        const categorieStore = useCategorieStore()
+         const authStore = useAuthStore()
+        return { categorieStore, authStore }
     },
     data: () => ({
         dialog: false,
         dialogDelete: false,
         search: "",
+        url: useRuntimeConfig().public.apiBase,
         headers: [
             {
                 title: "Libellé",
@@ -177,7 +185,17 @@ export default {
         this.initialize()
     },
     methods: {
-        initialize() {
+        async initialize() {
+
+            /*const resultat = await $fetch(`${this.url}/categories_slug/POD`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${this.authStore.data.token}`,
+                },
+            })*/
+     
+            console.log(" token : ", this.authStore.data)
+             
             this.categories = [
                 {
                     id: 1,
@@ -203,7 +221,6 @@ export default {
                     position: 2,
                     statut: 0,
                 },
-
             ]
         },
         editItem(item) {

@@ -21,6 +21,9 @@ const authStore= useAuthStore()
 const { data, status } = useAuth()
     
 authStore.data= data.value
-console.log("data : ",data.value)
-console.log("status : ", status.value)
+if(status.value =="unauthenticated"){
+    authStore.data={}
+}
+
+
 </script>
