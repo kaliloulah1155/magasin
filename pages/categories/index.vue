@@ -187,41 +187,18 @@ export default {
     methods: {
         async initialize() {
 
-            /*const resultat = await $fetch(`${this.url}/categories_slug/POD`, {
+           const resultat = await $fetch(`${this.url}/categories_slug/POD`, {
                 method: "GET",
                 headers: {
+                    Accept: 'application/json',
                     Authorization: `Bearer ${this.authStore.data.token}`,
                 },
-            })*/
-     
-            console.log(" token : ", this.authStore.data)
-             
-            this.categories = [
-                {
-                    id: 1,
-                    libelle: "Frozen Yogurt",
-                    parent: "",
-                    code: "FRZ",
-                    position: 2,
-                    statut: 1,
-                },
-                {
-                    id: 2,
-                    libelle: 'Ice cream sandwich',
-                    parent: "",
-                    code: "ICE",
-                    position: 2,
-                    statut: 1,
-                },
-                {
-                    id: 3,
-                    libelle: 'Eclair',
-                    parent: "ICE",
-                    code: "ICE",
-                    position: 2,
-                    statut: 0,
-                },
-            ]
+            }) 
+      
+            if(resultat.data.length > 0){
+                 this.categories =resultat.data;
+            }
+           
         },
         editItem(item) {
             this.editedIndex = this.categories.indexOf(item)
