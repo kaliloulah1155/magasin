@@ -212,10 +212,20 @@ export default {
                     this.categorieStore.data = response.data.data;
                 }
             } else {
-                this.msg = "Connectez - vous! ou réessayez la connexion";
-                this.err = true;
-                this.snackbar = true;
+                this.afficherCnx();
+                
             }
+        },
+        afficherCnx(){
+             this.msg = "Connectez - vous! ou réessayez la connexion";
+            this.err = true;
+            this.snackbar = true;
+        },
+        afficherMsg(messg){
+             this.msg = messg;
+            this.err = false;
+            this.snackbar = true;
+            this.initialize()
         },
         editItem(item) {
             this.editedIndex = this.categories.indexOf(item)
@@ -228,8 +238,15 @@ export default {
             this.dialogDelete = true
         },
         deleteItemConfirm() {
-            this.categories.splice(this.editedIndex, 1)
+           // this.categories.splice(this.editedIndex, 1)
+            this.$nextTick(() => {
+                //console.log("this.editedIndex conf : ", this.editedIndex.id);
+
+                this.deleteData(this.editedIndex.id)
+               
+            })
             this.closeDelete()
+
         },
         close() {
             this.dialog = false
@@ -239,7 +256,6 @@ export default {
             })
         },
         async updateData(json) {
-  
             if (this.authStore.data.token) {
                 const response = await useNuxtApp().$axios.post(`${this.url}/categories/${json.id}`, json, {
                     headers: {
@@ -248,16 +264,31 @@ export default {
                     }
                 });
                 if (response.status == 200) {
-                    this.msg = "Mise à jour effectué avec succès";
-                    this.err = false;
-                    this.snackbar = true;
-                    this.initialize()
+                     this.afficherMsg("Mise à jour effectué avec succès")
+                     
                 };
 
             } else {
-                this.msg = "Connectez - vous! ou réessayez la connexion";
-                this.err = true;
-                this.snackbar = true;
+                this.afficherCnx();
+            }
+        },
+           async deleteData(id) {
+            if (this.authStore.data.token) {
+                const response = await useNuxtApp().$axios.delete(`${this.url}/categories/${id}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.authStore.data.token}`,
+                    }
+                });
+                 
+                if (response.status == 201) {
+
+                    this.afficherMsg("Suppression effectuée avec succès")
+                  
+                };
+
+            } else {
+                this.afficherCnx();
             }
         },
         save() {
@@ -299,10 +330,6 @@ export default {
         },
         closeDelete() {
             this.dialogDelete = false
-            this.$nextTick(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
-                this.editedIndex = -1
-            })
         },
     },
     computed: {
