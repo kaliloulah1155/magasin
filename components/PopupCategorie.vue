@@ -10,10 +10,8 @@
           <v-form class="px-3" ref="form">
             <v-text-field label="Libellé" color="primary" clearable variant="outlined" v-model="libelle"
               :rules="inputRules"></v-text-field>
-            <v-select label="Parent" class="mt-2" color="primary" variant="outlined" v-model="parent" :items="parents"
+            <v-select label="Parent" class="mt-2" color="primary" variant="outlined" v-model="parent" :items="parent_cats"
               item-title="libelle" item-value="id" persistent-hint return-object></v-select>
-            <v-text-field label="Code" class="mt-2" color="primary" clearable variant="outlined" v-model="code"
-              :rules="inputCdRules"></v-text-field>
             <v-text-field label="Position" class="mt-2" type="number" color="primary" clearable variant="outlined"
               v-model="position"></v-text-field>
 
@@ -33,22 +31,17 @@
       </v-card>
     </template>
   </v-dialog>
-  <v-snackbar v-model="snackbar">
-    {{ text }}
-    <template v-slot:actions>
-      <v-btn color="pink" variant="text" @click="snackbar = false">
-        Fermer
-      </v-btn>
-    </template>
-  </v-snackbar>
+ 
 </template>
 
 <script>
 export default {
   emits: ['saveItem'],
+  props:{
+       parent_cats:Array
+  },
   data: () => ({
-    snackbar: false,
-    text: "message du snackbar",
+ 
     libelle: '',
     code: '',
     statut: { state: 'Activée', abbr: 1 },
@@ -61,7 +54,7 @@ export default {
       id: 0,
       libelle: '',
       parent: '',
-      code: '',
+      slug:'POD',
       position: 0,
       statut: 1,
     },
@@ -70,19 +63,9 @@ export default {
     inputRules: [
       v => (v && v.length >= 3) || "La longueur minimale est de 3 caractères"
     ],
-    inputCdRules: [
-      v => (v && v.length >= 2) || "La longueur minimale est de 2 caractères"
-    ],
     //Select parent
-    parent: { libelle: 'Veuillez selectionner', id: 0 },
-    parents: [
-      { libelle: 'Veuillez selectionner', id: 0 },
-      { libelle: 'Florida', id: 1 },
-      { libelle: 'Georgia', id: 2 },
-      { libelle: 'Nebraska', id: 3 },
-      { libelle: 'California', id: 4 },
-      { libelle: 'New York', id: 5 },
-    ],
+    parent: { libelle: 'Veuillez selectionner', id: null },
+   
   }),
   methods: {
     async submit() {
@@ -94,10 +77,7 @@ export default {
         this.editedItem.code = this.code
         this.editedItem.position = this.position
         this.editedItem.statut = this.statut
-        this.snackbar = true
         this.$emit('saveItem', this.editedItem);
-
-
 
       }
 

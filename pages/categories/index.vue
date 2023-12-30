@@ -6,7 +6,7 @@
                 <h1 class="text-subtitle-1 text-grey">Catégories</h1>
             </template>
             <template v-slot:actions>
-                <popup-categorie @saveItem="getItem" />
+                <popup-categorie @saveItem="getItem"  :parent_cats="parents" />
             </template>
         </v-banner>
         <v-container class="my-5">
@@ -255,6 +255,24 @@ export default {
                 this.editedIndex = -1
             })
         },
+        async createData(json) {
+            if (this.authStore.data.token) {
+                const response = await useNuxtApp().$axios.post(`${this.url}/categories`, json, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.authStore.data.token}`,
+                    }
+                });
+               
+                if (response.status == 200) {
+                    this.afficherMsg("Catégorie créé avec succès")
+
+                };
+
+            } else {
+                this.afficherCnx();
+            }
+        },
         async updateData(json) {
             if (this.authStore.data.token) {
                 const response = await useNuxtApp().$axios.post(`${this.url}/categories/${json.id}`, json, {
@@ -322,9 +340,11 @@ export default {
                 let updatedItem = {
                     ...fromPopup,
                     statut: fromPopup.statut.abbr,
-                    parent: fromPopup.parent.libelle
+                    parent:  fromPopup.parent.id ==0 ? null : fromPopup.parent.id
                 }
-                this.categories.push(updatedItem)
+                console.log("createdItem : ", updatedItem)
+                this.createData(updatedItem);
+                //this.categories.push(updatedItem)
             }
 
         },
