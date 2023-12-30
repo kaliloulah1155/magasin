@@ -184,14 +184,18 @@ export default {
         dialogDelete(val) {
             val || this.closeDelete()
         },
-        'categorieStore.data'(newData, oldData) {
-
+      'categorieStore.data'(newData, oldData) {
             if (newData.length > 0) {
                 const extractedData = newData.map(({ id, libelle }) => ({ id, libelle }));
 
-                this.parents = [...this.parents, ...extractedData];
+                // Filtrer les éléments déjà présents dans le tableau parents
+                const filteredData = extractedData.filter(({ id }) => !this.parents.some(parent => parent.id === id));
+
+                // Ajouter les éléments filtrés au tableau parents
+                this.parents = [...this.parents, ...filteredData];
             }
         }
+
     },
     mounted() {
         this.initialize()
