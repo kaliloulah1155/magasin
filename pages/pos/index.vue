@@ -245,6 +245,7 @@ export default {
     },
     data: () => ({
         dialog_client: false,
+        url: useRuntimeConfig().public.apiBase,
         editedItem: {
             id: 0,
             fullname: "",
@@ -401,10 +402,10 @@ export default {
             ]
         },
         consommer() {
-            const res = useNuxtApp().$axios.get('todos/1')
+           /* const res = useNuxtApp().$axios.get(`${this.url}/todos/1`)
             res.then(({ data }) => {
                 console.log(data)
-            })
+            })*/
         },
         addCustomer() {
             console.log('add client')

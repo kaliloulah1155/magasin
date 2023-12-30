@@ -1,6 +1,6 @@
 <template>
     <div class="dashboard ma-4">
-        <NuxtPage  title="Categorie" />
+        <NuxtPage title="Categorie" />
         <v-banner lines="one" color="warning">
             <template v-slot:text>
                 <h1 class="text-subtitle-1 text-grey">Catégories</h1>
@@ -36,9 +36,9 @@
                                         <v-text-field label="Libellé" color="primary" clearable variant="outlined"
                                             v-model="editedItem.libelle" :rules="inputRules"></v-text-field>
                                         <v-select label="Parent" class="mt-2" color="primary" variant="outlined"
-                                            v-model="editedItem.parent" :items="parents" item-title="libelle"></v-select>
-                                        <v-text-field label="Code" class="mt-2" color="primary" clearable variant="outlined"
-                                            v-model="editedItem.code" :rules="inputCdRules"></v-text-field>
+                                            v-model="editedItem.parent" :items="parents" item-title="libelle"
+                                            item-value="id"></v-select>
+
                                         <v-text-field label="Position" class="mt-2" type="number" color="primary" clearable
                                             variant="outlined" v-model="editedItem.position"></v-text-field>
                                         <v-select label="statut" class="mt-2" color="primary" variant="outlined"
@@ -99,9 +99,18 @@
             </v-card>
         </v-container>
     </div>
+    <v-snackbar v-model="snackbar" multi-line location="top" :color="err ? 'red-lighten-3' : 'green-lighten-3'">
+        {{ msg }}
+
+        <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbar = false">
+                Fermer
+            </v-btn>
+        </template>
+    </v-snackbar>
 </template>
 <script>
- 
+
 import { useCategorieStore } from '../../stores/categorie'
 import { useAuthStore } from '../../stores/auth'
 
@@ -112,12 +121,16 @@ export default {
             layout: 'master'
         })
         const categorieStore = useCategorieStore()
-         const authStore = useAuthStore()
+        const authStore = useAuthStore()
+
         return { categorieStore, authStore }
     },
     data: () => ({
         dialog: false,
         dialogDelete: false,
+        snackbar: false,
+        msg: '',
+        err: false,
         search: "",
         url: useRuntimeConfig().public.apiBase,
         headers: [
@@ -128,7 +141,6 @@ export default {
                 key: 'libelle'
             },
             { title: "Parent", key: "parent" },
-            { title: "Code", key: "code" },
             { title: "Position", key: "position" },
             { title: "Statut", key: "statut" },
             { title: "Actions", key: "actions", sortable: false }
@@ -136,16 +148,8 @@ export default {
         inputRules: [
             v => (v && v.length >= 3) || "La longueur minimale est de 3 caractères"
         ],
-        inputCdRules: [
-            v => (v && v.length >= 2) || "La longueur minimale est de 2 caractères"
-        ],
         parents: [
-            { libelle: 'Veuillez selectionner' },
-            { libelle: 'Florida' },
-            { libelle: 'Georgia' },
-            { libelle: 'Nebraska' },
-            { libelle: 'California' },
-            { libelle: 'New York' },
+            { libelle: 'Veuillez selectionner', id: null },
         ],
         categories: [],
         editedIndex: -1,
@@ -179,26 +183,39 @@ export default {
         },
         dialogDelete(val) {
             val || this.closeDelete()
+        },
+        'categorieStore.data'(newData, oldData) {
+
+            if (newData.length > 0) {
+                const extractedData = newData.map(({ id, libelle }) => ({ id, libelle }));
+
+                this.parents = [...this.parents, ...extractedData];
+            }
         }
     },
-    created() {
+    mounted() {
         this.initialize()
     },
     methods: {
         async initialize() {
+            if (this.authStore.data.token) {
 
-           const resultat = await $fetch(`${this.url}/categories_slug/POD`, {
-                method: "GET",
-                headers: {
-                    Accept: 'application/json',
-                    Authorization: `Bearer ${this.authStore.data.token}`,
-                },
-            }) 
-      
-            if(resultat.data.length > 0){
-                 this.categories =resultat.data;
+                const response = await useNuxtApp().$axios.get(`${this.url}/categories_slug/POD`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.authStore.data.token}`,
+                    }
+                });
+
+                if (response.data.data.length > 0) {
+                    this.categories = response.data.data;
+                    this.categorieStore.data = response.data.data;
+                }
+            } else {
+                this.msg = "Connectez - vous! ou réessayez la connexion";
+                this.err = true;
+                this.snackbar = true;
             }
-           
         },
         editItem(item) {
             this.editedIndex = this.categories.indexOf(item)
@@ -221,6 +238,28 @@ export default {
                 this.editedIndex = -1
             })
         },
+        async updateData(json) {
+  
+            if (this.authStore.data.token) {
+                const response = await useNuxtApp().$axios.post(`${this.url}/categories/${json.id}`, json, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.authStore.data.token}`,
+                    }
+                });
+                if (response.status == 200) {
+                    this.msg = "Mise à jour effectué avec succès";
+                    this.err = false;
+                    this.snackbar = true;
+                    this.initialize()
+                };
+
+            } else {
+                this.msg = "Connectez - vous! ou réessayez la connexion";
+                this.err = true;
+                this.snackbar = true;
+            }
+        },
         save() {
 
             if (this.editedIndex > -1) {
@@ -232,35 +271,31 @@ export default {
                         ...this.editedItem,
                         statut: this.editedItem.statut.abbr
                     }
-                    Object.assign(this.categories[this.editedIndex], updatedObject)
-                    // console.log('The key "state" exists in this.editedItem.statut.');
+                    //Traitement de la mise à jour en base 
+                    this.updateData(updatedObject);
                 } else {
-                    Object.assign(this.categories[this.editedIndex], this.editedItem)
-                    //console.log('The key "state" does not exist in this.editedItem.statut.');
+                    this.updateData(this.editedItem);
                 }
             }
 
-            /*else {
-                this.categories.push(this.editedItem)
-            }*/
             this.close()
         },
         getItem(fromPopup) {
-            
-              if (
+
+            if (
                 fromPopup.statut &&
                 fromPopup.statut.hasOwnProperty('state') &&
-                 fromPopup.parent &&
+                fromPopup.parent &&
                 fromPopup.parent.hasOwnProperty('libelle')
-            ){
-               let updatedItem = {
+            ) {
+                let updatedItem = {
                     ...fromPopup,
                     statut: fromPopup.statut.abbr,
                     parent: fromPopup.parent.libelle
                 }
-                 this.categories.push(updatedItem)
+                this.categories.push(updatedItem)
             }
-           
+
         },
         closeDelete() {
             this.dialogDelete = false
