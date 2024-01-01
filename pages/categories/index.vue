@@ -131,7 +131,6 @@ export default {
         snackbar: false,
         msg: '',
         err: false,
-        token: localStorage.getItem("pos_token"),
         search: "",
         url: useRuntimeConfig().public.apiBase,
         headers: [
@@ -203,12 +202,12 @@ export default {
     },
     methods: {
         async initialize() {
-            if (this.token) {
+            if (this.authStore.data.token) {
 
                 const response = await useNuxtApp().$axios.get(`${this.url}/categories_slug/POD`, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.token}`,
+                        'Authorization': `Bearer ${this.authStore.data.token}`,
                     }
                 });
 
@@ -261,11 +260,11 @@ export default {
             })
         },
         async createData(json) {
-            if (this.token) {
+            if (this.authStore.data.token) {
                 const response = await useNuxtApp().$axios.post(`${this.url}/categories`, json, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.token}`,
+                        'Authorization': `Bearer ${this.authStore.data.token}`,
                     }
                 });
                
@@ -279,11 +278,11 @@ export default {
             }
         },
         async updateData(json) {
-            if (this.token) {
+            if (this.authStore.data.token) {
                 const response = await useNuxtApp().$axios.post(`${this.url}/categories/${json.id}`, json, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.token}`,
+                        'Authorization': `Bearer ${this.authStore.data.token}`,
                     }
                 });
                 if (response.status == 200) {
@@ -296,11 +295,11 @@ export default {
             }
         },
            async deleteData(id) {
-            if (this.token) {
+            if (this.authStore.data.token) {
                 const response = await useNuxtApp().$axios.delete(`${this.url}/categories/${id}`, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.token}`,
+                        'Authorization': `Bearer ${this.authStore.data.token}`,
                     }
                 });
                  
@@ -347,6 +346,7 @@ export default {
                     statut: fromPopup.statut.abbr,
                     parent:  fromPopup.parent.id ==0 ? null : fromPopup.parent.id
                 }
+                
                 this.createData(updatedItem);
                 //this.categories.push(updatedItem)
             }

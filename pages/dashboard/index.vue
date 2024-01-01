@@ -21,13 +21,7 @@ const authStore= useAuthStore()
 const { data, status } = useAuth()
     
 authStore.data= data.value
-
-if(data.value){
-    localStorage.setItem('pos_token', data.value.token);
-}
-
 if(status.value =="unauthenticated"){
-    localStorage.removeItem('pos_token');
     authStore.data={}
 }
 
