@@ -203,12 +203,12 @@ export default {
     },
     methods: {
         async initialize() {
-            if (token) {
+            if (this.token) {
 
                 const response = await useNuxtApp().$axios.get(`${this.url}/categories_slug/POD`, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
+                        'Authorization': `Bearer ${this.token}`,
                     }
                 });
 
@@ -261,11 +261,11 @@ export default {
             })
         },
         async createData(json) {
-            if (token) {
+            if (this.token) {
                 const response = await useNuxtApp().$axios.post(`${this.url}/categories`, json, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
+                        'Authorization': `Bearer ${this.token}`,
                     }
                 });
                
@@ -279,11 +279,11 @@ export default {
             }
         },
         async updateData(json) {
-            if (token) {
+            if (this.token) {
                 const response = await useNuxtApp().$axios.post(`${this.url}/categories/${json.id}`, json, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
+                        'Authorization': `Bearer ${this.token}`,
                     }
                 });
                 if (response.status == 200) {
@@ -296,11 +296,11 @@ export default {
             }
         },
            async deleteData(id) {
-            if (token) {
+            if (this.token) {
                 const response = await useNuxtApp().$axios.delete(`${this.url}/categories/${id}`, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
+                        'Authorization': `Bearer ${this.token}`,
                     }
                 });
                  
