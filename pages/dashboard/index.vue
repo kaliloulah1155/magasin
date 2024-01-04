@@ -11,6 +11,7 @@
 <script setup>
 
 import {useAuthStore} from '../../stores/auth'
+ 
 definePageMeta({
     middleware: 'auth',
     layout: 'master'
@@ -18,9 +19,9 @@ definePageMeta({
 
 //Get Session of user
 const authStore= useAuthStore()
-const { data, status } = useAuth()
+const {  status } = useAuth()
     
-authStore.data= data.value
+ 
 if(status.value =="unauthenticated"){
     authStore.data={}
 }

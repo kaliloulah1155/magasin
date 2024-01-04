@@ -76,7 +76,6 @@
                         </v-dialog>
                     </template>
                     <template v-slot:item.statut="{ item }">
-
                         <template v-if="item.statut == 1">
                             <v-chip color="green" text="Activée" class="text-uppercase" label size="small">
                             </v-chip>
@@ -113,7 +112,7 @@
 
 import { useCategorieStore } from '../../stores/categorie'
 import { useAuthStore } from '../../stores/auth'
-
+ 
 
 export default {
     setup() {
@@ -122,8 +121,9 @@ export default {
         })
         const categorieStore = useCategorieStore()
         const authStore = useAuthStore()
+         const { token } = useAuth()
 
-        return { categorieStore, authStore }
+        return { categorieStore, authStore,token }
     },
     data: () => ({
         dialog: false,
@@ -157,7 +157,6 @@ export default {
         item_statut: [
             { state: 'Activée', abbr: 1 },
             { state: 'Désactivée', abbr: 0 },
-
         ],
         editedItem: {
             id: 0,
@@ -199,15 +198,17 @@ export default {
     },
     mounted() {
         this.initialize()
+
+
     },
     methods: {
         async initialize() {
-            if (this.authStore.data.token) {
+            if (this.token) {
 
                 const response = await useNuxtApp().$axios.get(`${this.url}/categories_slug/POD`, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.authStore.data.token}`,
+                        'Authorization': `${this.token}`,
                     }
                 });
 
@@ -242,15 +243,11 @@ export default {
             this.dialogDelete = true
         },
         deleteItemConfirm() {
-           // this.categories.splice(this.editedIndex, 1)
             this.$nextTick(() => {
-                //console.log("this.editedIndex conf : ", this.editedIndex.id);
-
                 this.deleteData(this.editedIndex.id)
                
             })
             this.closeDelete()
-
         },
         close() {
             this.dialog = false
@@ -260,17 +257,16 @@ export default {
             })
         },
         async createData(json) {
-            if (this.authStore.data.token) {
+            if (this.token) {
                 const response = await useNuxtApp().$axios.post(`${this.url}/categories`, json, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.authStore.data.token}`,
+                        'Authorization': `${this.token}`,
                     }
                 });
                
                 if (response.status == 200) {
                     this.afficherMsg("Catégorie créé avec succès")
-
                 };
 
             } else {
@@ -278,16 +274,15 @@ export default {
             }
         },
         async updateData(json) {
-            if (this.authStore.data.token) {
+            if (this.token) {
                 const response = await useNuxtApp().$axios.post(`${this.url}/categories/${json.id}`, json, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.authStore.data.token}`,
+                        'Authorization': `${this.token}`,
                     }
                 });
                 if (response.status == 200) {
                      this.afficherMsg("Mise à jour effectué avec succès")
-                     
                 };
 
             } else {
@@ -295,18 +290,15 @@ export default {
             }
         },
            async deleteData(id) {
-            if (this.authStore.data.token) {
+            if (this.token) {
                 const response = await useNuxtApp().$axios.delete(`${this.url}/categories/${id}`, {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.authStore.data.token}`,
+                        'Authorization': `${this.token}`,
                     }
                 });
-                 
                 if (response.status == 201) {
-
                     this.afficherMsg("Suppression effectuée avec succès")
-                  
                 };
 
             } else {

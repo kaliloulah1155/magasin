@@ -6,7 +6,7 @@
                 <h1 class="text-subtitle-1 text-grey">Employés</h1>
             </template>
             <template v-slot:actions>
-                 <popup-employe @saveItem="getItem" /> 
+                <popup-employe @saveItem="getItem" />
             </template>
         </v-banner>
         <v-container class="my-5">
@@ -19,6 +19,7 @@
                         label="Rechercher un employé" single-line flat hide-details variant="solo-filled"></v-text-field>
                 </v-card-title>
                 <v-divider class="mt-5"></v-divider>
+
                 <v-data-table v-model:search="search" :headers="headers" :items="employes"
                     :loading="employeLength > 0 ? false : true" :sort-by="[{ key: 'fullname', order: 'asc' }]"
                     items-per-page="10">
@@ -31,22 +32,29 @@
                                     <span class="text-h5">{{ formTitle }}</span>
                                 </v-card-title>
                                 <v-card-text>
+                                    
                                     <v-form class="px-3" ref="form">
-                                        <v-text-field label="Nom complet" color="primary" clearable variant="outlined"
-                                            v-model="editedItem.fullname" :rules="inputRules"></v-text-field>
+                                        <v-text-field label="Nom" color="primary" clearable variant="outlined"
+                                            v-model="editedItem.nom" :rules="inputRules"></v-text-field>
+                                        <v-text-field label="Prénoms" color="primary" clearable variant="outlined"
+                                            v-model="editedItem.prenoms" :rules="inputRules"></v-text-field>
                                         <v-text-field label="E-mail" class="mt-2" color="primary" clearable
                                             variant="outlined" v-model="editedItem.email"
                                             :rules="emailRules"></v-text-field>
-                                        <v-text-field label="Adresse" class="mt-2" color="primary" clearable
-                                            variant="outlined" v-model="editedItem.adresse"
-                                            :rules="inputRules"></v-text-field>
+                                          <v-select label="Sexe" class="mt-2" color="primary" variant="outlined"
+                                                    v-model="editedItem.lib_sexe" :items="sexe_statut" item-title="libelle"
+                                                    item-value="id" return-object></v-select>
                                         <v-text-field label="Téléphone" class="mt-2" color="primary" clearable
-                                            variant="outlined" v-model="editedItem.telephone" :rules="telephoneRules"></v-text-field>
+                                            variant="outlined" v-model="editedItem.telephone"
+                                            :rules="telephoneRules"></v-text-field>
                                         <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
-                                            variant="outlined" ></v-file-input>
+                                            variant="outlined"></v-file-input>
                                         <v-select label="Profil" class="mt-2" color="primary" variant="outlined"
                                             v-model="editedItem.profil" :items="profils" item-title="libelle"
-                                            item-value="code" return-object></v-select>
+                                            item-value="id" return-object></v-select>
+                                             <v-select label="Statut" class="mt-2" color="primary" variant="outlined"
+                                                v-model="editedItem.statut" :items="item_statut" item-title="libelle"
+                                                item-value="id" return-object></v-select>
                                     </v-form>
                                 </v-card-text>
                                 <v-card-actions>
@@ -77,6 +85,13 @@
                             </v-card>
                         </v-dialog>
                     </template>
+                    <template v-slot:item.lib_active="{ item }">
+                        <v-chip :color="item.lib_active === 'Activé' ? 'green' : 'red'" :value="item.lib_active"
+                            class="text-uppercase" label size="small">
+                            {{ item.lib_active }}
+                        </v-chip>
+                    </template>
+
                     <template v-slot:item.photo="{ item }">
                         <v-card class="my-2" elevation="2" rounded>
                             <v-img :src="item.photo ? `${item.photo}` : '/img/profil.png'" height="64" cover></v-img>
@@ -96,62 +111,92 @@
             </v-card>
         </v-container>
     </div>
+    <v-snackbar v-model="snackbar" multi-line location="top" :color="err ? 'red-lighten-3' : 'green-lighten-3'">
+        {{ msg }}
+        <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbar = false">
+                Fermer
+            </v-btn>
+        </template>
+    </v-snackbar>
 </template>
 <script>
+import { useEmployeStore } from '../../stores/employe'
+import { useAuthStore } from '../../stores/auth'
 export default {
     setup() {
         definePageMeta({
             layout: 'master'
         })
-        return {}
+        const authStore = useAuthStore()
+        const employeStore = useEmployeStore()
+          const { token } = useAuth()
+        return { authStore, employeStore, token }
     },
     data: () => ({
         dialog: false,
         dialogDelete: false,
+        snackbar: false,
+        msg: '',
+        err: false,
         search: "",
+        url: useRuntimeConfig().public.apiBase,
         photo: null,
         headers: [
             { title: "Nom complet", align: "start", key: 'fullname' },
             { title: "E-mail", key: "email" },
-            { title: "Adresse", key: "adresse" },
+            { title: "Sexe", key: "lib_sexe" },
             { title: "Telephone", key: "telephone" },
+            { title: "Statut", key: "lib_active" },
             { title: "Photo", key: "photo" },
-            { title: "Profil", key: "profil" },
+            { title: "Profil", key: "profile_name" },
             { title: "Actions", key: "actions", sortable: false }
         ],
         inputRules: [
             v => (v && v.length >= 3) || "La longueur minimale est de 3 caractères"
         ],
-          telephoneRules: [
-      v => (v && /^\d+$/.test(v) && v.length === 10) || 'Entrez un nombre valide de 10 chiffres',
-    ],
-       emailRules: [
+        telephoneRules: [
+            v => (v && /^\d+$/.test(v) && v.length === 10) || 'Entrez un nombre valide de 10 chiffres',
+        ],
+        emailRules: [
             v => (v && /.+@.+\..+/.test(v)) || 'Entrer une adresse e-mail valide',
         ],
-        profils: [
-            { libelle: 'Caissier', code: "CSS" },
-            { libelle: 'Admin', code: "ADM" },
-            { libelle: 'Designer', code: "DSG" },
-        ],
+        profils: [],
         employes: [],
         editedIndex: -1,
+          item_statut: [
+            { libelle: 'Activé', id: 1 },
+            { libelle: 'Désactivé', id: 0 },
+        ],
+          sexe_statut: [
+            { libelle: 'Homme', code: "M" },
+            { libelle: 'Femme', code: "F" },
+        ],
         editedItem: {
             id: 0,
             fullname: "",
+            nom: "",
+            prenoms: "",
             email: "",
-            adresse: "",
+            sexe:"",
+            lib_sexe: "M",
             telephone: "",
             photo: null,
             profil: "",
+            statut: 1,
         },
         defaultItem: {
             id: 0,
             fullname: "",
+            nom: "",
+            prenoms: "",
             email: "",
-            adresse: "",
+            sexe: "M",
+             lib_sexe: "M",
             telephone: "",
             photo: null,
             profil: "",
+            statut: 1,
         },
     }),
 
@@ -165,41 +210,56 @@ export default {
     },
     created() {
         this.initialize()
+        this.profils_list()
     },
     methods: {
-        initialize() {
-            this.employes = [
-                {
-                    id: 1,
-                    fullname: "KONATE Ibrahima",
-                    email: "ibson@gmail.com",
-                    adresse: "Yop",
-                    telephone: "0173832778",
-                    photo: "https://cdn.pixabay.com/photo/2013/07/13/10/07/man-156584_1280.png",
-                    profil: "Admin",
-                },
-                {
-                    id: 2,
-                    fullname: "Afisu Youssouf",
-                    email: "afisu@gmail.com",
-                    adresse: "Abobo",
-                    telephone: "0174862778",
-                    photo: "https://cdn.pixabay.com/photo/2016/08/20/05/38/avatar-1606916_1280.png",
-                    profil: "Graphiste",
-                },
-                {
-                    id: 3,
-                    fullname: "Kone Awa",
-                    email: "awakon@gmail.com",
-                    adresse: "Treichville",
-                    telephone: "0173062978",
-                    photo: null,
-                    profil: "Caissier(e)",
-                },
+        async initialize() {
+            if (this.token) {
+                const response = await useNuxtApp().$axios.get(`${this.url}/employes`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
 
-            ]
+                if (response.data.data.length > 0) {
+                    this.employes = response.data.data;
+                    this.employeStore.data = response.data.data;
+                }
+             
+            } else {
+                this.afficherCnx();
+            }
+        },
+        async profils_list(){
+            if (this.token) {
+                const response = await useNuxtApp().$axios.get(`${this.url}/profils_e`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+
+                if (response.data.data.length > 0) {
+                    this.profils = response.data.data;
+                }
+            } else {
+                this.afficherCnx();
+            }
+        },
+        afficherCnx() {
+            this.msg = "Connectez - vous! ou réessayez la connexion";
+            this.err = true;
+            this.snackbar = true;
+        },
+        afficherMsg(messg) {
+            this.msg = messg;
+            this.err = false;
+            this.snackbar = true;
+            this.initialize()
         },
         editItem(item) {
+            
             this.editedIndex = this.employes.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialog = true
@@ -221,14 +281,14 @@ export default {
             })
         },
         save() {
-           if (this.editedIndex > -1) {
+            if (this.editedIndex > -1) {
                 if (
-                      this.editedItem.profil &&
-                     this.editedItem.profil.hasOwnProperty('libelle')
+                    this.editedItem.profil &&
+                    this.editedItem.profil.hasOwnProperty('libelle')
                 ) {
                     let updatedObject = {
                         ...this.editedItem,
-                        profil:  this.editedItem.profil.libelle
+                        profil: this.editedItem.profil.libelle
                     }
                     Object.assign(this.employes[this.editedIndex], updatedObject)
                     // console.log('The key "state" exists in this.editedItem.statut.');
@@ -239,20 +299,20 @@ export default {
             }
             this.close()
         },
-         getItem(fromPopup) {
- 
+        getItem(fromPopup) {
+
             if (
                 fromPopup.profil &&
-                fromPopup.profil.hasOwnProperty('libelle')  
+                fromPopup.profil.hasOwnProperty('libelle')
             ) {
-                 let updatedItem = {
+                let updatedItem = {
                     ...fromPopup,
-                    profil: fromPopup.profil.libelle 
+                    profil: fromPopup.profil.libelle
                 }
                 this.employes.push(updatedItem)
 
             }
-         },
+        },
         closeDelete() {
             this.dialogDelete = false
             this.$nextTick(() => {
