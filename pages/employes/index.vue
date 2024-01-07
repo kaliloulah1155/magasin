@@ -32,7 +32,7 @@
                                     <span class="text-h5">{{ formTitle }}</span>
                                 </v-card-title>
                                 <v-card-text>
-                                    
+
                                     <v-form class="px-3" ref="form">
                                         <v-text-field label="Nom" color="primary" clearable variant="outlined"
                                             v-model="editedItem.nom" :rules="inputRules"></v-text-field>
@@ -41,20 +41,20 @@
                                         <v-text-field label="E-mail" class="mt-2" color="primary" clearable
                                             variant="outlined" v-model="editedItem.email"
                                             :rules="emailRules"></v-text-field>
-                                          <v-select label="Sexe" class="mt-2" color="primary" variant="outlined"
-                                                    v-model="editedItem.lib_sexe" :items="sexe_statut" item-title="libelle"
-                                                    item-value="id" return-object></v-select>
+                                        <v-select label="Sexe" class="mt-2" color="primary" variant="outlined"
+                                            v-model="editedItem.lib_sexe" :items="sexe_statut" item-title="libelle"
+                                            item-value="id" return-object></v-select>
                                         <v-text-field label="Téléphone" class="mt-2" color="primary" clearable
                                             variant="outlined" v-model="editedItem.telephone"
                                             :rules="telephoneRules"></v-text-field>
-                                        <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
-                                            variant="outlined"></v-file-input>
+                                        <v-file-input label="Photo" v-model="photo" accept="image/*" show-size
+                                            counter variant="outlined"></v-file-input>
                                         <v-select label="Profil" class="mt-2" color="primary" variant="outlined"
-                                            v-model="editedItem.profil" :items="profils" item-title="libelle"
+                                            v-model="editedItem.profil_id" :items="profils" item-title="libelle"
                                             item-value="id" return-object></v-select>
-                                             <v-select label="Statut" class="mt-2" color="primary" variant="outlined"
-                                                v-model="editedItem.statut" :items="item_statut" item-title="libelle"
-                                                item-value="id" return-object></v-select>
+                                        <v-select label="Statut" class="mt-2" color="primary" variant="outlined"
+                                            v-model="editedItem.statut" :items="item_statut" item-title="libelle"
+                                            item-value="id" return-object></v-select>
                                     </v-form>
                                 </v-card-text>
                                 <v-card-actions>
@@ -92,9 +92,9 @@
                         </v-chip>
                     </template>
 
-                    <template v-slot:item.photo="{ item }">
+                    <template v-slot:item.image="{ item }">
                         <v-card class="my-2" elevation="2" rounded>
-                            <v-img :src="item.photo ? `${item.photo}` : '/img/profil.png'" height="64" cover></v-img>
+                            <v-img :src="item.image ? `${item.image}` : '/img/profil.png'" height="64" cover></v-img>
                         </v-card>
                     </template>
 
@@ -130,7 +130,7 @@ export default {
         })
         const authStore = useAuthStore()
         const employeStore = useEmployeStore()
-          const { token } = useAuth()
+        const { token } = useAuth()
         return { authStore, employeStore, token }
     },
     data: () => ({
@@ -148,7 +148,7 @@ export default {
             { title: "Sexe", key: "lib_sexe" },
             { title: "Telephone", key: "telephone" },
             { title: "Statut", key: "lib_active" },
-            { title: "Photo", key: "photo" },
+            { title: "Photo", key: "image" },
             { title: "Profil", key: "profile_name" },
             { title: "Actions", key: "actions", sortable: false }
         ],
@@ -164,24 +164,26 @@ export default {
         profils: [],
         employes: [],
         editedIndex: -1,
-          item_statut: [
+        item_statut: [
             { libelle: 'Activé', id: 1 },
             { libelle: 'Désactivé', id: 0 },
         ],
-          sexe_statut: [
+        sexe_statut: [
             { libelle: 'Homme', code: "M" },
             { libelle: 'Femme', code: "F" },
         ],
+       
         editedItem: {
             id: 0,
             fullname: "",
             nom: "",
             prenoms: "",
             email: "",
-            sexe:"",
+            sexe: "",
             lib_sexe: "M",
             telephone: "",
-            photo: null,
+            image: null,
+            profil_id: 0,
             profil: "",
             statut: 1,
         },
@@ -192,9 +194,10 @@ export default {
             prenoms: "",
             email: "",
             sexe: "M",
-             lib_sexe: "M",
+            lib_sexe: "M",
             telephone: "",
-            photo: null,
+            image: null,
+            profil_id: 0,
             profil: "",
             statut: 1,
         },
@@ -226,12 +229,12 @@ export default {
                     this.employes = response.data.data;
                     this.employeStore.data = response.data.data;
                 }
-             
+
             } else {
                 this.afficherCnx();
             }
         },
-        async profils_list(){
+        async profils_list() {
             if (this.token) {
                 const response = await useNuxtApp().$axios.get(`${this.url}/profils_e`, {
                     headers: {
@@ -256,10 +259,10 @@ export default {
             this.msg = messg;
             this.err = false;
             this.snackbar = true;
+            this.photo=null;
             this.initialize()
         },
         editItem(item) {
-            
             this.editedIndex = this.employes.indexOf(item)
             this.editedItem = Object.assign({}, item)
             this.dialog = true
@@ -282,21 +285,27 @@ export default {
         },
         save() {
             if (this.editedIndex > -1) {
-                if (
-                    this.editedItem.profil &&
-                    this.editedItem.profil.hasOwnProperty('libelle')
-                ) {
-                    let updatedObject = {
-                        ...this.editedItem,
-                        profil: this.editedItem.profil.libelle
-                    }
-                    Object.assign(this.employes[this.editedIndex], updatedObject)
-                    // console.log('The key "state" exists in this.editedItem.statut.');
-                } else {
-                    Object.assign(this.employes[this.editedIndex], this.editedItem)
-                    //console.log('The key "state" does not exist in this.editedItem.statut.');
+                let updatedObject = { ...this.editedItem }; // Créez une copie de l'objet initial
+
+                if (this.editedItem.profil_id && this.editedItem.profil_id.hasOwnProperty('libelle')) {
+                    updatedObject.profil_id = this.editedItem.profil_id.id;
                 }
+
+                if (this.editedItem.statut && this.editedItem.statut.hasOwnProperty('libelle')) {
+                    updatedObject.statut = this.editedItem.statut.id;
+                }
+
+                if (this.editedItem.lib_sexe && this.editedItem.lib_sexe.hasOwnProperty('libelle')) {
+                    updatedObject.sexe = this.editedItem.lib_sexe.code;
+                }
+                if(this.photo){
+                    updatedObject.image = this.photo;
+                } 
+
+               // console.log('this.editedItem 1 : ', updatedObject);
+               this.updateData(updatedObject);
             }
+
             this.close()
         },
         getItem(fromPopup) {
@@ -311,6 +320,41 @@ export default {
                 }
                 this.employes.push(updatedItem)
 
+            }
+        },
+        async updateData(json) {
+            if (this.token) {
+
+                const formData = new FormData();
+
+                // Ajoutez les champs à formData
+                formData.append('id', json.id);
+                formData.append('nom', json.nom);
+                formData.append('prenoms', json.prenoms);
+                formData.append('email', json.email);
+                formData.append('telephone', json.telephone);
+                formData.append('sexe', json.sexe);
+                // Ajoutez ici la logique pour le fichier (s'il existe)
+                if (json.image) {
+                    formData.append('image', json.image[0]);
+                }
+                formData.append('isActive', json.statut);
+                formData.append('profil_id', json.profil_id);
+     
+
+                const response = await useNuxtApp().$axios.post(`${this.url}/users/${json.id}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+                if (response.status == 200) {
+                   
+                    this.afficherMsg("Mise à jour effectué avec succès")
+                };
+
+            } else {
+                this.afficherCnx();
             }
         },
         closeDelete() {
