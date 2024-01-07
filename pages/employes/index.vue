@@ -273,7 +273,10 @@ export default {
             this.dialogDelete = true
         },
         deleteItemConfirm() {
-            this.employes.splice(this.editedIndex, 1)
+            this.$nextTick(() => {
+                this.deleteData(this.editedIndex.id)
+
+            })
             this.closeDelete()
         },
         close() {
@@ -307,6 +310,22 @@ export default {
             }
 
             this.close()
+        },
+            async deleteData(id) {
+            if (this.token) {
+                const response = await useNuxtApp().$axios.delete(`${this.url}/users/${id}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+                if (response.status == 201) {
+                    this.afficherMsg("Suppression effectuée avec succès")
+                };
+
+            } else {
+                this.afficherCnx();
+            }
         },
         getItem(fromPopup) {
 
