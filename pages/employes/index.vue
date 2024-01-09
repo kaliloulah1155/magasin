@@ -6,7 +6,8 @@
                 <h1 class="text-subtitle-1 text-grey">Employés</h1>
             </template>
             <template v-slot:actions>
-                <popup-employe @saveItem="getItem" />
+                <popup-employe @saveItem="getItem" :profils="profils" :item_statut="item_statut"
+                    :sexe_statut="sexe_statut" />
             </template>
         </v-banner>
         <v-container class="my-5">
@@ -47,8 +48,8 @@
                                         <v-text-field label="Téléphone" class="mt-2" color="primary" clearable
                                             variant="outlined" v-model="editedItem.telephone"
                                             :rules="telephoneRules"></v-text-field>
-                                        <v-file-input label="Photo" v-model="photo" accept="image/*" show-size
-                                            counter variant="outlined"></v-file-input>
+                                        <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
+                                            variant="outlined"></v-file-input>
                                         <v-select label="Profil" class="mt-2" color="primary" variant="outlined"
                                             v-model="editedItem.profil_id" :items="profils" item-title="libelle"
                                             item-value="id" return-object></v-select>
@@ -141,6 +142,7 @@ export default {
         err: false,
         search: "",
         url: useRuntimeConfig().public.apiBase,
+        pwd: useRuntimeConfig().public.pwdForUser,
         photo: null,
         headers: [
             { title: "Nom complet", align: "start", key: 'fullname' },
@@ -172,7 +174,7 @@ export default {
             { libelle: 'Homme', code: "M" },
             { libelle: 'Femme', code: "F" },
         ],
-       
+
         editedItem: {
             id: 0,
             fullname: "",
@@ -245,6 +247,7 @@ export default {
 
                 if (response.data.data.length > 0) {
                     this.profils = response.data.data;
+
                 }
             } else {
                 this.afficherCnx();
@@ -259,7 +262,7 @@ export default {
             this.msg = messg;
             this.err = false;
             this.snackbar = true;
-            this.photo=null;
+            this.photo = null;
             this.initialize()
         },
         editItem(item) {
@@ -301,17 +304,50 @@ export default {
                 if (this.editedItem.lib_sexe && this.editedItem.lib_sexe.hasOwnProperty('libelle')) {
                     updatedObject.sexe = this.editedItem.lib_sexe.code;
                 }
-                if(this.photo){
+                if (this.photo) {
                     updatedObject.image = this.photo;
-                } 
+                }
 
-               // console.log('this.editedItem 1 : ', updatedObject);
-               this.updateData(updatedObject);
+                // console.log('this.editedItem 1 : ', updatedObject);
+                this.updateData(updatedObject);
             }
 
             this.close()
         },
-            async deleteData(id) {
+         async createData(json) {
+              const formData = new FormData();
+            // Ajoutez les champs à formData
+            formData.append('nom', json.nom);
+            formData.append('prenoms', json.prenoms);
+            formData.append('email', json.email);
+            formData.append('telephone', json.telephone);
+            formData.append('sexe', json.sexe);
+            // Ajoutez ici la logique pour le fichier (s'il existe)
+            if (json.image) {
+                formData.append('image', json.image[0]);
+            }
+            formData.append('isActive', json.statut);
+            formData.append('profil_id', json.profil_id);
+            formData.append('password', this.pwd);
+             formData.append('password_confirmation', this.pwd);
+
+            if (this.token) {
+                const response = await useNuxtApp().$axios.post(`${this.url}/register`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+
+                if (response.status == 200) {
+                    this.afficherMsg("Utilisateur créé avec succès")
+                };
+
+            } else {
+                this.afficherCnx();
+            }
+        },
+        async deleteData(id) {
             if (this.token) {
                 const response = await useNuxtApp().$axios.delete(`${this.url}/users/${id}`, {
                     headers: {
@@ -328,18 +364,21 @@ export default {
             }
         },
         getItem(fromPopup) {
-
-            if (
-                fromPopup.profil &&
-                fromPopup.profil.hasOwnProperty('libelle')
-            ) {
-                let updatedItem = {
-                    ...fromPopup,
-                    profil: fromPopup.profil.libelle
-                }
-                this.employes.push(updatedItem)
-
+            let savedObject = { ...fromPopup };
+            if (fromPopup.profil_id && fromPopup.profil_id.hasOwnProperty('libelle')) {
+                savedObject.profil_id = fromPopup.profil_id.id;
             }
+
+            if (fromPopup.statut && fromPopup.statut.hasOwnProperty('libelle')) {
+                savedObject.statut = fromPopup.statut.id;
+            }
+
+            if (fromPopup.sexe && fromPopup.sexe.hasOwnProperty('libelle')) {
+                savedObject.sexe = fromPopup.sexe.code;
+            }
+          
+           // console.log("Employe:fromPopup ", savedObject)
+             this.createData(savedObject);
         },
         async updateData(json) {
             if (this.token) {
@@ -359,7 +398,7 @@ export default {
                 }
                 formData.append('isActive', json.statut);
                 formData.append('profil_id', json.profil_id);
-     
+
 
                 const response = await useNuxtApp().$axios.post(`${this.url}/users/${json.id}`, formData, {
                     headers: {
@@ -368,7 +407,7 @@ export default {
                     }
                 });
                 if (response.status == 200) {
-                   
+
                     this.afficherMsg("Mise à jour effectué avec succès")
                 };
 

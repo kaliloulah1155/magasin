@@ -73,7 +73,7 @@ export default {
       if (this.$refs.form.validate()) {
 
         this.editedItem.libelle = this.libelle
-        this.editedItem.parent = this.parent
+        this.editedItem.parent = this.parent    
         this.editedItem.code = this.code
         this.editedItem.position = this.position
         this.editedItem.statut = this.statut

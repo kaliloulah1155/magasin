@@ -13,8 +13,7 @@
             <v-col>
                 <v-list>
                
-                    <v-list-item prepend-avatar="https://cdn.pixabay.com/photo/2016/08/31/11/54/icon-1633249_1280.png"
-                       :title="`${nom} ${prenoms}`" subtitle="caissier(e)">
+                    <v-list-item :prepend-avatar="photo" :title="`${nom} ${prenoms}`" :subtitle="profil">
                     </v-list-item>
                 </v-list>
             </v-col>
@@ -56,6 +55,8 @@ const { signOut,data } = useAuth();
 
 const nom =ref(data.value.nom)
 const prenoms = ref(data.value.prenoms)
+const profil =ref(data.value.profile_name)
+const photo = ref(data.value.image)
 
  
 

@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     apiSecret: "", // can be overridden by NUXT_API_SECRET environment variable
     public: {
       apiBase: "https://pos789456123.kewoustore.com/api/v1", // can be overridden by NUXT_PUBLIC_API_BASE environment variable
+      pwdForUser:"password2024"
     },
   },
   auth: {

@@ -6,6 +6,7 @@ export const useEmployeStore = defineStore("employe", {
   state: () => ({
  
     data: [],
+    profil:[]
   }),
   actions: {
  
