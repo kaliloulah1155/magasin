@@ -92,7 +92,7 @@ export default {
        this.editedItem.telephone=this.telephone;
        this.editedItem.profil_id=this.profil;
        this.editedItem.sexe=this.sexe;
-       //this.editedItem.statut= this.editedItem.statut;
+       //this.editedItem.statut= this.editedItem.statut;   
       
         this.$emit('saveItem', this.editedItem);
       }
