@@ -312,8 +312,7 @@ export default {
                 if (this.photo) {
                     updatedObject.image = this.photo;
                 }
-
-                //console.log('this.editedItem 1 : ', updatedObject);
+ 
                 this.updateData(updatedObject);
             }
 
@@ -381,7 +380,7 @@ export default {
             if (fromPopup.sexe && fromPopup.sexe.hasOwnProperty('libelle')) {
                 savedObject.sexe = fromPopup.sexe.code;
             }
-            console.log(" savedObject  ", savedObject)
+           
             this.createData(savedObject);
         },
         async updateData(json) {

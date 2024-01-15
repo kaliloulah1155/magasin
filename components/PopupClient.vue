@@ -23,7 +23,7 @@
             <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
               variant="outlined"></v-file-input>
             <v-select label="Profil" class="mt-2" color="primary" variant="outlined" v-model="profil" :items="profils"
-              item-title="libelle" item-value="id" return-object></v-select>
+              item-title="libelle" item-value="id" return-object  :rules="[v => !!v || 'Le profil est requis']"></v-select>
             <v-select label="Statut" class="mt-2" color="primary" variant="outlined" v-model="editedItem.statut"
               :items="item_statut" item-title="libelle" item-value="id" return-object></v-select>
           </v-form>
@@ -37,6 +37,14 @@
       </v-card>
     </template>
   </v-dialog>
+   <v-snackbar v-model="snackbar" multi-line location="top" :color="err ? 'red-lighten-3' : 'green-lighten-3'">
+          {{ msg }}
+          <template v-slot:actions>
+              <v-btn color="white" variant="text" @click="snackbar = false">
+                  Fermer
+              </v-btn>
+          </template>
+      </v-snackbar>
 </template>
 
 <script>
@@ -48,7 +56,9 @@ export default {
     sexe_statut: Array,
   },
   data: () => ({
-
+     snackbar: false,
+    msg: '',
+    err: false,
     photo: null,
     nom: '',
     prenoms: '',
@@ -60,7 +70,7 @@ export default {
       id: 0,
       nom: "",
       prenoms: "",
-       adresse: '',
+      adresse: '',
       email: "",
       sexe: "",
       lib_sexe: "M",
@@ -83,26 +93,29 @@ export default {
     // Select parent
     profil: { libelle: 'Veuillez selectionner', id: null },
   }),
-   created() {
-    this.profil= this.profils[0];
-   
-  },
+ 
   methods: {
     async submit() {
       this.loading = true;
       if (this.$refs.form.validate()) {
 
-        this.editedItem.image = this.photo ? this.photo : null;
-        this.editedItem.nom = this.nom;
-        this.editedItem.prenoms = this.prenoms;
-        this.editedItem.adresse = this.adresse;
-        this.editedItem.email = this.email;
-        this.editedItem.telephone = this.telephone;
-        this.editedItem.profil_id = this.profil;
-        this.editedItem.sexe = this.sexe;
-        //this.editedItem.statut= this.editedItem.statut;   
-
-        this.$emit('saveItem', this.editedItem);
+       if(this.profil.id !==null){
+         this.editedItem.image = this.photo ? this.photo : null;
+          this.editedItem.nom = this.nom;
+          this.editedItem.prenoms = this.prenoms;
+          this.editedItem.adresse = this.adresse;
+          this.editedItem.email = this.email;
+          this.editedItem.telephone = this.telephone;
+          this.editedItem.profil_id = this.profil;
+          this.editedItem.sexe = this.sexe;
+     
+          this.$emit('saveItem', this.editedItem);
+       }else{
+        this.err = true;
+        this.snackbar=true;
+        this.msg="OOPS !! Veuillez selectionner le profil"
+       }
+       
       }
       this.loading = false;
     },
