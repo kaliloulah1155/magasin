@@ -8,18 +8,24 @@
       <v-card title="Ajouter un nouveau fournisseur">
         <v-card-text>
           <v-form class="px-3" ref="form">
-            <v-text-field label="Fournisseur" color="primary" clearable variant="outlined" v-model="editedItem.fullname"
+            <v-text-field label="Nom" color="primary" clearable variant="outlined" v-model="nom"
               :rules="inputRules"></v-text-field>
-            <v-text-field label="E-mail" class="mt-2" color="primary" clearable variant="outlined"
-              v-model="editedItem.email" :rules="emailRules"></v-text-field>
-            <v-text-field label="Adresse" class="mt-2" color="primary" clearable variant="outlined"
-              v-model="editedItem.adresse" :rules="inputRules"></v-text-field>
-            <v-text-field label="Téléphone" class="mt-2" color="primary" clearable variant="outlined"
-              v-model="editedItem.telephone" :rules="telephoneRules"></v-text-field>
-            <v-text-field label="Magasin" class="mt-2" color="primary" clearable variant="outlined"
-              v-model="editedItem.shopname" :rules="inputRules"></v-text-field>
-
-
+            <v-text-field label="Prénoms" color="primary" clearable variant="outlined" v-model="prenoms"
+              :rules="inputRules"></v-text-field>
+            <v-text-field label="Adresse" color="primary" clearable variant="outlined" v-model="adresse"
+              :rules="inputRules"></v-text-field>
+            <v-text-field label="E-mail" class="mt-2" color="primary" clearable variant="outlined" v-model="email"
+              :rules="emailRules"></v-text-field>
+            <v-select label="Sexe" class="mt-2" color="primary" variant="outlined" v-model="sexe" :items="sexe_statut"
+              item-title="libelle" item-value="code" return-object></v-select>
+            <v-text-field label="Téléphone" class="mt-2" color="primary" clearable variant="outlined" v-model="telephone"
+              :rules="telephoneRules"></v-text-field>
+            <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
+              variant="outlined"></v-file-input>
+            <v-select label="Profil" class="mt-2" color="primary" variant="outlined" v-model="profil" :items="profils"
+              item-title="libelle" item-value="id" return-object :rules="[v => !!v || 'Le profil est requis']"></v-select>
+            <v-select label="Statut" class="mt-2" color="primary" variant="outlined" v-model="editedItem.statut"
+              :items="item_statut" item-title="libelle" item-value="id" return-object></v-select>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -31,10 +37,10 @@
       </v-card>
     </template>
   </v-dialog>
-  <v-snackbar v-model="snackbar">
-    {{ text }}
+  <v-snackbar v-model="snackbar" multi-line location="top" :color="err ? 'red-lighten-3' : 'green-lighten-3'">
+    {{ msg }}
     <template v-slot:actions>
-      <v-btn color="pink" variant="text" @click="snackbar = false">
+      <v-btn color="white" variant="text" @click="snackbar = false">
         Fermer
       </v-btn>
     </template>
@@ -43,22 +49,40 @@
 
 <script>
 export default {
-    emits: ['saveItem'],
+  emits: ['saveItem'],
+  props: {
+    profils: Array,
+    item_statut: Array,
+    sexe_statut: Array,
+  },
   data: () => ({
     snackbar: false,
-    text: "message du snackbar",
+    msg: '',
+    err: false,
     photo: null,
+    nom: '',
+    prenoms: '',
+    adresse: '',
+    sexe: { libelle: 'Homme', code: "M" },
+    telephone: "",
+    email: "",
     editedItem: {
       id: 0,
-      fullname: "",
+      nom: "",
+      prenoms: "",
+      adresse: '',
       email: "",
-      adresse: "",
+      sexe: "",
+      lib_sexe: "M",
       telephone: "",
-      shopname: "",
+      image: null,
+      profil_id: 0,
+      profil: "",
+      statut: 1,
     },
     loading: false,
     inputRules: [
-      v => (v && v.length >= 2) || "La longueur minimale est de 2 caractères"
+      (v) => (v && v.length >= 3) || "La longueur minimale est de 3 caractères",
     ],
     telephoneRules: [
       v => (v && /^\d+$/.test(v) && v.length === 10) || 'Entrez un nombre valide de 10 chiffres',
@@ -67,14 +91,31 @@ export default {
       v => (v && /.+@.+\..+/.test(v)) || 'Entrer une adresse e-mail valide',
     ],
     // Select parent
-
+    profil: { libelle: 'Veuillez selectionner', id: null },
   }),
+
   methods: {
     async submit() {
       this.loading = true;
       if (this.$refs.form.validate()) {
-        this.snackbar = true;
-        this.$emit('saveItem', this.editedItem);
+
+        if (this.profil.id !== null) {
+          this.editedItem.image = this.photo ? this.photo : null;
+          this.editedItem.nom = this.nom;
+          this.editedItem.prenoms = this.prenoms;
+          this.editedItem.adresse = this.adresse;
+          this.editedItem.email = this.email;
+          this.editedItem.telephone = this.telephone;
+          this.editedItem.profil_id = this.profil;
+          this.editedItem.sexe = this.sexe;
+
+          this.$emit('saveItem', this.editedItem);
+        } else {
+          this.err = true;
+          this.snackbar = true;
+          this.msg = "OOPS !! Veuillez selectionner le profil"
+        }
+
       }
       this.loading = false;
     },
