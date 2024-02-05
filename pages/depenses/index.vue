@@ -199,7 +199,22 @@ export default {
             // Set the dialog to true
             this.dialog = true;
         },
-      
+        async deleteData(id) {
+            if (this.token) {
+                const response = await useNuxtApp().$axios.delete(`${this.url}/depenses/${id}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+                if (response.status == 201) {
+                    this.afficherMsg("Suppression effectuée avec succès")
+                };
+
+            } else {
+                this.afficherCnx();
+            }
+        },
         deleteItem(item) {
             this.editedItem = this.depenses.indexOf(item)
             this.editedIndex = Object.assign({}, item)
