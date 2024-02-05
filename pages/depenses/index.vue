@@ -31,15 +31,15 @@
                                 </v-card-title>
                                 <v-card-text>
                                     <v-form class="px-3" ref="form">
-                                        <v-textarea label="Détail" class="mt-2" color="primary" clearable
-                                            variant="outlined"  rows="1" auto-grow v-model="editedItem.detail"
+                                        <v-textarea label="Détail" class="mt-2" color="primary" clearable variant="outlined"
+                                            rows="1" auto-grow v-model="editedItem.description"
                                             :rules="detailRules"></v-textarea>
-                                         <v-text-field label="Montant" class="mt-2" color="primary" clearable
-                                                variant="outlined" v-model="editedItem.montant"
-                                                :rules="montantRules"></v-text-field>
-                                                <v-text-field label="Date de dépense" class="mt-2" color="primary" clearable
-                                                variant="outlined" v-model="editedItem.created_at"
-                                                :rules="[isDateValid]"></v-text-field>
+                                        <v-text-field label="Montant" class="mt-2" color="primary" clearable
+                                            variant="outlined" v-model="editedItem.montant"
+                                            :rules="montantRules"></v-text-field>
+                                        <v-text-field label="Date de dépense" class="mt-2" color="primary" clearable
+                                            variant="outlined" v-model="editedItem.date_depense"
+                                            :rules="[isDateValid]"></v-text-field>
                                     </v-form>
                                 </v-card-text>
                                 <v-card-actions>
@@ -84,26 +84,48 @@
             </v-card>
         </v-container>
     </div>
+    <v-snackbar v-model="snackbar" multi-line location="top" :color="err ? 'red-lighten-3' : 'green-lighten-3'">
+        {{ msg }}
+        <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbar = false">
+                Fermer
+            </v-btn>
+        </template>
+    </v-snackbar>
 </template>
 <script>
+import { useDepenseStore } from '../../stores/depense'
+//import useRemoveFCFAAndSpaces from '~/composables/removeFCFAAndSpaces';
+
 export default {
     setup() {
         definePageMeta({
             layout: 'master'
         })
-        return {}
+        //  const { removeFCFAAndSpaces } = useRemoveFCFAAndSpaces();
+
+
+        const authStore = useAuthStore()
+        const depenseStore = useDepenseStore()
+        const { token } = useAuth()
+
+        return { authStore, depenseStore, token, }
     },
     data: () => ({
         dialog: false,
         dialogDelete: false,
+        snackbar: false,
+        msg: '',
+        err: false,
         search: "",
+        url: useRuntimeConfig().public.apiBase,
         headers: [
-            { title: "Détails", align: "start", key: 'detail' },
+            { title: "Détails", align: "start", key: 'description' },
             { title: "Montant", key: "montant" },
-            { title: "Date de dépense", key: "created_at" },
+            { title: "Date de dépense", key: "date_depense" },
             { title: "Actions", key: "actions", sortable: false }
         ],
-         detailRules: [
+        detailRules: [
             v => (v && v.length >= 3) || "La longueur minimale est de 3 caractères"
         ],
         montantRules: [
@@ -113,15 +135,15 @@ export default {
         editedIndex: -1,
         editedItem: {
             id: 0,
-            detail: "",
+            description: "",
             montant: "",
-            created_at: "",
+            date_depense: "",
         },
         defaultItem: {
             id: 0,
-            detail: "",
+            description: "",
             montant: "",
-            created_at: "",
+            date_depense: "",
         },
     }),
 
@@ -137,41 +159,57 @@ export default {
         this.initialize()
     },
     methods: {
-        initialize() {
-            this.depenses = [
-                {
-                    id: 1,
-                    detail: "Achat de carburant ",
-                    montant: 5000,
-                    created_at: "22/12/2023",
-                },
-                {
-                    id: 2,
-                    detail: "Achat de produit hygienique",
-                    montant: 7000,
-                    created_at: "23/12/2023",
-                },
-                {
-                    id: 3,
-                    detail: "Maconnerie",
-                    montant: 5200,
-                    created_at: "20/11/2023",
-                },
+        async initialize() {
+            if (this.token) {
+                const response = await useNuxtApp().$axios.get(`${this.url}/depenses`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
 
-            ]
+                if (response.data.data.length > 0) {
+                    this.depenses = response.data.data;
+                    this.depenseStore.data = response.data.data;
+                }
+
+            } else {
+                this.afficherCnx();
+            }
+        },
+        afficherCnx() {
+            this.msg = "Connectez - vous! ou réessayez la connexion";
+            this.err = true;
+            this.snackbar = true;
+        },
+        afficherMsg(messg) {
+            this.msg = messg;
+            this.err = false;
+            this.snackbar = true;
+
+            this.initialize()
         },
         editItem(item) {
+         
             this.editedIndex = this.depenses.indexOf(item)
-            this.editedItem = Object.assign({}, item)
-            this.dialog = true
+            // Create a copy of the item
+            this.editedItem = { ...item };
+            // Remove spaces and "F CFA" from the "montant" key
+            this.editedItem.montant = removeFCFAAndSpaces(this.editedItem.montant)
+            // Set the dialog to true
+            this.dialog = true;
         },
+      
         deleteItem(item) {
             this.editedItem = this.depenses.indexOf(item)
             this.editedIndex = Object.assign({}, item)
             this.dialogDelete = true
         },
         deleteItemConfirm() {
-            this.depenses.splice(this.editedIndex, 1)
+            this.$nextTick(() => {
+                this.deleteData(this.editedIndex.id)
+
+            })
             this.closeDelete()
         },
         close() {
@@ -183,13 +221,29 @@ export default {
         },
         save() {
             if (this.editedIndex > -1) {
-                    Object.assign(this.depenses[this.editedIndex], this.editedItem)
-                    //console.log('The key "state" does not exist in this.editedItem.statut.');
+                Object.assign(this.depenses[this.editedIndex], this.editedItem)
+                //console.log('The key "state" does not exist in this.editedItem.statut.');
             }
             this.close()
         },
         getItem(fromPopup) {
-           this.depenses.push(fromPopup)
+            this.depenses.push(fromPopup)
+        },
+        async updateData(json) {
+            if (this.token) {
+                const response = await useNuxtApp().$axios.post(`${this.url}/depenses/${json.id}`, json, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+                if (response.status == 200) {
+                    this.afficherMsg("Mise à jour effectué avec succès")
+                };
+
+            } else {
+                this.afficherCnx();
+            }
         },
         closeDelete() {
             this.dialogDelete = false
@@ -198,8 +252,16 @@ export default {
                 this.editedIndex = -1
             })
         },
+        save() {
+            if (this.editedIndex > -1) {
+                let updatedObject = { ...this.editedItem }; // Créez une copie de l'objet initial
+                this.updateData(updatedObject);
+            }
 
-          isLeapYear(year) {
+            this.close()
+        },
+
+        isLeapYear(year) {
             return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
         },
         isValidDate(day, month, year) {
@@ -219,7 +281,7 @@ export default {
 
             return true;
         },
- 
+
     },
     computed: {
         depenseLength() {
@@ -231,4 +293,4 @@ export default {
     }
 }
 </script>
-<style scoped></style>
+<style scoped></style>~/composables/rmFCFAAndSpaces

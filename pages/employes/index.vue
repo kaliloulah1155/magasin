@@ -426,7 +426,7 @@ export default {
     computed: {
         employeLength() {
             return this.employes.length;
-        },
+        },    
         formTitle() {
             return this.editedIndex === -1 ? "Nouvel employé(e)" : "Modifier un(e) employé(e)"
         }

@@ -59,6 +59,7 @@ const profil =ref(data.value.profile_name)
 const photo = ref(data.value.image)
 
  
+   console.log("Mes donnees : ", data.value)
 
 const drawer = ref(null)
 const links = ref([

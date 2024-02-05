@@ -14,7 +14,7 @@
             <v-card flat>
                 <v-card-title class="d-flex align-center pe-2">
                     <v-icon icon="view_list"></v-icon>&nbsp;
-                    Liste des fournisseurs
+                    Liste des fournisseurs 
                     <v-spacer></v-spacer>
                     <v-text-field v-model="search" prepend-inner-icon="search" density="compact"
                         label="Rechercher un fournisseur" single-line flat hide-details variant="solo-filled"></v-text-field>
@@ -177,7 +177,6 @@ export default {
             { libelle: 'Homme', code: "M" },
             { libelle: 'Femme', code: "F" },
         ],
-
         editedItem: {
             id: 0,
             fullname: "",

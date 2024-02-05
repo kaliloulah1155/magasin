@@ -187,7 +187,7 @@ export default {
         async login() {
              const { signIn } = useAuth();
             try {
-               
+                   
                 await signIn(
                     { ...this.credentials },
                     { callbackUrl: '/dashboard' } // Where the user will be redirected after a successiful login
