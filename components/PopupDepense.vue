@@ -3,17 +3,17 @@
     <template v-slot:activator="{ props }">
       <v-btn v-bind="props" text="Ajouter" variant="flat" color="blue-lighten-4" size="small"></v-btn>
     </template>
-
+     
     <template v-slot:default="{ isActive }">
       <v-card title="Ajouter une dépense">
         <v-card-text>
           <v-form class="px-3" ref="form">
             <v-textarea label="Détail" class="mt-2" color="primary" clearable variant="outlined" rows="1" auto-grow
-              v-model="editedItem.detail" :rules="detailRules"></v-textarea>
+              v-model="editedItem.description" :rules="detailRules"></v-textarea>
             <v-text-field label="Montant" class="mt-2" color="primary" clearable variant="outlined"
               v-model="editedItem.montant" :rules="montantRules"></v-text-field>
             <v-text-field label="Date de dépense" class="mt-2" color="primary" clearable variant="outlined"
-              v-model="editedItem.created_at" :rules="[isDateValid]"></v-text-field>
+              v-model="editedItem.date_depense" :rules="[isDateValid]"></v-text-field>
 
           </v-form>
         </v-card-text>
@@ -26,27 +26,19 @@
       </v-card>
     </template>
   </v-dialog>
-  <v-snackbar v-model="snackbar">
-    {{ text }}
-    <template v-slot:actions>
-      <v-btn color="pink" variant="text" @click="snackbar = false">
-        Fermer
-      </v-btn>
-    </template>
-  </v-snackbar>
+ 
 </template>
 
 <script>
 export default {
     emits: ['saveItem'],
   data: () => ({
-    snackbar: false,
-    text: "message du snackbar",
+  
     editedItem: {
       id: 0,
-      detail: "",
+      description: "",
       montant: "",
-      created_at: "",
+      date_depense: "",
     },
     loading: false,
     detailRules: [
@@ -56,7 +48,7 @@ export default {
       v => (v && /^\d+$/.test(v)) || 'Entrez un montant',
     ],
     // Select parent
-
+   
   }),
   methods: {
     async submit() {

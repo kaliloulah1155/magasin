@@ -95,15 +95,14 @@
 </template>
 <script>
 import { useDepenseStore } from '../../stores/depense'
-//import useRemoveFCFAAndSpaces from '~/composables/removeFCFAAndSpaces';
+
 
 export default {
     setup() {
         definePageMeta({
             layout: 'master'
         })
-        //  const { removeFCFAAndSpaces } = useRemoveFCFAAndSpaces();
-
+        
 
         const authStore = useAuthStore()
         const depenseStore = useDepenseStore()
@@ -234,15 +233,28 @@ export default {
                 this.editedIndex = -1
             })
         },
-        save() {
-            if (this.editedIndex > -1) {
-                Object.assign(this.depenses[this.editedIndex], this.editedItem)
-                //console.log('The key "state" does not exist in this.editedItem.statut.');
+            async createData(json) {
+            if (this.token) {
+                const response = await useNuxtApp().$axios.post(`${this.url}/depenses`, json, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+
+                if (response.status == 200) {
+                    this.afficherMsg("Dépense créé avec succès")
+                };
+
+            } else {
+                this.afficherCnx();
             }
-            this.close()
         },
         getItem(fromPopup) {
-            this.depenses.push(fromPopup)
+            let updatedItem = {
+                ...fromPopup
+            }
+              this.createData(updatedItem);
         },
         async updateData(json) {
             if (this.token) {
