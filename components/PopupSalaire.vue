@@ -8,8 +8,8 @@
       <v-card title="Ajouter un nouveau salaire">
         <v-card-text>
           <v-form class="px-3" ref="form">
-            <v-select label="Nom complet" class="mt-2" color="primary" variant="outlined" v-model="editedItem.user_id"
-              :items="salaries" item-title="fullname" item-value="id" return-object></v-select>
+              <v-select label="Nom complet" class="mt-2" color="primary" variant="outlined" v-model="employe" :items="salaries"
+                item-title="fullname" item-value="id" persistent-hint return-object></v-select>
             <v-text-field label="Montant" class="mt-2" color="primary" clearable variant="outlined"
               v-model="editedItem.montant" :rules="montantRules"></v-text-field>
             <v-text-field label="Date de paiement" class="mt-2" color="primary" clearable variant="outlined"
@@ -54,6 +54,7 @@ export default {
       this.loading = true;
       if (this.$refs.form.validate()) {
         this.snackbar = true;
+        this.editedItem.user_id = this.employe;
         this.$emit('saveItem', this.editedItem);
       }
       this.loading = false;

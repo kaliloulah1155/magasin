@@ -33,7 +33,7 @@
                                     <v-form class="px-3" ref="form">
 
                                         <v-select label="Nom complet" class="mt-2" color="primary" variant="outlined"
-                                            v-model="editedItem.user_id" :items="salaries" item-title="fullname"
+                                            v-model="editedItem.fullname" :items="salaries" item-title="fullname"
                                             item-value="id" return-object></v-select>
                                         <v-text-field label="Montant" class="mt-2" color="primary" clearable
                                             variant="outlined" v-model="editedItem.montant"
@@ -129,13 +129,14 @@
              v => (v && /^\d+$/.test(v)) || 'Entrez un montant',
          ],
          salaries: [
-             { libelle: 'Veuillez selectionner', id: null },
+             { fullname: 'Veuillez selectionner', id: null },
          ],
          salaires: [],
          editedIndex: -1,
          editedItem: {
              id: 0,
              user_id: "",
+             fullname:"",
              montant: "",
              date_salaire: "",
          },
@@ -153,11 +154,22 @@
          },
          dialogDelete(val) {
              val || this.closeDelete()
-         }
+         } ,
+         'salaireStore.data'(newData, oldData) {
+             if (newData.length > 0) {
+                 const extractedData = newData.map(({ id, fullname }) => ({ id, fullname }));
+
+                 // Filtrer les éléments déjà présents dans le tableau parents
+                 const filteredData = extractedData.filter(({ id }) => !this.salaries.some(parent => parent.id === id));
+
+                 // Ajouter les éléments filtrés au tableau parents
+                 this.salaries = [...this.salaries, ...filteredData];
+             }
+         } 
      },
      created() {
          this.initialize()
-         this.employes_list()
+        this.employes_list()
      },
      methods: {
          async initialize() {
@@ -171,7 +183,7 @@
 
                  if (response.data.data.length > 0) {
                      this.salaires = response.data.data;
-                     this.salaireStore.data = response.data.data;
+                   //  this.salaireStore.data = response.data.data;
                  }
 
              } else {
@@ -189,7 +201,7 @@
 
                  if (response.data.data.length > 0) {
                      this.salaries = response.data.data;
-
+                     this.salaireStore.data = response.data.data;
                  }
              } else {
                  this.afficherCnx();
@@ -273,6 +285,7 @@
              let updatedItem = {
                  ...fromPopup
              }
+          
                  if (fromPopup.user_id && fromPopup.user_id.hasOwnProperty('fullname')) {
                  updatedItem.user_id = fromPopup.user_id.id;
              }
@@ -305,9 +318,11 @@
          save() {
              if (this.editedIndex > -1) {
                  let updatedObject = { ...this.editedItem }; // Créez une copie de l'objet initial
-                  if (this.editedItem.user_id && this.editedItem.user_id.hasOwnProperty('nom')) {
-                     updatedObject.user_id = this.editedItem.user_id.id;
+                 
+                  if (this.editedItem.fullname && this.editedItem.fullname.hasOwnProperty('fullname')) {
+                     updatedObject.user_id = this.editedItem.fullname.id;
                  }
+               
                  this.updateData(updatedObject);
              }
 
