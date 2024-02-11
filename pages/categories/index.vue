@@ -37,7 +37,7 @@
                                             v-model="editedItem.libelle" :rules="inputRules"></v-text-field>
                                         <v-select label="Parent" class="mt-2" color="primary" variant="outlined"
                                             v-model="editedItem.parent" :items="parents" item-title="libelle"
-                                            item-value="id"></v-select>
+                                            item-value="id"></v-select>    
 
                                         <v-text-field label="Position" class="mt-2" type="number" color="primary" clearable
                                             variant="outlined" v-model="editedItem.position"></v-text-field>

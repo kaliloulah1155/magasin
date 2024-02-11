@@ -6,7 +6,7 @@
                 <h1 class="text-subtitle-1 text-grey">Salaires</h1>
             </template>
             <template v-slot:actions>
-                <popup-salaire @saveItem="getItem" />
+                <popup-salaire @saveItem="getItem"  :salaries="salaries" />
             </template>
         </v-banner>
         <v-container class="my-5">
@@ -33,13 +33,13 @@
                                     <v-form class="px-3" ref="form">
 
                                         <v-select label="Nom complet" class="mt-2" color="primary" variant="outlined"
-                                            v-model="editedItem.fullname" :items="salaries" item-title="fullname"
+                                            v-model="editedItem.user_id" :items="salaries" item-title="fullname"
                                             item-value="id" return-object></v-select>
                                         <v-text-field label="Montant" class="mt-2" color="primary" clearable
                                             variant="outlined" v-model="editedItem.montant"
                                             :rules="montantRules"></v-text-field>
                                         <v-text-field label="Date de paiement" class="mt-2" color="primary" clearable
-                                            variant="outlined" v-model="editedItem.created_at"
+                                            variant="outlined" v-model="editedItem.date_salaire"
                                             :rules="[isDateValid]"></v-text-field>
 
                                     </v-form>
@@ -88,180 +88,262 @@
             </v-card>
         </v-container>
     </div>
+     <v-snackbar v-model="snackbar" multi-line location="top" :color="err ? 'red-lighten-3' : 'green-lighten-3'">
+            {{ msg }}
+            <template v-slot:actions>
+                <v-btn color="white" variant="text" @click="snackbar = false">
+                    Fermer
+                </v-btn>
+            </template>
+        </v-snackbar>
 </template>
-<script>
-export default {
-    setup() {
-        definePageMeta({
-            layout: 'master'
-        })
-        return {}
-    },
-    data: () => ({
-        dialog: false,
-        dialogDelete: false,
-        search: "",
-        headers: [
-            { title: "Nom complet", align: "start", key: 'fullname' },
-            { title: "Montant", key: "montant" },
-            { title: "Date de paiement", key: "created_at" },
-            { title: "Actions", key: "actions", sortable: false }
-        ],
-        montantRules: [
-            v => (v && /^\d+$/.test(v)) || 'Entrez un montant',
-        ],
-        salaires: [],
-        salaries: [
-            { fullname: "KONATE Ibrahima", id: 1 },
-            { fullname: "KONE Aziz", id: 2 },
+ <script>
+ import { useSalaireStore } from '../../stores/salaire'
+ export default {
+     setup() {
+         definePageMeta({
+             layout: 'master'
+         })
+         const authStore = useAuthStore()
+         const salaireStore = useSalaireStore()
+         const { token } = useAuth()
 
-        ],
-        editedIndex: -1,
-        editedItem: {
-            id: 0,
-            fullname: "",
-            montant: "",
-            created_at: "",
-        },
-        defaultItem: {
-            id: 0,
-            fullname: "",
-            montant: "",
-            created_at: "",
-        },
-    }),
+         return { authStore, salaireStore, token, }
+     },
+     data: () => ({
+         dialog: false,
+         dialogDelete: false,
+         snackbar: false,
+         msg: '',
+         err: false,
+         search: "",
+         url: useRuntimeConfig().public.apiBase,
+         headers: [
+             { title: "Nom complet", align: "start", key: 'fullname' },
+             { title: "Montant", key: "montant" },
+             { title: "Date de paiement", key: "date_salaire" },
+             { title: "Actions", key: "actions", sortable: false }
+         ],
+        
+         montantRules: [
+             v => (v && /^\d+$/.test(v)) || 'Entrez un montant',
+         ],
+         salaries: [
+             { libelle: 'Veuillez selectionner', id: null },
+         ],
+         salaires: [],
+         editedIndex: -1,
+         editedItem: {
+             id: 0,
+             user_id: "",
+             montant: "",
+             date_salaire: "",
+         },
+         defaultItem: {
+             id: 0,
+             user_id: "",
+             montant: "",
+             date_salaire: "",
+         },
+     }),
 
-    watch: {
-        dialog(val) {
-            val || this.close()
-        },
-        dialogDelete(val) {
-            val || this.closeDelete()
-        }
-    },
-    created() {
-        this.initialize()
-    },
-    methods: {
-        initialize() {
-            this.salaires = [
-                {
-                    id: 1,
-                    fullname: "KONATE Ibrahima",
-                    montant: 5000,
-                    created_at: "22/12/2023",
-                },
-                {
-                    id: 2,
-                    fullname: "SYLLA Rokia",
-                    montant: 7000,
-                    created_at: "23/12/2023",
-                },
-                {
-                    id: 3,
-                    fullname: "SA SODECI",
-                    montant: 5200,
-                    created_at: "20/11/2023",
-                },
+     watch: {
+         dialog(val) {
+             val || this.close()
+         },
+         dialogDelete(val) {
+             val || this.closeDelete()
+         }
+     },
+     created() {
+         this.initialize()
+         this.employes_list()
+     },
+     methods: {
+         async initialize() {
+             if (this.token) {
+                 const response = await useNuxtApp().$axios.get(`${this.url}/salaires`, {
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `${this.token}`,
+                     }
+                 });
 
-            ]
-        },
-        editItem(item) {
-            this.editedIndex = this.salaires.indexOf(item)
-            this.editedItem = Object.assign({}, item)
-            this.dialog = true
-        },
-        deleteItem(item) {
-            this.editedItem = this.salaires.indexOf(item)
-            this.editedIndex = Object.assign({}, item)
-            this.dialogDelete = true
-        },
-        deleteItemConfirm() {
-            this.salaires.splice(this.editedIndex, 1)
-            this.closeDelete()
-        },
-        close() {
-            this.dialog = false
-            this.$nextTick(() => {
-                this.editedIndex = Object.assign({}, this.defaultItem)
-                this.editedIndex = -1
-            })
-        },
-        save() {
-            if (this.editedIndex > -1) {
+                 if (response.data.data.length > 0) {
+                     this.salaires = response.data.data;
+                     this.salaireStore.data = response.data.data;
+                 }
 
-                 if (
-                    this.editedItem.fullname &&
-                    this.editedItem.fullname.hasOwnProperty('fullname')
-                ) {
-                    let updatedObject = {
-                        ...this.editedItem,
-                        fullname: this.editedItem.fullname.fullname,
-                    }
-                    
-                    Object.assign(this.salaires[this.editedIndex], updatedObject)
-                    // console.log('The key "state" exists in this.editedItem.statut.');
-                } else {
-                    
-                    Object.assign(this.salaires[this.editedIndex], this.editedItem)
-                    //console.log('The key "state" does not exist in this.editedItem.statut.');
-                }
+             } else {
+                 this.afficherCnx();
+             }
+         },
+         async employes_list() {
+             if (this.token) {
+                 const response = await useNuxtApp().$axios.get(`${this.url}/employes`, {
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `${this.token}`,
+                     }
+                 });
 
-                
+                 if (response.data.data.length > 0) {
+                     this.salaries = response.data.data;
 
-            }
-            this.close()
-        },
-        getItem(fromPopup) {
-              if (
-                fromPopup.fullname &&
-                fromPopup.fullname.hasOwnProperty('fullname') 
-            ) {
-                let updatedItem = {
-                    ...fromPopup,
-                    fullname: fromPopup.fullname.fullname,
-                }
-                this.salaires.push(updatedItem)
-            }
-           
-        },
-        closeDelete() {
-            this.dialogDelete = false
-            this.$nextTick(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
-                this.editedIndex = -1
-            })
-        },
+                 }
+             } else {
+                 this.afficherCnx();
+             }
+         },
+         afficherCnx() {
+             this.msg = "Connectez - vous! ou réessayez la connexion";
+             this.err = true;
+             this.snackbar = true;
+         },
+         afficherMsg(messg) {
+             this.msg = messg;
+             this.err = false;
+             this.snackbar = true;
+             this.initialize()
+         },
+         editItem(item) {
 
-        isLeapYear(year) {
-            return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
-        },
-        isValidDate(day, month, year) {
-            const daysInMonth = [31, this.isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-            return month >= 1 && month <= 12 && day >= 1 && day <= daysInMonth[month - 1];
-        },
-        isDateValid(v) {
-            if (!v || !/^\d{2}\/\d{2}\/\d{4}$/.test(v)) {
-                return 'Entrez une date valide au format DD/MM/YYYY';
-            }
+             this.editedIndex = this.salaires.indexOf(item)
+             // Create a copy of the item
+             this.editedItem = { ...item };
+             // Remove spaces and "F CFA" from the "montant" key
+             this.editedItem.montant = removeFCFAAndSpaces(this.editedItem.montant)
+             // Set the dialog to true
+             this.dialog = true;
+         },
+         async deleteData(id) {
+             if (this.token) {
+                 const response = await useNuxtApp().$axios.delete(`${this.url}/salaires/${id}`, {
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `${this.token}`,
+                     }
+                 });
+                 if (response.status == 201) {
+                     this.afficherMsg("Suppression effectuée avec succès")
+                 };
 
-            const [day, month, year] = v.split('/').map(Number);
+             } else {
+                 this.afficherCnx();
+             }
+         },
+         deleteItem(item) {
+             this.editedItem = this.salaires.indexOf(item)
+             this.editedIndex = Object.assign({}, item)
+             this.dialogDelete = true
+         },
+         deleteItemConfirm() {
+             this.$nextTick(() => {
+                 this.deleteData(this.editedIndex.id)
 
-            if (!this.isValidDate(day, month, year)) {
-                return 'Entrez une date valide avec le nombre correct de jours et de mois.';
-            }
+             })
+             this.closeDelete()
+         },
+         close() {
+             this.dialog = false
+             this.$nextTick(() => {
+                 this.editedIndex = Object.assign({}, this.defaultItem)
+                 this.editedIndex = -1
+             })
+         },
+         async createData(json) {
+             if (this.token) {
+                 const response = await useNuxtApp().$axios.post(`${this.url}/salaires`, json, {
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `${this.token}`,
+                     }
+                 });
 
-            return true;
-        },
-    },
-    computed: {
-        salaireLength() {
-            return this.salaires.length;
-        },
-        formTitle() {
-            return this.editedIndex === -1 ? "Nouveau salaire" : "Modifier un salaire"
-        }
-    }
-}
-</script>
+                 if (response.status == 200) {
+                     this.afficherMsg("Paiement effectué avec succès")
+                 };
+
+             } else {
+                 this.afficherCnx();
+             }
+         },
+         getItem(fromPopup) {
+         
+             let updatedItem = {
+                 ...fromPopup
+             }
+                 if (fromPopup.user_id && fromPopup.user_id.hasOwnProperty('fullname')) {
+                 updatedItem.user_id = fromPopup.user_id.id;
+             }
+            
+           this.createData(updatedItem);
+         },
+         async updateData(json) {
+             if (this.token) {
+                 const response = await useNuxtApp().$axios.post(`${this.url}/salaires/${json.id}`, json, {
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `${this.token}`,
+                     }
+                 });
+                 if (response.status == 200) {
+                     this.afficherMsg("Mise à jour effectué avec succès")
+                 };
+
+             } else {
+                 this.afficherCnx();
+             }
+         },
+         closeDelete() {
+             this.dialogDelete = false
+             this.$nextTick(() => {
+                 this.editedItem = Object.assign({}, this.defaultItem)
+                 this.editedIndex = -1
+             })
+         },
+         save() {
+             if (this.editedIndex > -1) {
+                 let updatedObject = { ...this.editedItem }; // Créez une copie de l'objet initial
+                  if (this.editedItem.user_id && this.editedItem.user_id.hasOwnProperty('nom')) {
+                     updatedObject.user_id = this.editedItem.user_id.id;
+                 }
+                 this.updateData(updatedObject);
+             }
+
+             this.close()
+         },
+
+         isLeapYear(year) {
+             return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+         },
+         isValidDate(day, month, year) {
+             const daysInMonth = [31, this.isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+             return month >= 1 && month <= 12 && day >= 1 && day <= daysInMonth[month - 1];
+         },
+         isDateValid(v) {
+             if (!v || !/^\d{2}\/\d{2}\/\d{4}$/.test(v)) {
+                 return 'Entrez une date valide au format DD/MM/YYYY';
+             }
+
+             const [day, month, year] = v.split('/').map(Number);
+
+             if (!this.isValidDate(day, month, year)) {
+                 return 'Entrez une date valide avec le nombre correct de jours et de mois.';
+             }
+
+             return true;
+         },
+
+     },
+     computed: {
+         salaireLength() {
+             return this.salaires.length;
+         },
+         formTitle() {
+             return this.editedIndex === -1 ? "Nouveau paiement" : "Modifier un paiement"
+         }
+     }
+ }
+ </script>
 <style scoped></style>

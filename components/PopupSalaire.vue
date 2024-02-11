@@ -8,12 +8,12 @@
       <v-card title="Ajouter un nouveau salaire">
         <v-card-text>
           <v-form class="px-3" ref="form">
-            <v-select label="Nom complet" class="mt-2" color="primary" variant="outlined" v-model="editedItem.fullname"
+            <v-select label="Nom complet" class="mt-2" color="primary" variant="outlined" v-model="editedItem.user_id"
               :items="salaries" item-title="fullname" item-value="id" return-object></v-select>
             <v-text-field label="Montant" class="mt-2" color="primary" clearable variant="outlined"
               v-model="editedItem.montant" :rules="montantRules"></v-text-field>
             <v-text-field label="Date de paiement" class="mt-2" color="primary" clearable variant="outlined"
-              v-model="editedItem.created_at" :rules="[isDateValid]"></v-text-field>
+              v-model="editedItem.date_salaire" :rules="[isDateValid]"></v-text-field>
 
           </v-form>
         </v-card-text>
@@ -26,34 +26,23 @@
       </v-card>
     </template>
   </v-dialog>
-  <v-snackbar v-model="snackbar">
-    {{ text }}
-    <template v-slot:actions>
-      <v-btn color="pink" variant="text" @click="snackbar = false">
-        Fermer
-      </v-btn>
-    </template>
-  </v-snackbar>
 </template>
 
 <script>
 export default {
-    emits: ['saveItem'],
+  emits: ['saveItem'],
+  props: {
+    salaries: Array,
+  },
   data: () => ({
-    snackbar: false,
-    text: "message du snackbar",
     editedItem: {
       id: 0,
-      fullname: "",
+      user_id: "",
       montant: "",
-      created_at: "",
+      date_salaire: "",
     },
     loading: false,
-    salaries: [
-      { fullname: "KONATE Ibrahima", id: 1 },
-      { fullname: "KONE Aziz", id: 2 },
-
-    ],
+    employe: { fullname: 'Veuillez selectionner', id: null },
     montantRules: [
       v => (v && /^\d+$/.test(v)) || 'Entrez un montant',
     ],
