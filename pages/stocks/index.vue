@@ -27,9 +27,17 @@
                         </v-card>
                     </template>
 
-                    <template v-slot:item.statut="{ item }">
+                    <template v-slot:item.categories="{ item }">
+                        <template v-for="(cat, index) in item.categories">
+                                 {{ cat }}
+                                 <span v-if="index !== item.categories.length - 1">, </span>
+                    </template>
+                           
+                    </template>
+
+                    <template v-slot:item.stock="{ item }">
                         <v-chip :color="item.quantite > 0 ? 'green' : 'red'" label size="small">
-                            {{ item.statut }}
+                            {{ item.stock }}
                         </v-chip>
                     </template>
 
@@ -38,29 +46,45 @@
             </v-card>
         </v-container>
     </div>
+    <v-snackbar v-model="snackbar" multi-line location="top" :color="err ? 'red-lighten-3' : 'green-lighten-3'">
+                {{ msg }}
+                <template v-slot:actions>
+                    <v-btn color="white" variant="text" @click="snackbar = false">
+                        Fermer
+                    </v-btn>
+                </template>
+            </v-snackbar>
 </template>
 <script>
+import { useStockStore } from '../../stores/stock'
 export default {
     setup() {
         definePageMeta({
             layout: 'master'
         })
-        return {}
+          const authStore = useAuthStore()
+        const stockStore = useStockStore()
+        const { token } = useAuth()
+
+        return { authStore, stockStore, token, }
     },
     data: () => ({
         dialog: false,
         dialogDelete: false,
+         snackbar: false,
+        msg: '',
+        err: false,
         search: "",
-
+        url: useRuntimeConfig().public.apiBase,
         headers: [
             { title: "Libellé", align: "start", key: 'libelle' },
             { title: "Code", key: "code" },
             { title: "Prix d'achat", key: "buying_price" },
             { title: "Image", key: "image" },
             { title: "Fournisseurs", key: "fournisseur" },
-            { title: "Catégories", key: "categorie" },
+            { title: "Catégories", key: "categories" },
             { title: "Quantité", key: "quantite" },
-            { title: "statut", key: "statut" },
+            { title: "Stock", key: "stock" },
         ],
         produits: [],
 
@@ -74,43 +98,28 @@ export default {
         this.initialize()
     },
     methods: {
-        initialize() {
-            this.produits = [
-                {
-                    id: 1,
-                    libelle: "ICE Milano and ice L",
-                    code: "ABZ",
-                    buying_price: 5000,
-                    fournisseur: "Awa",
-                    categorie: "Lait",
-                    image: "https://cdn.pixabay.com/photo/2016/06/14/04/51/bag-1455765_1280.jpg",
-                    quantite: 2,
-                    statut: "En stock"
-                },
-                {
-                    id: 2,
-                    libelle: "ADA",
-                    code: "ABZ",
-                    buying_price: 5000,
-                    fournisseur: "Awa",
-                    categorie: "Lait",
-                    image: "https://cdn.pixabay.com/photo/2018/10/16/23/48/milkshake-3752840_1280.png",
-                    quantite: 1,
-                    statut: "En stock"
-                },
-                {
-                    id: 3,
-                    libelle: "PAWPAW",
-                    code: "ABZ",
-                    buying_price: 7000,
-                    fournisseur: "Softcare",
-                    categorie: "Crème",
-                    image: null,
-                    quantite: 0,
-                    statut: "En rupture"
-                },
+       async initialize() {
+            if (this.token) {
+                const response = await useNuxtApp().$axios.get(`${this.url}/produits_stock`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
 
-            ]
+                if (response.data.data.length > 0) {
+                    this.produits = response.data.data;
+                }
+
+            } else {
+                this.afficherCnx();
+            }
+        },
+
+        afficherCnx() {
+            this.msg = "Connectez - vous! ou réessayez la connexion";
+            this.err = true;
+            this.snackbar = true;
         },
 
     },

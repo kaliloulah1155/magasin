@@ -286,7 +286,7 @@
                  ...fromPopup
              }
           
-                 if (fromPopup.user_id && fromPopup.user_id.hasOwnProperty('fullname')) {
+              if (fromPopup.user_id && fromPopup.user_id.hasOwnProperty('fullname')) {
                  updatedItem.user_id = fromPopup.user_id.id;
              }
             
@@ -340,7 +340,7 @@
              if (!v || !/^\d{2}\/\d{2}\/\d{4}$/.test(v)) {
                  return 'Entrez une date valide au format DD/MM/YYYY';
              }
-
+    
              const [day, month, year] = v.split('/').map(Number);
 
              if (!this.isValidDate(day, month, year)) {
