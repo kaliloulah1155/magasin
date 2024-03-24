@@ -54,7 +54,7 @@ export default {
      sexe: { libelle: 'Homme', code: "M" },
      telephone:"",
      email:"",
-    editedItem: {
+    editedItem: {   
       id: 0,
       nom: "",
       prenoms: "",

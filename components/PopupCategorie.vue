@@ -9,7 +9,7 @@
         <v-card-text>
           <v-form class="px-3" ref="form">
             <v-text-field label="Libellé" color="primary" clearable variant="outlined" v-model="libelle"
-              :rules="inputRules"></v-text-field>
+              :rules="inputRules"></v-text-field>   
             <v-select label="Parent" class="mt-2" color="primary" variant="outlined" v-model="parent" :items="parent_cats"
               item-title="libelle" item-value="id" persistent-hint return-object></v-select>
             <v-text-field label="Position" class="mt-2" type="number" color="primary" clearable variant="outlined"

@@ -6,7 +6,7 @@
                 <h1 class="text-subtitle-1 text-grey">Produits</h1>
             </template>
             <template v-slot:actions>
-                <popup-produit @saveItem="getItem" />
+                <popup-produit @saveItem="getItem" :list_cats="categories" :fournisseurs="fournisseurs" />
             </template>
         </v-banner>
         <v-container class="my-5">
@@ -164,7 +164,7 @@ export default {
         photo: null,
         editedIndex: -1,
         editedItem: {
-            id: 0,
+            id: 0,  
             libelle: "",
             code: "",
             buying_price: 0,
@@ -348,7 +348,7 @@ export default {
                this.updateData(updatedObject);
             }
             this.close()
-        },
+        },    
         async updateData(json) {
             if (this.token) {
 
