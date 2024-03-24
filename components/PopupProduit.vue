@@ -8,27 +8,21 @@
       <v-card title="Ajouter un nouveau produit">
         <v-card-text>
           <v-form class="px-3" ref="form">
-            <v-text-field label="Libellé" color="primary" clearable variant="outlined"
-                                              v-model="editedItem.libelle" :rules="inputRules"></v-text-field>
-                                          <v-text-field label="Code" class="mt-2" color="primary" clearable
-                                              variant="outlined" v-model="editedItem.code"></v-text-field>
-                                          <v-text-field label="Prix d'achat" class="mt-2" color="primary" clearable
-                                              variant="outlined" v-model="editedItem.buying_price"
-                                              :rules="digitRules"></v-text-field>
-                                           <v-text-field label="Prix de vente" class="mt-2" color="primary" clearable
-                                                  variant="outlined" v-model="editedItem.selling_price"
-                                                  :rules="digitRules"></v-text-field>
-                                               <v-select label="Fournisseur" class="mt-2" color="primary" variant="outlined"
-                                                      v-model="editedItem.fournisseur" :items="fournisseurs" item-title="libelle"
-                                                      item-value="id" return-object></v-select>
-                                               <v-select label="Catégorie" class="mt-2" color="primary" variant="outlined"
-                                                  v-model="editedItem.categorie" :items="categories" item-title="libelle"
-                                                  item-value="id" return-object></v-select>
-                                          <v-file-input label="Image" v-model="image" accept="image/*" show-size counter
-                                              variant="outlined"></v-file-input>
-                                          <v-text-field label="Quantité" class="mt-2" color="primary" clearable
-                                                  variant="outlined" v-model="editedItem.quantite"
-                                                  :rules="digitRules"></v-text-field>
+            <v-text-field label="Libellé" color="primary" clearable variant="outlined" v-model="editedItem.libelle"
+              :rules="inputRules"></v-text-field>
+            <v-text-field label="Prix d'achat" class="mt-2" color="primary" clearable variant="outlined"
+              v-model="editedItem.buying_price" :rules="digitRules"></v-text-field>
+            <v-text-field label="Prix de vente" class="mt-2" color="primary" clearable variant="outlined"
+              v-model="editedItem.selling_price" :rules="digitRules"></v-text-field>
+            <v-select label="Fournisseur" class="mt-2" color="primary" variant="outlined" v-model="editedItem.fournisseur"
+              :items="fournisseurs" item-title="libelle" item-value="id" return-object></v-select>
+            <v-combobox label="Catégories" chips multiple clearable class="mt-2" color="primary" variant="outlined"
+              v-model="editedItem.categorie" :items="categories" item-title="libelle" item-value="id"
+              return-object></v-combobox>
+            <v-file-input label="Image" v-model="image" accept="image/*" show-size counter
+              variant="outlined"></v-file-input>
+            <v-text-field label="Quantité" class="mt-2" color="primary" clearable variant="outlined"
+              v-model="editedItem.quantite" :rules="digitRules"></v-text-field>
 
           </v-form>
         </v-card-text>
@@ -53,11 +47,11 @@
 
 <script>
 export default {
-    emits: ['saveItem'],
+  emits: ['saveItem'],
   data: () => ({
     snackbar: false,
     text: "message du snackbar",
-    image:null,
+    image: null,
     editedItem: {
       id: 0,
       libelle: "",
@@ -70,7 +64,7 @@ export default {
       quantite: 0
     },
     loading: false,
-      categories: [
+    categories: [
       { libelle: "Lait", id: 1 },
       { libelle: 'Crème', id: 2 },
       { libelle: 'Lotion', id: 3 },
@@ -80,7 +74,7 @@ export default {
       { libelle: 'Moye', id: 2 },
       { libelle: 'Autre', id: 3 },
     ],
-     inputRules: [
+    inputRules: [
       v => (v && v.length >= 3) || "La longueur minimale est de 3 caractères"
     ],
     digitRules: [

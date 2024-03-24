@@ -6,7 +6,7 @@
                 <h1 class="text-subtitle-1 text-grey">Produits</h1>
             </template>
             <template v-slot:actions>
-                 <popup-produit @saveItem="getItem" /> 
+                <popup-produit @saveItem="getItem" />
             </template>
         </v-banner>
         <v-container class="my-5">
@@ -16,12 +16,20 @@
                     Liste des produits
                     <v-spacer></v-spacer>
                     <v-text-field v-model="search" prepend-inner-icon="search" density="compact"
-                        label="Rechercher un produit" single-line flat hide-details variant="solo-filled"></v-text-field>
+                        label="Rechercher un produit" single-line flat hide-details
+                        variant="solo-filled"></v-text-field>
                 </v-card-title>
                 <v-divider class="mt-5"></v-divider>
                 <v-data-table v-model:search="search" :headers="headers" :items="produits"
                     :loading="produitLength > 0 ? false : true" :sort-by="[{ key: 'libelle', order: 'asc' }]"
                     items-per-page="10">
+
+                    <template v-slot:item.categories="{ item }">
+                        <template v-for="(cat, index) in item.categories">
+                            {{ cat }}
+                            <span v-if="index !== item.categories.length - 1">, </span>
+                        </template>
+                    </template>
 
                     <template v-slot:top>
                         <v-spacer></v-spacer>
@@ -34,25 +42,24 @@
                                     <v-form class="px-3" ref="form">
                                         <v-text-field label="Libellé" color="primary" clearable variant="outlined"
                                             v-model="editedItem.libelle" :rules="inputRules"></v-text-field>
-                                        <v-text-field label="Code" class="mt-2" color="primary" clearable
-                                            variant="outlined" v-model="editedItem.code"></v-text-field>
                                         <v-text-field label="Prix d'achat" class="mt-2" color="primary" clearable
                                             variant="outlined" v-model="editedItem.buying_price"
                                             :rules="digitRules"></v-text-field>
-                                         <v-text-field label="Prix de vente" class="mt-2" color="primary" clearable
-                                                variant="outlined" v-model="editedItem.selling_price"
-                                                :rules="digitRules"></v-text-field>
-                                             <v-select label="Fournisseur" class="mt-2" color="primary" variant="outlined"
-                                                    v-model="editedItem.fournisseur" :items="fournisseurs" item-title="libelle"
-                                                    item-value="id" return-object></v-select>
-                                             <v-select label="Catégorie" class="mt-2" color="primary" variant="outlined"
-                                                v-model="editedItem.categorie" :items="categories" item-title="libelle"
-                                                item-value="id" return-object></v-select>
-                                        <v-file-input label="Image" v-model="image" accept="image/*" show-size counter
+                                        <v-text-field label="Prix de vente" class="mt-2" color="primary" clearable
+                                            variant="outlined" v-model="editedItem.selling_price"
+                                            :rules="digitRules"></v-text-field>
+                                        <v-select label="Fournisseur" class="mt-2" color="primary" variant="outlined"
+                                            v-model="editedItem.fournisseur" :items="fournisseurs" item-title="fullname"
+                                            item-value="id" return-object></v-select>
+                                        <v-combobox label="Catégories" chips multiple clearable class="mt-2"
+                                            color="primary" variant="outlined" v-model="editedItem.categories"
+                                            :items="categories" item-title="libelle" item-value="id"
+                                            return-object></v-combobox>
+                                        <v-file-input label="Image" v-model="photo" accept="image/*" show-size counter
                                             variant="outlined"></v-file-input>
                                         <v-text-field label="Quantité" class="mt-2" color="primary" clearable
-                                                variant="outlined" v-model="editedItem.quantite"
-                                                :rules="digitRules"></v-text-field>
+                                            variant="outlined" v-model="editedItem.quantite"
+                                            :rules="digitRules"></v-text-field>
                                     </v-form>
                                 </v-card-text>
                                 <v-card-actions>
@@ -102,19 +109,35 @@
             </v-card>
         </v-container>
     </div>
+    <v-snackbar v-model="snackbar" multi-line location="top" :color="err ? 'red-lighten-3' : 'green-lighten-3'">
+        {{ msg }}
+        <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbar = false">
+                Fermer
+            </v-btn>
+        </template>
+    </v-snackbar>
 </template>
 <script>
+import { useProduitStore } from '../../stores/produit'
 export default {
     setup() {
         definePageMeta({
             layout: 'master'
         })
-        return {}
+        const authStore = useAuthStore()
+        const produitStore = useProduitStore()
+        const { token } = useAuth()
+       return { authStore, produitStore, token }
     },
     data: () => ({
         dialog: false,
         dialogDelete: false,
+        snackbar: false,
+        msg: '',
+        err: false,
         search: "",
+        url: useRuntimeConfig().public.apiBase,
         image: null,
         headers: [
             { title: "Libellé", align: "start", key: 'libelle' },
@@ -123,7 +146,7 @@ export default {
             { title: "Prix de vente", key: "selling_price" },
             { title: "Image", key: "image" },
             { title: "Fournisseurs", key: "fournisseur" },
-            { title: "Catégories", key: "categorie" },
+            { title: "Catégories", key: "categories" },
             { title: "Quantité", key: "quantite" },
             { title: "Actions", key: "actions", sortable: false }
         ],
@@ -133,17 +156,12 @@ export default {
         digitRules: [
             v => (v && /^\d+$/.test(v) ) || 'Entrez des chiffres',
         ],
-        categories: [
-            { libelle: "Lait", id: 1 },
-            { libelle: 'Crème', id: 2 },
-            { libelle: 'Lotion', id: 3 },
-        ],
-        fournisseurs: [
-            { libelle: "Awa", id: 1 },
-            { libelle: 'Movern', id: 2 },
-            { libelle: 'Autre', id: 3 },
-        ],
+        categories: [],
+         fournisseurs: [
+             { fullname: 'Veuillez selectionner', id: null },
+         ],
         produits: [],
+        photo: null,
         editedIndex: -1,
         editedItem: {
             id: 0,
@@ -151,8 +169,9 @@ export default {
             code: "",
             buying_price: 0,
             selling_price: 0,
+            fournisseur_id: null,
             fournisseur: "",
-            categorie: "",
+            categories: "",
             image: null,
             quantite: 0
 
@@ -163,8 +182,9 @@ export default {
             code: "",
             buying_price: 0,
             selling_price: 0,
+            fournisseur_id:null,
             fournisseur: "",
-            categorie: "",
+            categories: "",
             image: null,
             quantite: 0
         },
@@ -176,54 +196,113 @@ export default {
         },
         dialogDelete(val) {
             val || this.closeDelete()
+        },
+         'produitStore.data'(newData, oldData) {
+             if (newData.length > 0) {
+                 const extractedData = newData.map(({ id, fullname }) => ({ id, fullname }));
+
+                 // Filtrer les éléments déjà présents dans le tableau parents
+                 const filteredData = extractedData.filter(({ id }) => !this.fournisseurs.some(parent => parent.id === id));
+
+                 // Ajouter les éléments filtrés au tableau parents
+                 this.fournisseurs = [...this.fournisseurs, ...filteredData];
+             }
+         },
+          'produitStore.cats'(newData, oldData) {
+            if (newData.length > 0) {
+                const extractedData = newData.map(({ id, libelle }) => ({ id, libelle }));
+
+                // Filtrer les éléments déjà présents dans le tableau parents
+                const filteredData = extractedData.filter(({ id }) => !this.categories.some(parent => parent.id === id));
+
+                // Ajouter les éléments filtrés au tableau parents
+                this.categories = [...this.categories, ...filteredData];
+            }
         }
     },
     created() {
         this.initialize()
+        this.fournisseurs_list()
+       
     },
+     mounted() {
+         this.categories_list()
+     },
     methods: {
-        initialize() {
-            this.produits = [
-                {
-                    id: 1,
-                    libelle: "ICE Milano and ice L",
-                    code: "ABZ",
-                    buying_price: 5000,
-                    selling_price: 5100,
-                     fournisseur: "Awa",
-                    categorie: "Lait",
-                    image: "https://cdn.pixabay.com/photo/2016/06/14/04/51/bag-1455765_1280.jpg",
-                    quantite: 2,
-                },
-                {
-                    id: 2,
-                   libelle: "ADA",
-                    code: "ABZ",
-                    buying_price: 5000,
-                    selling_price: 5100,
-                    fournisseur: "Awa",
-                    categorie: "Lait",
-                    image: "https://cdn.pixabay.com/photo/2018/10/16/23/48/milkshake-3752840_1280.png",
-                    quantite: 1,
-                },
-                {
-                    id: 3,
-                    libelle: "PAWPAW",
-                    code: "ABZ",
-                    buying_price: 7000,
-                    selling_price: 6100,
-                    fournisseur: "Softcare",
-                    categorie: "Crème",
-                    image: null,
-                    quantite: 3,
-                },
+        async initialize() {
+            if (this.token) {
+                const response = await useNuxtApp().$axios.get(`${this.url}/produits`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
 
-            ]
+                if (response.data.data.length > 0) {
+                    this.produits = response.data.data;
+                    this.produitStore.data = response.data.data;
+                }
+
+            } else {
+                this.afficherCnx();
+            }
         },
+
+         async categories_list() {
+            if (this.token) {
+
+                const response = await useNuxtApp().$axios.get(`${this.url}/categories_slug/POD`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+                if (response.data.data.length > 0) {
+                    //this.categories = response.data.data;
+                    this.produitStore.cats = response.data.data;
+                }
+            } else {
+                this.afficherCnx();
+                
+            }
+        },
+         async fournisseurs_list() {
+             if (this.token) {    
+                 const response = await useNuxtApp().$axios.get(`${this.url}/fournisseurs`, {
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `${this.token}`,
+                     }
+                 });
+
+                 if (response.data.data.length > 0) {
+                     this.fournisseurs = response.data.data;
+                     this.produitStore.data = response.data.data;
+                 }
+             } else {
+                 this.afficherCnx();
+             }
+         },
+        afficherCnx() {
+            this.msg = "Connectez - vous! ou réessayez la connexion";
+            this.err = true;
+            this.snackbar = true;
+        },
+         afficherMsg(messg) {
+             this.msg = messg;
+             this.err = false;
+             this.snackbar = true;
+             this.initialize()
+         },
         editItem(item) {
             this.editedIndex = this.produits.indexOf(item)
-            this.editedItem = Object.assign({}, item)
-            this.dialog = true
+            // Create a copy of the item
+            this.editedItem = { ...item };
+            // Remove spaces and "F CFA" from the "montant" key
+            this.editedItem.buying_price = parseInt(removeFCFAAndSpaces(this.editedItem.buying_price))
+            this.editedItem.selling_price = parseInt(removeFCFAAndSpaces(this.editedItem.selling_price))
+            // Set the dialog to true
+            this.dialog = true;
         },
         deleteItem(item) {
             this.editedItem = this.produits.indexOf(item)
@@ -244,25 +323,69 @@ export default {
         save() {
             if (this.editedIndex > -1) {
                
-                if (
-                    this.editedItem.fournisseur &&
-                    this.editedItem.fournisseur.hasOwnProperty('libelle') ||
-                    this.editedItem.categorie &&
-                     this.editedItem.categorie.hasOwnProperty('libelle') 
-                ) {
-                    let updatedObject = {
-                        ...this.editedItem,
-                        fournisseur: this.editedItem.fournisseur.libelle,
-                        categorie: this.editedItem.categorie.libelle
-                    }
-                    Object.assign(this.produits[this.editedIndex], updatedObject)
-                    // console.log('The key "state" exists in this.editedItem.statut.');
-                } else {
-                    Object.assign(this.produits[this.editedIndex], this.editedItem)
-                    //console.log('The key "state" does not exist in this.editedItem.statut.');
+                let updatedObject = { ...this.editedItem }; // Créez une copie de l'objet initial
+                   if (this.editedItem.fournisseur && this.editedItem.fournisseur.hasOwnProperty('fullname')) {
+                       updatedObject.fournisseur_id = this.editedItem.fournisseur.id;
+                 }
+
+                if (this.photo) {
+                    updatedObject.image = this.photo;
                 }
+
+               if(updatedObject.categories[0] !== null ){
+                const categoryIds = updatedObject.categories.map(updatedCategory => {
+                    // Recherche de l'objet correspondant dans this.categories en fonction du libellé
+                    if (updatedCategory.libelle && updatedCategory.hasOwnProperty('libelle')) {
+                        updatedCategory = updatedCategory.libelle;
+                 }
+                    const matchedCategory = this.categories.find(category => category.libelle === updatedCategory);
+                    // Récupération de l'identifiant de l'objet s'il est trouvé, sinon retourner null
+                    return matchedCategory ? matchedCategory.id : null;
+                });
+                const uniqueCategoryIds = Array.from(new Set(categoryIds)); //retirer les doublons
+                      updatedObject.categories=uniqueCategoryIds;
+               }
+               this.updateData(updatedObject);
             }
             this.close()
+        },
+        async updateData(json) {
+            if (this.token) {
+
+                const formData = new FormData();
+
+                // Ajoutez les champs à formData
+                formData.append('id', parseInt(json.id));
+                formData.append('libelle', json.libelle);
+                formData.append('fournisseur_id',parseInt(json.fournisseur_id));
+                formData.append('buying_price', parseInt(json.buying_price));
+                formData.append('selling_price',parseInt(json.selling_price));
+                // Ajoutez ici la logique pour le fichier (s'il existe)
+                if (json.image) {
+                    formData.append('image', json.image[0]);
+                }
+                formData.append('quantite', parseInt(json.quantite));
+
+                //formData.append('categories', JSON.stringify(json.categories));
+               // const idsArray = json.categories.map(category => category.id);
+                formData.append('categories', JSON.stringify(json.categories));
+               // formData.append('categories', json.categories);
+
+
+                const response = await useNuxtApp().$axios.post(`${this.url}/produits/${json.id}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+                if (response.status == 200) {
+
+                    this.afficherMsg("Mise à jour effectué avec succès")
+                };
+
+            } else {
+                this.afficherCnx();
+            }
         },
         getItem(fromPopup) {
 

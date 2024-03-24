@@ -84,7 +84,7 @@ export default {
     async submit() {
       this.loading = true;
       if (this.$refs.form.validate()) {
-
+            
         this.editedItem.image = this.photo ? this.photo :  null;
        this.editedItem.nom=this.nom;
        this.editedItem.prenoms=this.prenoms;

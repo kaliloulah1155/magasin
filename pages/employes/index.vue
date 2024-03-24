@@ -292,7 +292,7 @@ export default {
         save() {
             if (this.editedIndex > -1) {
                 let updatedObject = { ...this.editedItem }; // Créez une copie de l'objet initial
-
+    
                 if (this.editedItem.profil_id && this.editedItem.profil_id.hasOwnProperty('libelle')) {
                     updatedObject.profil_id = this.editedItem.profil_id.id;
                 }
@@ -362,7 +362,7 @@ export default {
             } else {
                 this.afficherCnx();
             }
-        },
+        },   
         getItem(fromPopup) {
             let savedObject = { ...fromPopup };
             if (fromPopup.profil_id && fromPopup.profil_id.hasOwnProperty('libelle')) {

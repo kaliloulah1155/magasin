@@ -53,12 +53,12 @@
                         Fermer
                     </v-btn>
                 </template>
-            </v-snackbar>
+      </v-snackbar>
 </template>
 <script>
 import { useStockStore } from '../../stores/stock'
 export default {
-    setup() {
+    setup() {   
         definePageMeta({
             layout: 'master'
         })
@@ -71,7 +71,7 @@ export default {
     data: () => ({
         dialog: false,
         dialogDelete: false,
-         snackbar: false,
+        snackbar: false,
         msg: '',
         err: false,
         search: "",

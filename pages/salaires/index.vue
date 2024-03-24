@@ -191,7 +191,7 @@
              }
          },
          async employes_list() {
-             if (this.token) {
+             if (this.token) {    
                  const response = await useNuxtApp().$axios.get(`${this.url}/employes`, {
                      headers: {
                          'Content-Type': 'application/json',
@@ -200,6 +200,7 @@
                  });
 
                  if (response.data.data.length > 0) {
+               
                      this.salaries = response.data.data;
                      this.salaireStore.data = response.data.data;
                  }
