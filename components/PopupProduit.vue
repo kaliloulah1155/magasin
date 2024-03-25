@@ -6,6 +6,9 @@
 
     <template v-slot:default="{ isActive }">
       <v-card title="Ajouter un nouveau produit">
+
+
+        
         <v-card-text>
           <v-form class="px-3" ref="form">
             <v-text-field label="Libellé" color="primary" clearable variant="outlined" v-model="editedItem.libelle"
@@ -34,14 +37,7 @@
       </v-card>
     </template>
   </v-dialog>
-  <v-snackbar v-model="snackbar">
-    {{ text }}
-    <template v-slot:actions>
-      <v-btn color="pink" variant="text" @click="snackbar = false">
-        Fermer
-      </v-btn>
-    </template>
-  </v-snackbar>
+
 </template>
 
 <script>    
@@ -67,7 +63,7 @@ export default {
       quantite: 0
     },
     loading: false,
-    categorie: [{libelle: 'Veuillez selectionner', id: null}],
+    categorie: [],
     fournisseur: [{ fullname: 'Veuillez selectionner', id: null }],
     inputRules: [
       v => (v && v.length >= 3) || "La longueur minimale est de 3 caractères"
@@ -82,7 +78,9 @@ export default {
     async submit() {
       this.loading = true;
       if (this.$refs.form.validate()) {
-    
+        this.editedItem.image = this.photo ? this.photo : null;
+        this.editedItem.fournisseur_id = this.fournisseur;
+        this.editedItem.categories = this.categorie;
         this.$emit('saveItem', this.editedItem);
       }
       this.loading = false;

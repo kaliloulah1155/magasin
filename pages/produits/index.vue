@@ -14,6 +14,7 @@
                 <v-card-title class="d-flex align-center pe-2">
                     <v-icon icon="view_list"></v-icon>&nbsp;
                     Liste des produits
+                     
                     <v-spacer></v-spacer>
                     <v-text-field v-model="search" prepend-inner-icon="search" density="compact"
                         label="Rechercher un produit" single-line flat hide-details
@@ -276,7 +277,15 @@ export default {
                  });
 
                  if (response.data.data.length > 0) {
-                     this.fournisseurs = response.data.data;
+                      let reponses = response.data.data;
+                      const fournisseursInfo = reponses.map(fournisseur => {
+                                return {
+                                    id: fournisseur.id,
+                                    fullname: fournisseur.fullname
+                                };
+                            }); 
+                    this.fournisseurs=fournisseursInfo;
+
                      this.produitStore.data = response.data.data;
                  }
              } else {
@@ -387,21 +396,67 @@ export default {
                 this.afficherCnx();
             }
         },
+
+         async createData(json) {
+              const formData = new FormData();
+             // Ajoutez les champs à formData
+              formData.append('libelle', json.libelle);
+             formData.append('fournisseur_id', parseInt(json.fournisseur_id));
+             formData.append('buying_price', parseInt(json.buying_price));
+             formData.append('selling_price', parseInt(json.selling_price));
+             // Ajoutez ici la logique pour le fichier (s'il existe)
+             if (json.image) {
+                 formData.append('image', json.image[0]);
+             }
+             formData.append('quantite', parseInt(json.quantite));
+
+             //formData.append('categories', JSON.stringify(json.categories));
+             // const idsArray = json.categories.map(category => category.id);
+             formData.append('categories', JSON.stringify(json.categories));
+
+            if (this.token) {
+                const response = await useNuxtApp().$axios.post(`${this.url}/produits`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+
+                if (response.status == 200) {
+                    this.afficherMsg("Produit créé avec succès")
+                };
+
+            } else {
+                this.afficherCnx();
+            }
+        },
         getItem(fromPopup) {
 
-            if (
-                fromPopup.fournisseur &&
-                fromPopup.fournisseur.hasOwnProperty('libelle') ||
-                fromPopup.categorie &&
-                fromPopup.categorie.hasOwnProperty('libelle')
-            ) {
-                let updatedItem = {
-                    ...fromPopup,
-                     fournisseur: fromPopup.fournisseur.libelle,
-                    categorie: fromPopup.categorie.libelle
-                }
-                this.produits.push(updatedItem)
+             let updatedItem = {
+                 ...fromPopup
+             }
+
+            if (updatedItem.fournisseur_id && updatedItem.fournisseur_id.hasOwnProperty('fullname')) {
+                updatedItem.fournisseur_id = updatedItem.fournisseur_id.id;
+              }
+
+            if (updatedItem.categories[0] !== null) {
+                const categoryIds = updatedItem.categories.map(updatedCategory => {
+                    // Recherche de l'objet correspondant dans this.categories en fonction du libellé
+                    if (updatedCategory.libelle && updatedCategory.hasOwnProperty('libelle')) {
+                        updatedCategory = updatedCategory.libelle;
+                    }
+                    const matchedCategory = this.categories.find(category => category.libelle === updatedCategory);
+                    // Récupération de l'identifiant de l'objet s'il est trouvé, sinon retourner null
+                    return matchedCategory ? matchedCategory.id : null;
+                });
+                const uniqueCategoryIds = Array.from(new Set(categoryIds)); //retirer les doublons
+                updatedItem.categories = uniqueCategoryIds;
             }
+
+ 
+                      this.createData(updatedItem);
+             console.log("updatedItem ",updatedItem);
         },
         closeDelete() {
             this.dialogDelete = false

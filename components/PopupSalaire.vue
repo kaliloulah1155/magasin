@@ -53,7 +53,6 @@ export default {
     async submit() {
       this.loading = true;
       if (this.$refs.form.validate()) {
-        this.snackbar = true;
         this.editedItem.user_id = this.employe;
         this.$emit('saveItem', this.editedItem);
       }
