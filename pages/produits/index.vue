@@ -409,9 +409,6 @@ export default {
                  formData.append('image', json.image[0]);
              }
              formData.append('quantite', parseInt(json.quantite));
-
-             //formData.append('categories', JSON.stringify(json.categories));
-             // const idsArray = json.categories.map(category => category.id);
              formData.append('categories', JSON.stringify(json.categories));
 
             if (this.token) {
