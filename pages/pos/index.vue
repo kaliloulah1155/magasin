@@ -14,7 +14,6 @@
                                     <v-scroll-y-transition>
                                         <div class="text-subtitle-1 flex-grow-1 text-center"
                                             @click.prevent="getCategorie(cat.id)">
-
                                             {{ cat.libelle }}
                                         </div>
                                     </v-scroll-y-transition>
@@ -45,7 +44,7 @@
                                             <v-card class="pb-3" v-bind="props" border flat>
                                                 <v-img :src="item.raw.image" height="100" cover></v-img>
                                                 <v-list-item class="mb-2 text-center"
-                                                    :subtitle="`${item.raw.selling_price} F CFA`">
+                                                    :subtitle="`${item.raw.selling_price}`">
                                                     <template v-slot:title>
                                                         <strong class="text-h6 mb-2 ">{{ item.raw.libelle }}</strong>
                                                     </template>
@@ -57,7 +56,7 @@
                                                                 :content="Number(item.raw.quantite)" inline> </v-badge>
                                                             &nbsp;
                                                             <v-chip :color="item.raw.quantite > 0 ? 'green' : 'red'">{{
-                                                                item.raw.statut }}</v-chip>
+                                                                item.raw.stock }}</v-chip>
                                                         </div>
                                                     </div>
                                                     <v-btn border flat size="small" class="text-none mx-1"
@@ -231,6 +230,14 @@
         </v-container>
 
     </div>
+     <v-snackbar v-model="snackbar" multi-line location="top" :color="err ? 'red-lighten-3' : 'green-lighten-3'">
+        {{ msg }}
+        <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbar = false">
+                Fermer
+            </v-btn>
+        </template>
+    </v-snackbar>
 </template>
 <script>
 
@@ -241,9 +248,13 @@ export default {
         definePageMeta({
             layout: 'master'
         })
-        return {}
+         const { token } = useAuth()
+        return { token }
     },
     data: () => ({
+         snackbar: false,
+        msg: '',
+        err: false,
         dialog_client: false,
         url: useRuntimeConfig().public.apiBase,
         editedItem: {
@@ -276,95 +287,15 @@ export default {
             { libelle: "CREDIT", id: 3 },
             { libelle: "MOBILE MONEY", id: 3 },
         ],
-        categories: [
-            { libelle: "Categorie 1", id: 1 },
-            { libelle: "Categorie 2", id: 2 },
-            { libelle: "Categorie 3", id: 3 },
-            { libelle: "Categorie 4", id: 4 },
-        ],
+        categories: [],
         produits: [
-            {
-                image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/4.png',
-                libelle: "Lait",
-                selling_price: 2000,
-                quantite: 2,
-                statut: "Stock",
-            },
-            {
-                image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/2.png',
-                libelle: "Bonbon",
-                selling_price: 1000,
-                quantite: 0,
-                statut: 'Rupture',
-            },
-            {
-                image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/3.png',
-                libelle: "Pomme",
-                selling_price: 2300,
-                quantite: 1,
-                statut: "Stock",
-            },
-            {
-                image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/5.png',
-                libelle: "Ananas",
-                selling_price: 600,
-                quantite: 5,
-                statut: "Stock",
-            },
-            {
-                image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/6.png',
-                libelle: "Prume",
-                selling_price: 780,
-                quantite: 2,
-                statut: "Stock",
-            },
-            {
-                image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/7.png',
-                libelle: "Mangue",
-                selling_price: 850,
-                quantite: 3,
-                statut: "Stock",
-            },
-            {
-                image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/1.png',
-                libelle: "Palme",
-                selling_price: 4120,
-                quantite: true,
-                statut: "Stock",
-            },
-            {
-                image: 'https://cdn.vuetifyjs.com/docs/images/graphics/games/8.png',
-                libelle: "Oignon",
-                selling_price: 1250,
-                quantite: 2,
-                statut: "Stock",
-            },
-            {
-                image: '/img/bread.jpg',
-                libelle: 'Pain de miche',
-                selling_price: 200,
-                quantite: 1,
-                statut: "Stock",
-            },
-            {
-                image: '/img/croissant.jpg',
-                libelle: 'Croissant',
-                selling_price: 1200,
-                quantite: 4,
-                statut: "Stock",
-            },
-            {
-                image: '/img/jaune_doeuf.jpg',
-                libelle: "Jaune d'oeuf",
-                selling_price: 570,
-                quantite: 3,
-                statut: "Stock",
-            },
+          
         ],
     }),
     created() {
         this.initialize()
-        this.consommer()
+        this.lcategorie()
+        this.lproduit()
     },
     methods: {
         initialize() {
@@ -401,11 +332,44 @@ export default {
 
             ]
         },
-        consommer() {
-           /* const res = useNuxtApp().$axios.get(`${this.url}/todos/1`)
-            res.then(({ data }) => {
-                console.log(data)
-            })*/
+      async  lcategorie() {
+           if (this.token) {
+
+                const response = await useNuxtApp().$axios.get(`${this.url}/pos_categories`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+                if (response.data.data.length > 0) {
+                    this.categories = response.data.data;
+                }
+            } else {
+                this.afficherCnx();
+                
+            }
+        },
+        async lproduit() {
+            if (this.token) {
+
+                const response = await useNuxtApp().$axios.get(`${this.url}/produits_stock`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+                if (response.data.data.length > 0) {
+                    this.produits = response.data.data;
+                }
+            } else {
+                this.afficherCnx();
+
+            }
+        },
+          afficherCnx() {
+            this.msg = "Connectez - vous! ou réessayez la connexion";
+            this.err = true;
+            this.snackbar = true;
         },
         addCustomer() {
             console.log('add client')

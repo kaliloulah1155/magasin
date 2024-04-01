@@ -318,10 +318,13 @@ export default {
             this.editedIndex = Object.assign({}, item)
             this.dialogDelete = true
         },
-        deleteItemConfirm() {
-            this.produits.splice(this.editedIndex, 1)
-            this.closeDelete()
-        },
+         deleteItemConfirm() {
+             this.$nextTick(() => {
+                 this.deleteData(this.editedIndex.id)
+
+             })
+             this.closeDelete()
+         },
         close() {
             this.dialog = false
             this.$nextTick(() => {
@@ -396,7 +399,6 @@ export default {
                 this.afficherCnx();
             }
         },
-
          async createData(json) {
               const formData = new FormData();
              // Ajoutez les champs à formData
@@ -427,6 +429,22 @@ export default {
                 this.afficherCnx();
             }
         },
+         async deleteData(id) {
+             if (this.token) {
+                 const response = await useNuxtApp().$axios.delete(`${this.url}/produits/${id}`, {
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `${this.token}`,
+                     }
+                 });
+                 if (response.status == 201) {
+                     this.afficherMsg("Suppression effectuée avec succès")
+                 };
+
+             } else {
+                 this.afficherCnx();
+             }
+         },
         getItem(fromPopup) {
 
              let updatedItem = {
