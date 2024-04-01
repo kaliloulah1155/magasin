@@ -288,10 +288,14 @@ export default {
             { libelle: "MOBILE MONEY", id: 3 },
         ],
         categories: [],
-        produits: [
-          
-        ],
+        produits: [],
+            copy_produits:[],
     }),
+      watch: {
+        copy_produits(val,old){
+            this.produits=val;
+        }
+      },
     created() {
         this.initialize()
         this.lcategorie()
@@ -378,8 +382,23 @@ export default {
         printTicket() {
             console.log('print ticket')
         },
-        getCategorie(n) {
-            console.log(n)
+    async  getCategorie(n) {
+        
+              if (this.token) {
+
+                const response = await useNuxtApp().$axios.get(`${this.url}/pos_produit_by_categorie/${parseInt(n)}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+                if (response.data.data.length > 0) {
+                    this.copy_produits = response.data.data;
+                }
+            } else {
+                this.afficherCnx();
+
+            }
         }
 
     }
