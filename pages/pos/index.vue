@@ -6,8 +6,15 @@
             <!-- RECHERCHE PAR CATEGORIE-->
             <v-item-group mandatory>
                 <v-container>
+                    <v-row align="center" justify="center">
+                        <v-col cols="auto">
+                            <v-btn size="x-small" icon="autorenew"  color="green" title="Rafraichissement de la liste des produits"  @click="refraichir"></v-btn>
+                        </v-col>
+                    </v-row>
                     <v-row>
+                        
                         <v-col v-for="cat in categories" :key="cat.id" cols="12" md="4">
+                            
                             <v-item v-slot="{ isSelected, toggle }">
                                 <v-card :color="isSelected ? 'rgba(249, 232, 232, 0.8)' : ''" class="d-flex align-center"
                                     dark height="30" @click="toggle">
@@ -352,6 +359,9 @@ export default {
                 this.afficherCnx();
                 
             }
+        },
+        refraichir(){
+            this.lproduit();
         },
         async lproduit() {
             if (this.token) {
