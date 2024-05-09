@@ -242,7 +242,7 @@ export default {
                 if (response.data.data.length > 0) {
                     this.produits = response.data.data;
                     this.produitStore.data = response.data.data;
-                }
+                }    
 
             } else {
                 this.afficherCnx();
@@ -266,7 +266,7 @@ export default {
                 this.afficherCnx();
                 
             }
-        },
+        },       
          async fournisseurs_list() {
              if (this.token) {    
                  const response = await useNuxtApp().$axios.get(`${this.url}/fournisseurs`, {

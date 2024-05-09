@@ -94,6 +94,7 @@
                 </v-data-iterator>
             </v-card>
             <!-- END::ALL PRODUCT-->
+         
             <!--BEGIN RIGHT SIDEBAR-->
             <v-navigation-drawer permanent app color="white" location="right" width="400">
                 <v-list subheader lines="two" class="mt-5">
@@ -177,7 +178,7 @@
                                 CLIENT
                             </v-col>
                             <v-col sm="12" md="4" lg="6" xl="8">
-                                <v-autocomplete color="primary" variant="outlined" clearable :items="clients"
+                                <v-autocomplete v-model="editedItem.client" color="primary" variant="outlined" clearable :items="clients"
                                     item-title="fullname" item-value="id" return-object
                                     style="width:10rem;"></v-autocomplete>
                             </v-col>
@@ -187,7 +188,7 @@
                                 MOYEN DE PAIEMENT
                             </v-col>
                             <v-col sm="12" md="4" lg="6" xl="8">
-                                <v-select color="primary" variant="outlined" :items="moyen_payments" item-title="libelle"
+                                <v-select v-model="editedItem.moyen_p" color="primary" variant="outlined" :items="moyen_payments" item-title="libelle"
                                     item-value="id" return-object style="width:10rem;"></v-select>
                             </v-col>
                         </v-row>
@@ -223,7 +224,7 @@
     </v-snackbar>
 </template>
 <script>
-
+import { usePosStore } from '../../stores/pos'
 
 
 export default {
@@ -233,7 +234,8 @@ export default {
         })
          const { token } = useAuth();
          const router = useRouter() ;
-        return { token ,router}
+         const posStore = usePosStore();
+        return { token ,router,posStore}
     },
     data: () => ({
          snackbar: false,
@@ -242,7 +244,8 @@ export default {
         url: useRuntimeConfig().public.apiBase,
         editedItem: {
             id: 0,
-            fullname: "",
+            client: "",
+            moyen_p:"",
             email: "",
             adresse: "",
             telephone: "",
@@ -260,15 +263,10 @@ export default {
         search: '',
         articles: [],
         clients: [
-            { fullname: "KONATE Ibrahima", id: 1 },
-            { fullname: "KONE Issouf", id: 2 },
-            { fullname: "KOUYATE Idriss", id: 3 },
+             { fullname: 'Veuillez selectionner', id: null },
         ],
         moyen_payments: [
-            { libelle: "ESPECE", id: 1 },
-            { libelle: "CHEQUE", id: 2 },
-            { libelle: "CREDIT", id: 3 },
-            { libelle: "MOBILE MONEY", id: 3 },
+            { libelle: 'Veuillez selectionner', id: null },
         ],
         categories: [],
         produits: [],
@@ -283,6 +281,8 @@ export default {
         this.initialize()
         this.lcategorie()
         this.lproduit()
+        this.lclients()
+        this.lmoyenpaid()
     },
     methods: {
         initialize() {
@@ -319,6 +319,57 @@ export default {
 
             ]
         },
+        async lclients() {
+             if (this.token) {    
+                 const response = await useNuxtApp().$axios.get(`${this.url}/clients`, {
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `${this.token}`,
+                     }
+                 });
+
+                 if (response.data.data.length > 0) {
+                      let reponses = response.data.data;
+                      const clientsInfo = reponses.map(client => {
+                                return {
+                                    id: client.id,
+                                    fullname: client.fullname
+                                };
+                            }); 
+                    this.clients=clientsInfo;
+
+                    // this.produitStore.data = response.data.data;
+                 }
+             } else {
+                 this.afficherCnx();
+             }
+         },
+
+         async lmoyenpaid() {
+             if (this.token) {    
+                 const response = await useNuxtApp().$axios.get(`${this.url}/categories_slug/MDP`, {
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': `${this.token}`,
+                     }
+                 });
+
+                 if (response.data.data.length > 0) {
+                      let reponses = response.data.data;
+                      const moyensInfo = reponses.map(moyen => {
+                                return {
+                                    id: moyen.id,
+                                    libelle: moyen.libelle
+                                };
+                            }); 
+                    this.moyen_payments=moyensInfo;
+
+                    // this.produitStore.data = response.data.data;
+                 }
+             } else {
+                 this.afficherCnx();
+             }
+         },
       async  lcategorie() {
            if (this.token) {
 
@@ -350,6 +401,7 @@ export default {
                 });
                 if (response.data.data.length > 0) {
                     this.produits = response.data.data;
+                    this.posStore.produits = response.data.data;
                 }
             } else {
                 this.afficherCnx();
