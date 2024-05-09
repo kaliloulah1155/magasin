@@ -8,16 +8,17 @@
                 <v-container>
                     <v-row align="center" justify="center">
                         <v-col cols="auto">
-                            <v-btn size="x-small" icon="autorenew"  color="green" title="Rafraichissement de la liste des produits"  @click="refraichir"></v-btn>
+                            <v-btn size="x-small" icon="autorenew" color="green"
+                                title="Rafraichissement de la liste des produits" @click="refraichir"></v-btn>
                         </v-col>
                     </v-row>
                     <v-row>
-                        
+
                         <v-col v-for="cat in categories" :key="cat.id" cols="12" md="4">
-                            
+
                             <v-item v-slot="{ isSelected, toggle }">
-                                <v-card :color="isSelected ? 'rgba(249, 232, 232, 0.8)' : ''" class="d-flex align-center"
-                                    dark height="30" @click="toggle">
+                                <v-card :color="isSelected ? 'rgba(249, 232, 232, 0.8)' : ''"
+                                    class="d-flex align-center" dark height="30" @click="toggle">
                                     <v-scroll-y-transition>
                                         <div class="text-subtitle-1 flex-grow-1 text-center"
                                             @click.prevent="getCategorie(cat.id)">
@@ -37,8 +38,8 @@
                     <template v-slot:header>
                         <v-toolbar class="px-2">
                             <v-text-field v-model="search" clearable density="comfortable" hide-details
-                                placeholder="Rechercher un produit" prepend-inner-icon="magnify" style="max-width: 300px;"
-                                variant="solo"></v-text-field>
+                                placeholder="Rechercher un produit" prepend-inner-icon="magnify"
+                                style="max-width: 300px;" variant="solo"></v-text-field>
                         </v-toolbar>
                     </template>
 
@@ -57,16 +58,19 @@
                                                     </template>
                                                 </v-list-item>
                                                 <div class="d-flex justify-space-between ">
-                                                    <div class="d-flex align-center text-caption text-medium-emphasis me-1">
+                                                    <div
+                                                        class="d-flex align-center text-caption text-medium-emphasis me-1">
                                                         <div class="text-truncate">
                                                             <v-badge :color="item.raw.quantite > 0 ? 'info' : 'error'"
-                                                                :content="Number(item.raw.quantite)" inline> </v-badge>
+                                                                :content="Number(item.raw.quantite)" inline>
+                                                            </v-badge>
                                                             &nbsp;
                                                             <v-chip :color="item.raw.quantite > 0 ? 'green' : 'red'">{{
                                                                 item.raw.stock }}</v-chip>
                                                         </div>
                                                     </div>
-                                                    <v-btn border flat size="small" class="text-none mx-1"
+                                                    <v-btn border flat size="small"
+                                                        @click.prevent="addProduct(item.raw.id)" class="text-none mx-1"
                                                         icon="add"></v-btn>
 
                                                 </div>
@@ -80,21 +84,21 @@
 
                     <template v-slot:footer="{ page, pageCount, prevPage, nextPage }">
                         <div class="d-flex align-center justify-center pa-4">
-                            <v-btn :disabled="page === 1" icon="arrow_back" density="comfortable" variant="tonal" rounded
-                                @click="prevPage"></v-btn>
+                            <v-btn :disabled="page === 1" icon="arrow_back" density="comfortable" variant="tonal"
+                                rounded @click="prevPage"></v-btn>
 
                             <div class="mx-2 text-caption">
                                 Page {{ page }} sur {{ pageCount }}
                             </div>
 
-                            <v-btn :disabled="page >= pageCount" icon="arrow_forward" density="comfortable" variant="tonal"
-                                rounded @click="nextPage"></v-btn>
+                            <v-btn :disabled="page >= pageCount" icon="arrow_forward" density="comfortable"
+                                variant="tonal" rounded @click="nextPage"></v-btn>
                         </div>
                     </template>
                 </v-data-iterator>
             </v-card>
             <!-- END::ALL PRODUCT-->
-         
+
             <!--BEGIN RIGHT SIDEBAR-->
             <v-navigation-drawer permanent app color="white" location="right" width="400">
                 <v-list subheader lines="two" class="mt-5">
@@ -111,7 +115,7 @@
                                 </v-card-text>
                             </v-card>
                         </v-col>
-                          
+
                         <v-col cols="auto">
                             <v-card class="mx-auto" @click="printTicket" max-width="344" hover>
                                 <v-card-item class="d-flex justify-center">
@@ -136,7 +140,8 @@
                 <!--Begin::Articles-->
                 <v-row v-for="article in articles" :key="article.id">
                     <v-col sm="6" md="4" lg="3" xl="2">
-                        <v-img :src="article.image" max-height="50" max-width="50" contain class="mt-1 mr-1 px-1"></v-img>
+                        <v-img :src="article.image" max-height="50" max-width="50" contain
+                            class="mt-1 mr-1 px-1"></v-img>
                     </v-col>
                     <v-col sm="6" md="4" lg="3" xl="2">
                         <h6 class="ml-n6 text-grey text-dark text-subtitle-2 font-weight-bold">{{ article.libelle }}
@@ -146,10 +151,12 @@
                         </h6>
                     </v-col>
                     <v-col sm="12" md="4" lg="6" xl="8">
-                        <v-btn class="ml-n6" color="green" size="small" variant="flat" density="compact" icon="add"></v-btn>
-                        <v-divider vertical inset class="mr-1 mt-2"></v-divider> {{ article.quantite }} <v-divider vertical
-                            inset class="mr-1"></v-divider>
-                        <v-btn class="mx-1" color="red" size="small" variant="flat" density="compact" icon="remove"></v-btn>
+                        <v-btn class="ml-n6" color="green" size="small" variant="flat" density="compact"
+                            icon="add"></v-btn>
+                        <v-divider vertical inset class="mr-1 mt-2"></v-divider> {{ article.quantite }} <v-divider
+                            vertical inset class="mr-1"></v-divider>
+                        <v-btn class="mx-1" color="red" size="small" variant="flat" density="compact"
+                            icon="remove"></v-btn>
                         <strong class="ml-1 mr-1">{{ article.price }} F CFA</strong>
                     </v-col>
                     <v-divider></v-divider>
@@ -178,8 +185,8 @@
                                 CLIENT
                             </v-col>
                             <v-col sm="12" md="4" lg="6" xl="8">
-                                <v-autocomplete v-model="editedItem.client" color="primary" variant="outlined" clearable :items="clients"
-                                    item-title="fullname" item-value="id" return-object
+                                <v-autocomplete v-model="editedItem.client" color="primary" variant="outlined" clearable
+                                    :items="clients" item-title="fullname" item-value="id" return-object
                                     style="width:10rem;"></v-autocomplete>
                             </v-col>
                         </v-row>
@@ -188,8 +195,9 @@
                                 MOYEN DE PAIEMENT
                             </v-col>
                             <v-col sm="12" md="4" lg="6" xl="8">
-                                <v-select v-model="editedItem.moyen_p" color="primary" variant="outlined" :items="moyen_payments" item-title="libelle"
-                                    item-value="id" return-object style="width:10rem;"></v-select>
+                                <v-select v-model="editedItem.moyen_p" color="primary" variant="outlined"
+                                    :items="moyen_payments" item-title="libelle" item-value="id" return-object
+                                    style="width:10rem;"></v-select>
                             </v-col>
                         </v-row>
                         <v-row>
@@ -214,7 +222,7 @@
         </v-container>
 
     </div>
-     <v-snackbar v-model="snackbar" multi-line location="top" :color="err ? 'red-lighten-3' : 'green-lighten-3'">
+    <v-snackbar v-model="snackbar" multi-line location="top" :color="err ? 'red-lighten-3' : 'green-lighten-3'">
         {{ msg }}
         <template v-slot:actions>
             <v-btn color="white" variant="text" @click="snackbar = false">
@@ -232,20 +240,20 @@ export default {
         definePageMeta({
             layout: 'master'
         })
-         const { token } = useAuth();
-         const router = useRouter() ;
-         const posStore = usePosStore();
-        return { token ,router,posStore}
+        const { token } = useAuth();
+        const router = useRouter();
+        const posStore = usePosStore();
+        return { token, router, posStore }
     },
     data: () => ({
-         snackbar: false,
+        snackbar: false,
         msg: '',
         err: false,
         url: useRuntimeConfig().public.apiBase,
         editedItem: {
             id: 0,
             client: "",
-            moyen_p:"",
+            moyen_p: "",
             email: "",
             adresse: "",
             telephone: "",
@@ -263,20 +271,20 @@ export default {
         search: '',
         articles: [],
         clients: [
-             { fullname: 'Veuillez selectionner', id: null },
+            { fullname: 'Veuillez selectionner', id: null },
         ],
         moyen_payments: [
             { libelle: 'Veuillez selectionner', id: null },
         ],
         categories: [],
         produits: [],
-            copy_produits:[],
+        copy_produits: [],
     }),
-      watch: {
-        copy_produits(val,old){
-            this.produits=val;
+    watch: {
+        copy_produits(val, old) {
+            this.produits = val;
         }
-      },
+    },
     created() {
         this.initialize()
         this.lcategorie()
@@ -320,58 +328,58 @@ export default {
             ]
         },
         async lclients() {
-             if (this.token) {    
-                 const response = await useNuxtApp().$axios.get(`${this.url}/clients`, {
-                     headers: {
-                         'Content-Type': 'application/json',
-                         'Authorization': `${this.token}`,
-                     }
-                 });
+            if (this.token) {
+                const response = await useNuxtApp().$axios.get(`${this.url}/clients`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
 
-                 if (response.data.data.length > 0) {
-                      let reponses = response.data.data;
-                      const clientsInfo = reponses.map(client => {
-                                return {
-                                    id: client.id,
-                                    fullname: client.fullname
-                                };
-                            }); 
-                    this.clients=clientsInfo;
-
-                    // this.produitStore.data = response.data.data;
-                 }
-             } else {
-                 this.afficherCnx();
-             }
-         },
-
-         async lmoyenpaid() {
-             if (this.token) {    
-                 const response = await useNuxtApp().$axios.get(`${this.url}/categories_slug/MDP`, {
-                     headers: {
-                         'Content-Type': 'application/json',
-                         'Authorization': `${this.token}`,
-                     }
-                 });
-
-                 if (response.data.data.length > 0) {
-                      let reponses = response.data.data;
-                      const moyensInfo = reponses.map(moyen => {
-                                return {
-                                    id: moyen.id,
-                                    libelle: moyen.libelle
-                                };
-                            }); 
-                    this.moyen_payments=moyensInfo;
+                if (response.data.data.length > 0) {
+                    let reponses = response.data.data;
+                    const clientsInfo = reponses.map(client => {
+                        return {
+                            id: client.id,
+                            fullname: client.fullname
+                        };
+                    });
+                    this.clients = clientsInfo;
 
                     // this.produitStore.data = response.data.data;
-                 }
-             } else {
-                 this.afficherCnx();
-             }
-         },
-      async  lcategorie() {
-           if (this.token) {
+                }
+            } else {
+                this.afficherCnx();
+            }
+        },
+
+        async lmoyenpaid() {
+            if (this.token) {
+                const response = await useNuxtApp().$axios.get(`${this.url}/categories_slug/MDP`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+
+                if (response.data.data.length > 0) {
+                    let reponses = response.data.data;
+                    const moyensInfo = reponses.map(moyen => {
+                        return {
+                            id: moyen.id,
+                            libelle: moyen.libelle
+                        };
+                    });
+                    this.moyen_payments = moyensInfo;
+
+                    // this.produitStore.data = response.data.data;
+                }
+            } else {
+                this.afficherCnx();
+            }
+        },
+        async lcategorie() {
+            if (this.token) {
 
                 const response = await useNuxtApp().$axios.get(`${this.url}/pos_categories`, {
                     headers: {
@@ -384,10 +392,10 @@ export default {
                 }
             } else {
                 this.afficherCnx();
-                
+
             }
         },
-        refraichir(){
+        refraichir() {
             this.lproduit();
         },
         async lproduit() {
@@ -408,7 +416,7 @@ export default {
 
             }
         },
-          afficherCnx() {
+        afficherCnx() {
             this.msg = "Connectez - vous! ou réessayez la connexion";
             this.err = true;
             this.snackbar = true;
@@ -416,14 +424,17 @@ export default {
         addCustomer() {
             console.log('add client');
             this.router.push({ path: "/customers" });
-         
+
+        },
+        addProduct(id) {
+            console.log("produit ID : ", id);
         },
         printTicket() {
             console.log('print ticket')
         },
-    async  getCategorie(n) {
-        
-              if (this.token) {
+        async getCategorie(n) {
+
+            if (this.token) {
 
                 const response = await useNuxtApp().$axios.get(`${this.url}/pos_produit_by_categorie/${parseInt(n)}`, {
                     headers: {
@@ -441,6 +452,7 @@ export default {
         }
 
     }
+
 
 }
 </script>
