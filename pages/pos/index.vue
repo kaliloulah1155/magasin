@@ -131,7 +131,7 @@
                     </v-row>
 
                     <div class="d-flex justify-center mt-6">
-                        <v-badge bordered overlap color="error" content="10">
+                        <v-badge bordered overlap color="error" :content="qte_total">
                             <v-icon size="x-large">shopping_cart</v-icon>
                         </v-badge>
                     </div>
@@ -144,20 +144,20 @@
                             class="mt-1 mr-1 px-1"></v-img>
                     </v-col>
                     <v-col sm="6" md="4" lg="3" xl="2">
-                        <h6 class="ml-n6 text-grey text-dark text-subtitle-2 font-weight-bold">{{ article.libelle }}
+                        <h6 class="ml-n6 text-grey text-dark text-subtitle-2 font-weight-bold">{{ article.name }}
                             <br />
-                            <v-btn class="ml-2 mt-1" color="red" size="small" variant="flat" density="compact"
+                            <v-btn class="ml-2 mt-1" color="red" size="small" @click="delCartItem(article.id)"  variant="flat" density="compact"
                                 icon="cancel"></v-btn>
                         </h6>
                     </v-col>
                     <v-col sm="12" md="4" lg="6" xl="8">
-                        <v-btn class="ml-n6" color="green" size="small" variant="flat" density="compact"
+                        <v-btn class="ml-n6" color="green" size="small" @click="incCart(article.id)" variant="flat" density="compact"
                             icon="add"></v-btn>
-                        <v-divider vertical inset class="mr-1 mt-2"></v-divider> {{ article.quantite }} <v-divider
+                        <v-divider vertical inset class="mr-1 mt-2"></v-divider> {{ article.quantity }} <v-divider
                             vertical inset class="mr-1"></v-divider>
-                        <v-btn class="mx-1" color="red" size="small" variant="flat" density="compact"
+                        <v-btn class="mx-1" color="red" size="small" @click="decCart(article.id)" variant="flat" density="compact"
                             icon="remove"></v-btn>
-                        <strong class="ml-1 mr-1">{{ article.price }} F CFA</strong>
+                        <strong class="ml-1 mr-1">{{ moneyFormat(article.price*article.quantity) }} F CFA</strong>
                     </v-col>
                     <v-divider></v-divider>
                 </v-row>
@@ -205,7 +205,7 @@
                                 TOTAL
                             </v-col>
                             <v-col sm="12" md="4" lg="6" xl="8">
-                                1 500 500 F CFA
+                               {{ moneyFormat(grand_total) }} F CFA
                             </v-col>
                         </v-row>
 
@@ -250,6 +250,8 @@ export default {
         msg: '',
         err: false,
         url: useRuntimeConfig().public.apiBase,
+        qte_total:0,
+        grand_total:0,
         editedItem: {
             id: 0,
             client: "",
@@ -291,41 +293,11 @@ export default {
         this.lproduit()
         this.lclients()
         this.lmoyenpaid()
+        this.cartContent()
     },
     methods: {
         initialize() {
-            this.articles = [
-                {
-                    id: 1,
-                    libelle: "Lait",
-                    quantite: 2,
-                    price: 200,
-                    image: "/img/bread.jpg"
-                },
-                {
-                    id: 2,
-                    libelle: "Croissant",
-                    quantite: 1,
-                    price: 200,
-                    image: "/img/croissant.jpg"
-                },
-                {
-                    id: 2,
-                    libelle: "Prod 303",
-                    quantite: 1,
-                    price: 320,
-                    image: "/img/product.png"
-                },
-                {
-                    id: 3,
-                    libelle: "Jaune d'oeuf ",
-                    quantite: 1,
-                    price: 420,
-                    image: "/img/jaune_doeuf.jpg"
-                },
-
-
-            ]
+            this.articles = []
         },
         async lclients() {
             if (this.token) {
@@ -421,13 +393,96 @@ export default {
             this.err = true;
             this.snackbar = true;
         },
+        afficherMsg(messg){
+             this.msg = messg;
+            this.err = false;
+            this.snackbar = true;
+            //this.initialize()
+        },
         addCustomer() {
-            console.log('add client');
             this.router.push({ path: "/customers" });
 
         },
-        addProduct(id) {
-            console.log("produit ID : ", id);
+        async cartContent(){
+            if (this.token) {
+                const response = await useNuxtApp().$axios.get(`${this.url}/cart`,{
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                }); 
+                if(Object.values(response.data.cartItems).length > 0){
+                    this.articles= Object.values(response.data.cartItems);
+                    this.qte_total=response.data.totalProducts;
+                    this.grand_total=response.data.total
+                    //console.log(this.articles); 
+                }
+                
+                 
+            } else {
+                this.afficherCnx();
+            }
+        },
+        async addProduct(id) {
+            
+            if (this.token) {
+                const response = await useNuxtApp().$axios.post(`${this.url}/cart/${parseInt(id)}`,null, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                }); 
+                this.afficherMsg(response.data.message); 
+                this.cartContent();
+                 
+            } else {
+                this.afficherCnx();
+            }
+        },
+        async decCart(id){
+            if (this.token) {
+                const response = await useNuxtApp().$axios.post(`${this.url}/cart/${parseInt(id)}/decrease`,null, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                }); 
+                this.afficherMsg(response.data.message); 
+                this.cartContent();
+                 
+            } else {
+                this.afficherCnx();
+            }
+        },
+        async delCartItem(id){
+            if (this.token) {
+                const response = await useNuxtApp().$axios.delete(`${this.url}/cart/${parseInt(id)}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                }); 
+                this.afficherMsg(response.data.message); 
+                this.cartContent();
+                 
+            } else {
+                this.afficherCnx();
+            }
+        },
+        async incCart(id){
+            if (this.token) {
+                const response = await useNuxtApp().$axios.post(`${this.url}/cart/${parseInt(id)}/increase`,null, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `${this.token}`,
+                    }
+                }); 
+                this.afficherMsg(response.data.message); 
+                this.cartContent();
+                 
+            } else {
+                this.afficherCnx();
+            }
         },
         printTicket() {
             console.log('print ticket')

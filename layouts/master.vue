@@ -14,7 +14,7 @@ import { ref } from 'vue'
 <style scoped>
 .zoomed-content {
         /*transform: scale(0.9);*/
-        zoom:80%;
+        zoom:70%;
        
 }
 </style>
