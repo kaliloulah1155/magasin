@@ -49,7 +49,8 @@
                                 <v-col v-for="item in items" :key="item.libelle" sm="6" md="5" lg="2" xl="2" xs="2">
                                     <v-tooltip :text="item.raw.libelle" activator="parent" location="top">
                                         <template v-slot:activator="{ props }">
-                                            <v-card class="pb-3" @click.prevent="addProduct(item.raw.id)"   v-bind="props" border flat>
+                                            <v-card class="pb-3" @click.prevent="addProduct(item.raw.id)" v-bind="props"
+                                                border flat>
                                                 <v-img :src="item.raw.image" height="100" cover></v-img>
                                                 <v-list-item class="mb-2 text-center"
                                                     :subtitle="`${item.raw.selling_price}`">
@@ -58,11 +59,14 @@
                                                     </template>
                                                 </v-list-item>
                                                 <div class="d-flex justify-content-center">
-                                                    <div class="d-flex align-items-center text-caption text-medium-emphasis ">
+                                                    <div
+                                                        class="d-flex align-items-center text-caption text-medium-emphasis ">
                                                         <div class="text-truncate ml-8">
-                                                            <v-badge :color="item.raw.quantite > 0 ? 'info' : 'error'" :content="Number(item.raw.quantite)" inline></v-badge>
+                                                            <v-badge :color="item.raw.quantite > 0 ? 'info' : 'error'"
+                                                                :content="Number(item.raw.quantite)" inline></v-badge>
                                                             &nbsp;
-                                                            <v-chip :color="item.raw.quantite > 0 ? 'green' : 'red'">{{ item.raw.stock }}</v-chip>
+                                                            <v-chip :color="item.raw.quantite > 0 ? 'green' : 'red'">{{
+                                                                item.raw.stock }}</v-chip>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -139,18 +143,18 @@
                     <v-col sm="6" md="4" lg="3" xl="2">
                         <h6 class="ml-n6 text-grey text-dark text-subtitle-2 font-weight-bold">{{ article.name }}
                             <br />
-                            <v-btn class="ml-2 mt-1" color="red" size="small" @click="delCartItem(article.id)"  variant="flat" density="compact"
-                                icon="cancel"></v-btn>
+                            <v-btn class="ml-2 mt-1" color="red" size="small" @click="delCartItem(article.id)"
+                                variant="flat" density="compact" icon="cancel"></v-btn>
                         </h6>
                     </v-col>
                     <v-col sm="12" md="4" lg="6" xl="8">
-                        <v-btn class="ml-n6" color="green" size="small" @click="incCart(article.id)" variant="flat" density="compact"
-                            icon="add"></v-btn>
+                        <v-btn class="ml-n6" color="green" size="small" @click="incCart(article.id)" variant="flat"
+                            density="compact" icon="add"></v-btn>
                         <v-divider vertical inset class="mr-1 mt-2"></v-divider> {{ article.quantity }} <v-divider
                             vertical inset class="mr-1"></v-divider>
-                        <v-btn class="mx-1" color="red" size="small" @click="decCart(article.id)" variant="flat" density="compact"
-                            icon="remove"></v-btn>
-                        <strong class="ml-1 mr-1">{{ moneyFormat(article.price*article.quantity) }} F CFA</strong>
+                        <v-btn class="mx-1" color="red" size="small" @click="decCart(article.id)" variant="flat"
+                            density="compact" icon="remove"></v-btn>
+                        <strong class="ml-1 mr-1">{{ moneyFormat(article.price * article.quantity) }} F CFA</strong>
                     </v-col>
                     <v-divider></v-divider>
                 </v-row>
@@ -159,10 +163,11 @@
                     <v-col class="ma-1">
                         <v-row>
                             <v-col sm="12" md="4" lg="6" xl="8">
+
                                 <span>TVA(%)</span>
                             </v-col>
                             <v-col sm="12" md="4" lg="6" xl="8">
-                                <v-text-field type="number" class="" style="width:10rem;" />
+                                <v-text-field type="number" v-model="vtva" class="" style="width:10rem;" />
                             </v-col>
                         </v-row>
                         <v-row>
@@ -170,7 +175,7 @@
                                 REMISE(F CFA)
                             </v-col>
                             <v-col sm="12" md="4" lg="6" xl="8">
-                                <v-text-field type="number" class="" style="width: 10rem;" />
+                                <v-text-field type="number" v-model="vremise" class="" style="width: 10rem;" />
                             </v-col>
                         </v-row>
                         <v-row>
@@ -198,7 +203,7 @@
                                 TOTAL
                             </v-col>
                             <v-col sm="12" md="4" lg="6" xl="8">
-                               {{ moneyFormat(grand_total) }} F CFA
+                                {{ moneyFormat(grand_total) }} F CFA
                             </v-col>
                         </v-row>
 
@@ -243,8 +248,11 @@ export default {
         msg: '',
         err: false,
         url: useRuntimeConfig().public.apiBase,
-        qte_total:0,
-        grand_total:0,
+        qte_total: 0,
+        grand_total: 0,
+        vtva: 0,
+        vremise: 0,
+        grand_total_init: 0,
         editedItem: {
             id: 0,
             client: "",
@@ -278,7 +286,29 @@ export default {
     watch: {
         copy_produits(val, old) {
             this.produits = val;
+        },
+        vtva(val, old) {
+            let wtva = 0;
+
+            if (val !== undefined && val !== null && val !== '') {
+                wtva = parseInt(val);
+            }
+            console.log("wtva : ", wtva);
+            this.grand_total = this.calculerMontantTotal(this.grand_total, this.vremise, wtva, this.grand_total_init);
+        },
+        vremise(val, old) {
+            let wremise = 0;
+
+            if (val !== undefined && val !== null && val !== '') {
+                wremise = parseInt(val);
+            }
+            console.log("wremise : ", wremise);
+
+            this.grand_total = this.calculerMontantTotal(this.grand_total, wremise, this.vtva, this.grand_total_init);
+
+
         }
+
     },
     created() {
         this.initialize()
@@ -386,8 +416,8 @@ export default {
             this.err = true;
             this.snackbar = true;
         },
-        afficherMsg(messg){
-             this.msg = messg;
+        afficherMsg(messg) {
+            this.msg = messg;
             this.err = false;
             this.snackbar = true;
             //this.initialize()
@@ -396,83 +426,107 @@ export default {
             this.router.push({ path: "/customers" });
 
         },
-        async cartContent(){
+        calculerMontantTotal(total, remise, tva, total_init) {
+
+
+            // Initialiser le total final à zéro
+            let total_final = 0;
+
+            // Vérifier si la remise est vide et la mettre à zéro si c'est le cas
+            if (remise === '' || remise === undefined || isNaN(parseInt(remise))) {
+                remise = 0;
+            }
+            // Vérifier si la TVA est vide et la mettre à zéro si c'est le cas
+            if (tva === '' || tva === undefined || isNaN(parseInt(tva))) {
+                tva = 0;
+            }
+            // Si ni la TVA ni la remise n'existent pas, retourner le total initial
+            if (tva === 0 && remise === 0) {
+                return total_init;
+            }
+            let montant_tva = 0;
+            montant_tva = (total_init * parseInt(tva)) / 100;
+            total_final = parseInt(total_init) + parseInt(montant_tva) - parseInt(remise)
+            return parseInt(total_final);
+        },
+        async cartContent() {
             if (this.token) {
-                const response = await useNuxtApp().$axios.get(`${this.url}/cart`,{
+                const response = await useNuxtApp().$axios.get(`${this.url}/cart`, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `${this.token}`,
                     }
-                }); 
-                if(Object.values(response.data.cartItems).length > 0){
-                    this.articles= Object.values(response.data.cartItems);
-                    this.qte_total=response.data.totalProducts;
-                    this.grand_total=response.data.total
-                    //console.log(this.articles); 
+                });
+                if (Object.values(response.data.cartItems).length > 0) {
+                    this.articles = Object.values(response.data.cartItems);
+                    this.qte_total = response.data.cartTotalQuantity;
+                    this.grand_total_init = response.data.total
+                    this.grand_total = this.calculerMontantTotal(parseInt(response.data.total), this.vremise, this.tva, this.grand_total_init);
+
                 }
-                
-                 
+
+
             } else {
                 this.afficherCnx();
             }
         },
         async addProduct(id) {
-            
+
             if (this.token) {
-                const response = await useNuxtApp().$axios.post(`${this.url}/cart/${parseInt(id)}`,null, {
+                const response = await useNuxtApp().$axios.post(`${this.url}/cart/${parseInt(id)}`, null, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `${this.token}`,
                     }
-                }); 
-                this.afficherMsg(response.data.message); 
+                });
+                this.afficherMsg(response.data.message);
                 this.cartContent();
-                 
+
             } else {
                 this.afficherCnx();
             }
         },
-        async decCart(id){
+        async decCart(id) {
             if (this.token) {
-                const response = await useNuxtApp().$axios.post(`${this.url}/cart/${parseInt(id)}/decrease`,null, {
+                const response = await useNuxtApp().$axios.post(`${this.url}/cart/${parseInt(id)}/decrease`, null, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `${this.token}`,
                     }
-                }); 
-                this.afficherMsg(response.data.message); 
+                });
+                this.afficherMsg(response.data.message);
                 this.cartContent();
-                 
+
             } else {
                 this.afficherCnx();
             }
         },
-        async delCartItem(id){
+        async delCartItem(id) {
             if (this.token) {
                 const response = await useNuxtApp().$axios.delete(`${this.url}/cart/${parseInt(id)}`, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `${this.token}`,
                     }
-                }); 
-                this.afficherMsg(response.data.message); 
+                });
+                this.afficherMsg(response.data.message);
                 this.cartContent();
-                 
+
             } else {
                 this.afficherCnx();
             }
         },
-        async incCart(id){
+        async incCart(id) {
             if (this.token) {
-                const response = await useNuxtApp().$axios.post(`${this.url}/cart/${parseInt(id)}/increase`,null, {
+                const response = await useNuxtApp().$axios.post(`${this.url}/cart/${parseInt(id)}/increase`, null, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `${this.token}`,
                     }
-                }); 
-                this.afficherMsg(response.data.message); 
+                });
+                this.afficherMsg(response.data.message);
                 this.cartContent();
-                 
+
             } else {
                 this.afficherCnx();
             }
