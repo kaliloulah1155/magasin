@@ -49,7 +49,7 @@
                                 <v-col v-for="item in items" :key="item.libelle" sm="6" md="5" lg="2" xl="2" xs="2">
                                     <v-tooltip :text="item.raw.libelle" activator="parent" location="top">
                                         <template v-slot:activator="{ props }">
-                                            <v-card class="pb-3" v-bind="props" border flat>
+                                            <v-card class="pb-3" @click.prevent="addProduct(item.raw.id)"   v-bind="props" border flat>
                                                 <v-img :src="item.raw.image" height="100" cover></v-img>
                                                 <v-list-item class="mb-2 text-center"
                                                     :subtitle="`${item.raw.selling_price}`">
@@ -57,23 +57,16 @@
                                                         <strong class="text-h6 mb-2 ">{{ item.raw.libelle }}</strong>
                                                     </template>
                                                 </v-list-item>
-                                                <div class="d-flex justify-space-between ">
-                                                    <div
-                                                        class="d-flex align-center text-caption text-medium-emphasis me-1">
-                                                        <div class="text-truncate">
-                                                            <v-badge :color="item.raw.quantite > 0 ? 'info' : 'error'"
-                                                                :content="Number(item.raw.quantite)" inline>
-                                                            </v-badge>
+                                                <div class="d-flex justify-content-center">
+                                                    <div class="d-flex align-items-center text-caption text-medium-emphasis ">
+                                                        <div class="text-truncate ml-8">
+                                                            <v-badge :color="item.raw.quantite > 0 ? 'info' : 'error'" :content="Number(item.raw.quantite)" inline></v-badge>
                                                             &nbsp;
-                                                            <v-chip :color="item.raw.quantite > 0 ? 'green' : 'red'">{{
-                                                                item.raw.stock }}</v-chip>
+                                                            <v-chip :color="item.raw.quantite > 0 ? 'green' : 'red'">{{ item.raw.stock }}</v-chip>
                                                         </div>
                                                     </div>
-                                                    <v-btn border flat size="small"
-                                                        @click.prevent="addProduct(item.raw.id)" class="text-none mx-1"
-                                                        icon="add"></v-btn>
-
                                                 </div>
+
                                             </v-card>
                                         </template>
                                     </v-tooltip>
