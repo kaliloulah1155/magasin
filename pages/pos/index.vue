@@ -293,7 +293,6 @@ export default {
             if (val !== undefined && val !== null && val !== '') {
                 wtva = parseInt(val);
             }
-            console.log("wtva : ", wtva);
             this.grand_total = this.calculerMontantTotal(this.grand_total, this.vremise, wtva, this.grand_total_init);
         },
         vremise(val, old) {
@@ -302,8 +301,6 @@ export default {
             if (val !== undefined && val !== null && val !== '') {
                 wremise = parseInt(val);
             }
-            console.log("wremise : ", wremise);
-
             this.grand_total = this.calculerMontantTotal(this.grand_total, wremise, this.vtva, this.grand_total_init);
 
 
