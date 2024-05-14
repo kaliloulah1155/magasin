@@ -2,7 +2,7 @@ export default defineNuxtConfig({
   modules: [
     "@sidebase/nuxt-auth",
     "@pinia/nuxt",
-    "@pinia-plugin-persistedstate/nuxt",
+    "@pinia-plugin-persistedstate/nuxt"
   ],
   pinia: {
     storesDirs: ["./stores/**"],
@@ -35,6 +35,7 @@ export default defineNuxtConfig({
     "vuetify/dist/vuetify.css",
     "@mdi/font/css/materialdesignicons.min.css",
     "material-design-icons-iconfont/dist/material-design-icons.css",
+    "~/assets/scss/main.scss"
   ],
   build: {
     transpile: ["vuetify", "axios"],
@@ -63,5 +64,5 @@ export default defineNuxtConfig({
   },
   experimental: {
     inlineSSRStyles: false,
-  },
+  }
 });

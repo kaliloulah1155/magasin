@@ -42,13 +42,7 @@ export default defineNuxtPlugin((app) => {
       fallback: "en",
       messages: { fr, en },
     },
-    /*date: {
-      adapter: DateFnsAdapter,
-      locale: {
-        en: enUS,
-        fr: frFr,
-      },
-    }, */   
+      
   });
   app.vueApp.use(vuetify);
 });
