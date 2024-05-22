@@ -97,7 +97,7 @@
             <!-- END::ALL PRODUCT-->
 
             <!--BEGIN RIGHT SIDEBAR-->
-            <v-navigation-drawer permanent app color="white" location="right" width="400">
+            <v-navigation-drawer permanent app color="white" location="right" width="500">
                 <v-list subheader lines="two" class="mt-5">
                     <v-row align="center" justify="center">
                         <v-col cols="auto">
@@ -163,6 +163,14 @@
                     <v-col class="ma-1">
                         <v-row>
                             <v-col sm="12" md="4" lg="6" xl="8">
+                                TOTAL
+                            </v-col>
+                            <v-col sm="12" md="4" lg="6" xl="8">
+                                {{ moneyFormat(grand_total) }} F CFA
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col sm="12" md="4" lg="6" xl="8">
 
                                 <span>TVA(%)</span>
                             </v-col>
@@ -176,6 +184,22 @@
                             </v-col>
                             <v-col sm="12" md="4" lg="6" xl="8">
                                 <v-text-field type="number" v-model="vremise" class="" style="width: 10rem;" />
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col sm="12" md="4" lg="6" xl="8">
+                                ESPECE(F CFA)
+                            </v-col>
+                            <v-col sm="12" md="4" lg="6" xl="8">
+                                <v-text-field type="number" v-model="vespece" class="" style="width: 10rem;" />
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col sm="12" md="4" lg="6" xl="8">
+                                MONNAIE(F CFA)
+                            </v-col>
+                            <v-col sm="12" md="4" lg="6" xl="8">
+                                <v-text-field type="number" disabled v-model="vmonnaie" class="" style="width: 10rem;" />
                             </v-col>
                         </v-row>
                         <v-row>
@@ -198,14 +222,7 @@
                                     style="width:10rem;"></v-select>
                             </v-col>
                         </v-row>
-                        <v-row>
-                            <v-col sm="12" md="4" lg="6" xl="8">
-                                TOTAL
-                            </v-col>
-                            <v-col sm="12" md="4" lg="6" xl="8">
-                                {{ moneyFormat(grand_total) }} F CFA
-                            </v-col>
-                        </v-row>
+                        
 
                         <v-toolbar color="rgba(0,0,0,0)" flat class="d-flex justify-center">
                             <v-btn size="x-large" block variant="flat" color="green" density="compact"
@@ -252,6 +269,8 @@ export default {
         grand_total: 0,
         vtva: 0,
         vremise: 0,
+        vespece:0,
+        vmonnaie:0,
         grand_total_init: 0,
         editedItem: {
             id: 0,
@@ -294,6 +313,7 @@ export default {
                 wtva = parseInt(val);
             }
             this.grand_total = this.calculerMontantTotal(this.grand_total, this.vremise, wtva, this.grand_total_init);
+            this.calculMonnaie(this.vespece);
         },
         vremise(val, old) {
             let wremise = 0;
@@ -303,7 +323,14 @@ export default {
             }
             this.grand_total = this.calculerMontantTotal(this.grand_total, wremise, this.vtva, this.grand_total_init);
 
-
+            this.calculMonnaie(this.vespece);
+        },
+        vespece(val,old){
+                let wespece = 0;
+                if (val !== undefined && val !== null && val !== '') {
+                    wespece = parseInt(val);
+                }
+                this.vmonnaie=wespece - this.grand_total; //calcul de la monnaie
         }
 
     },
@@ -422,6 +449,19 @@ export default {
         addCustomer() {
             this.router.push({ path: "/customers" });
 
+        },
+        calculMonnaie(wespece){
+                 wespece = 0;
+                if (wespece !== undefined && wespece !== null && wespece !== '') {
+                    if(this.vespece>0){
+                        wespece=this.vespece;
+                    }else{
+                        wespece = parseInt(wespece);
+                    }
+                   
+                }
+                this.vmonnaie=wespece - this.grand_total;
+                 
         },
         calculerMontantTotal(total, remise, tva, total_init) {
 
