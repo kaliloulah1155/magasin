@@ -72,7 +72,7 @@ const links = ref([
     { text: "PRODUITS", icon: "add_chart", route: "/produits" },
     { text: "DEPENSES", icon: "account_balance", route: "/depenses" },
     { text: "STOCKS", icon: "store", route: "/stocks" },
-      { text: "SALAIRES", icon: "payments", route: "/salaires" }
+    { text: "SALAIRES", icon: "payments", route: "/salaires" }
 ])
 
 const logout=async()=>{

@@ -225,7 +225,7 @@
                         
 
                         <v-toolbar color="rgba(0,0,0,0)" flat class="d-flex justify-center">
-                            <v-btn size="x-large" block variant="flat" color="green" density="compact"
+                            <v-btn size="x-large" block variant="flat" color="green" @click="valideOrder" density="compact"
                                 elevation="1">COMMANDER</v-btn>
                         </v-toolbar>
                     </v-col>
@@ -272,6 +272,7 @@ export default {
         vespece:0,
         vmonnaie:0,
         grand_total_init: 0,
+        pos_ID:0,
         editedItem: {
             id: 0,
             client: "",
@@ -568,8 +569,71 @@ export default {
                 this.afficherCnx();
             }
         },
+        async createOrder(json){
+
+            const formData = new FormData();
+            formData.append('client_id', json.client_id);
+            formData.append('tva', json.tva);
+            formData.append('remise', json.remise);
+            formData.append('qte_total', json.qte_total);
+            formData.append('paid_method_id', json.paid_method_id);
+            formData.append('espece', json.espece);
+            formData.append('monnaie', json.monnaie);
+
+            let entries = formData.entries();
+                // Parcours de toutes les paires clé/valeur et affichage
+            for(let pair of entries) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+
+            if (this.token) {
+                const response = await useNuxtApp().$axios.post(`${this.url}/addOrder`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `${this.token}`,
+                    }
+                });
+                 
+                if (response.status == 201) {
+                    //lien de l'imprimer
+                    this.pos_ID=response.data.pos_id
+                    this.afficherMsg("Commande effectuée avec succès, Veuillez imprimer");
+                };
+
+            } else {
+                this.afficherCnx();
+            }
+
+        },
+        async valideOrder(){
+            let savedObject = {};
+
+            if( 
+                this.editedItem.client !=='' &&
+                 this.editedItem.moyen_p !=='' &&
+                 this.vespece >0 &&
+                 this.vmonnaie > 0
+                 
+                 ){
+
+                if (this.editedItem.client && this.editedItem.client.hasOwnProperty('fullname')) {
+                    savedObject.client_id = this.editedItem.client.id;
+                }
+                if (this.editedItem.moyen_p && this.editedItem.moyen_p.hasOwnProperty('libelle')) {
+                    savedObject.paid_method_id = this.editedItem.moyen_p.id;
+                }
+                savedObject.tva=parseInt(this.vtva);
+                savedObject.remise=parseInt(this.vremise);
+                savedObject.qte_total=parseInt(this.grand_total);
+                savedObject.espece=parseInt(this.vespece);
+                savedObject.monnaie=parseInt(this.vmonnaie);
+
+                this.createOrder(savedObject);
+
+             }
+        },
         printTicket() {
-            console.log('print ticket')
+            window.open(`${this.url}/printOrder/${this.pos_ID}`, '_blank');  
         },
         async getCategorie(n) {
 

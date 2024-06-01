@@ -373,7 +373,7 @@ export default {
             if (fromPopup.profil_id && fromPopup.profil_id.hasOwnProperty('libelle')) {
                 savedObject.profil_id = fromPopup.profil_id.id;
             }
-
+   
             if (fromPopup.statut && fromPopup.statut.hasOwnProperty('libelle')) {
                 savedObject.statut = fromPopup.statut.id;
             }
