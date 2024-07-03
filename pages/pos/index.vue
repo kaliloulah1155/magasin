@@ -598,12 +598,27 @@ export default {
                     //lien de l'imprimer
                     this.pos_ID=response.data.pos_id
                     this.afficherMsg("Commande effectuée avec succès, Veuillez imprimer");
+                    //REINITIALISER LES ELEMENTS
+                    this.videOrder();
                 };
 
             } else {
                 this.afficherCnx();
             }
 
+        },
+        async videOrder(){
+            this.lproduit();
+            this.lcategorie();
+            this.qte_total=0;
+            this.grand_total=0;
+            this.vtva=0;
+            this.vremise=0;
+            this.vmonnaie=0;
+            this.vespece=0;
+            this.lclients();
+            this.lmoyenpaid();
+            this.cartContent();
         },
         async valideOrder(){
             let savedObject = {};
@@ -612,7 +627,7 @@ export default {
                 this.editedItem.client !=='' &&
                  this.editedItem.moyen_p !=='' &&
                  this.vespece >0 &&
-                 this.vmonnaie > 0
+                 this.vmonnaie >= 0
                  
                  ){
 
@@ -633,7 +648,10 @@ export default {
              }
         },
         printTicket() {
-            window.open(`${this.url}/printOrder/${this.pos_ID}`, '_blank');  
+           if( this.pos_ID > 0){ 
+                window.open(`${this.url}/printOrder/${this.pos_ID}`, '_blank');
+                this.pos_ID=0;
+            };  
         },
         async getCategorie(n) {
 

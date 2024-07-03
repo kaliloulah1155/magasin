@@ -10,13 +10,15 @@ export default defineNuxtConfig({
   runtimeConfig: {
     apiSecret: "", // can be overridden by NUXT_API_SECRET environment variable
     public: {
-      apiBase: "https://pos789456123.kewoustore.com/api/v1", // can be overridden by NUXT_PUBLIC_API_BASE environment variable
+      //"https://pos789456123.kewoustore.com/api/v1"
+      //http://127.0.0.1
+      apiBase: "http://127.0.0.1:8000/api/v1", // can be overridden by NUXT_PUBLIC_API_BASE environment variable
       pwdForUser:"password2024"
     },
   },
   auth: {
     globalAppMiddleware: true,
-    baseURL: "https://pos789456123.kewoustore.com/api/v1",
+    baseURL: "http://127.0.0.1:8000/api/v1",
     provider: {
       type: "local",
       endpoints: {
