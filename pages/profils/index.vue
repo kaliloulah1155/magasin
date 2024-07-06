@@ -85,7 +85,8 @@ export default {
     });
     const authStore = useAuthStore();
     const { token } = useAuth();
-    return { authStore, token };
+    const router = useRouter();
+    return { authStore, token,router };
   },
   data: () => ({
     snackbar: false,
@@ -153,6 +154,24 @@ export default {
         this.afficherCnx();
       }
     },
+    async updateMenu() {
+      if (this.token) {
+        const response = await useNuxtApp().$axios.get(`${this.url}/infoUser`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${this.token}`,
+          },
+        });
+        
+        if (response.data.menus.length > 0) {
+           window.location.reload();
+        }   
+
+
+      } else {
+        this.afficherCnx();
+      }
+    },
     async fetchMenus() {
       if (this.token) {
         if (this.selectedProfilId > 0) {
@@ -212,6 +231,7 @@ export default {
           );
 
           if (response.status == 201) {
+            this.updateMenu();
             this.afficherMsg("Mise à jour effectué avec succès");
           }
         }

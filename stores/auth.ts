@@ -1,13 +1,11 @@
-import { defineStore } from "pinia";
-export const useAuthStore = defineStore(
-  "auth",
-  {
-    state: () => ({
-      data: {},
-    }),
-    actions: {},
-  },
-  {
-    persist: true,
-  }
-);
+import { defineStore } from 'pinia';
+
+export const useAuthStore = defineStore({
+  id: 'auth',
+  state: () => ({
+    data: {},
+    userInfo: [],
+  }),
+  actions: {},
+  persist: true, // Inclure persist ici
+});

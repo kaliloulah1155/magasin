@@ -20,16 +20,17 @@
             <!-- BEGIN: Afficage des menus sidebar-->
             <nav class="ma-2">
                 <v-list>
-                    <v-list-item v-for="link in links" :key="link.icon" router :to="link.route" color="primary"
+                    <v-list-item v-for="link in links" :key="link.resourceId" router :to="link.resourcePath" color="primary"
                         rounded="shaped">
                         <template v-slot:prepend>
-                            <v-icon class="dark caption"   >{{ link.icon }}</v-icon>
+                            <v-icon class="dark caption"   >{{ link.resourceIcon }}</v-icon>
                         </template>
-                        <v-list-item-title>{{ link.text }}</v-list-item-title>
+                        <v-list-item-title>{{ link.resourceName }}</v-list-item-title>
                     </v-list-item>
                 </v-list>
             </nav>
             <!-- END: Afficage des menus sidebar-->
+            
             <!-- Bouton de deconnexion  -->
             <template v-slot:append>
                 <div class="pa-2">
@@ -48,33 +49,38 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref ,onMounted,watch} from 'vue'
+import { useAuthStore } from '../stores/auth'
  
 
-const { signOut,data } = useAuth();
+const { signOut,data} = useAuth();
+
+
+const authStore = useAuthStore();
 
 const nom =ref(data.value.nom)
 const prenoms = ref(data.value.prenoms)
 const profil =ref(data.value.profile_name)
 const photo = ref(data.value.image)
 
+const links =ref([]);
+
+onMounted(() => {
+    authStore.data=data.value;
+});
+links.value=authStore.data.menus;
+
+watch(() => authStore.data, (newValue, oldValue) => {
+  
+  console.log(oldValue);
+  console.log(newValue);
+  links.value=newValue.menus
+}, { deep: true });
  
-   console.log("Mes donnees : ", data.value)
+ //  console.log(authStore.data.menus)
 
 const drawer = ref(null)
-const links = ref([
-    { text: "DASHBOARD", icon: "dashboard", route: "/dashboard" },
-    { text: "POINT OF SALES", icon: "point_of_sale", route: "/pos" },
-    { text: "PROFILS", icon: "settings_accessibility", route: "/profils" },
-    { text: "EMPLOYES", icon: "group", route: "/employes" },
-    { text: "CLIENTS", icon: "co_present", route: "/customers" },
-    { text: "FOURNISSEURS", icon: "currency_exchange", route: "/fournisseurs" },
-    { text: "CATEGORIES", icon: "collections_bookmark", route: "/categories" },
-    { text: "PRODUITS", icon: "add_chart", route: "/produits" },
-    { text: "DEPENSES", icon: "account_balance", route: "/depenses" },
-    { text: "STOCKS", icon: "store", route: "/stocks" },
-    { text: "SALAIRES", icon: "payments", route: "/salaires" }
-])
+ 
 
 const logout=async()=>{
    try {
