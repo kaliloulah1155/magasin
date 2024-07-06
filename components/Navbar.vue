@@ -65,7 +65,7 @@ const drawer = ref(null)
 const links = ref([
     { text: "DASHBOARD", icon: "dashboard", route: "/dashboard" },
     { text: "POINT OF SALES", icon: "point_of_sale", route: "/pos" },
-    { text: "PROFILS", icon: "group", route: "/profils" },
+    { text: "PROFILS", icon: "settings_accessibility", route: "/profils" },
     { text: "EMPLOYES", icon: "group", route: "/employes" },
     { text: "CLIENTS", icon: "co_present", route: "/customers" },
     { text: "FOURNISSEURS", icon: "currency_exchange", route: "/fournisseurs" },

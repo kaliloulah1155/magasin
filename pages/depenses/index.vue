@@ -103,7 +103,7 @@ export default {
             layout: 'master'
         })
         
-
+  
         const authStore = useAuthStore()
         const depenseStore = useDepenseStore()
         const { token } = useAuth()

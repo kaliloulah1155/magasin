@@ -29,7 +29,7 @@ export default defineNuxtConfig({
       },
       pages: {
         login: "/",
-      },
+      },   
     },
   },
   devtools: { enabled: true },
@@ -61,6 +61,7 @@ export default defineNuxtConfig({
           rel: "stylesheet",
           href: "https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/3.8.95/css/materialdesignicons.css",
         },
+        
       ],
     },
   },
