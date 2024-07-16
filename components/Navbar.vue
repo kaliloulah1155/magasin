@@ -2,17 +2,10 @@
     <nav>
         <v-navigation-drawer app v-model="drawer" location="left" color="rgba(249, 232, 232, 0.8)">
             <v-col class="text-center">
-                <v-avatar color="grey-lighten-5 " rounded="0" size="100">
-                    <v-img src="logo.png"
-                        alt="Logo Entreprise"></v-img>
-                </v-avatar>
-                <p class="text-center font-weight-black text-caption text-uppercase text-subtitle-1 mt-1">
-                    KEWOUSTORE
-                </p>
+                <v-img src="logo.png" alt="Logo Entreprise"></v-img>
             </v-col>
             <v-col>
                 <v-list>
-               
                     <v-list-item :prepend-avatar="photo" :title="`${nom} ${prenoms}`" :subtitle="profil">
                     </v-list-item>
                 </v-list>
@@ -34,16 +27,21 @@
             <!-- Bouton de deconnexion  -->
             <template v-slot:append>
                 <div class="pa-2">
-                    <v-btn @click.prevent="logout" color="rgba(243, 105, 127, 0.8)" block flat size="small" elevation="1">
+                    <v-btn @click.prevent="logout" color="rgba(243, 105, 127, 0.8)" block flat elevation="10">
                         D&Eacute;CONNEXION
                     </v-btn>
                 </div>
             </template>
         </v-navigation-drawer>
-        <v-app-bar>
-            
-            <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" color="blue"></v-app-bar-nav-icon>
-            <v-app-bar-title>Application</v-app-bar-title>
+        <v-app-bar class="border rounded px-3" max-height="300">
+            <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" color="black"></v-app-bar-nav-icon>
+
+            <v-app-bar-title>
+                <marquee behavior="" direction=""><b>GLOBAL SHOP PLUS :</b> Votre application de gestion de stock</marquee>
+            </v-app-bar-title>
+
+            <v-spacer></v-spacer>
+
         </v-app-bar>
     </nav>
 </template>
@@ -51,10 +49,8 @@
 <script setup>
 import { ref ,onMounted,watch} from 'vue'
 import { useAuthStore } from '../stores/auth'
- 
 
 const { signOut,data} = useAuth();
-
 
 const authStore = useAuthStore();
 
