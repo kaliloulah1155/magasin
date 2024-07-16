@@ -1,5 +1,5 @@
 <template  >
-        <v-app id="inspire" class="zoomed-content" >
+        <v-app :theme="theme" id="inspire" class="zoomed-content">
                 <Navbar />
                 <v-main>
                         <slot />
@@ -8,9 +8,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
- 
+  import { ref } from 'vue'
+
+  const theme = ref('light')
+
+  function onClick () {
+    theme.value = theme.value === 'light' ? 'dark' : 'light'
+  }
 </script>
+
 <style scoped>
 .zoomed-content {
         /*transform: scale(0.9);*/
