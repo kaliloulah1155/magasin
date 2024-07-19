@@ -471,7 +471,7 @@ export default {
 
  
                       this.createData(updatedItem);
-             console.log("updatedItem ",updatedItem);
+           
         },
         closeDelete() {
             this.dialogDelete = false

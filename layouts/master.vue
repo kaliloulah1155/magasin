@@ -1,5 +1,7 @@
 <template  >
-        <v-app :theme="theme" id="inspire" class="zoomed-content">
+       
+       <v-app :theme="theme" id="inspire" class="zoomed-content">
+        
                 <Navbar />
                 <v-main>
                         <slot />

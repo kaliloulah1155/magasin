@@ -1,4 +1,5 @@
 <template>
+    
     <nav>
         <v-navigation-drawer app v-model="drawer" location="left" color="rgba(249, 232, 232, 0.8)">
             <v-col class="text-center">
@@ -66,7 +67,7 @@ onMounted(() => {
  authStore.data=data.value;
 });
 links.value= removeDuplicates(authStore.data.menus,'resourceName');
-console.log("links : ",removeDuplicates(links.value,'resourceName'));
+
 
  
 
