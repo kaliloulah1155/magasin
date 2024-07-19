@@ -263,7 +263,7 @@ export default {
                         'Content-Type': 'application/json',
                         'Authorization': `${this.token}`,
                     }
-                });
+                });  
                
                 if (response.status == 200) {
                     this.afficherMsg("Catégorie créé avec succès")

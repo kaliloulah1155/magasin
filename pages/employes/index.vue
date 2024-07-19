@@ -308,7 +308,7 @@ export default {
                     updatedObject.image = this.photo;
                 }
 
-                // console.log('this.editedItem 1 : ', updatedObject);
+                
                 this.updateData(updatedObject);
             }
 
@@ -377,7 +377,7 @@ export default {
                 savedObject.sexe = fromPopup.sexe.code;
             }
           
-           // console.log("Employe:fromPopup ", savedObject)
+          
              this.createData(savedObject);
         },
         async updateData(json) {

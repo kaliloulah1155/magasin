@@ -162,7 +162,7 @@ export default {
             Authorization: `${this.token}`,
           },
         });
-        
+         
         if (response.data.menus.length > 0) {
            window.location.reload();
         }   

@@ -53,6 +53,7 @@ import { useAuthStore } from '../stores/auth'
 const { signOut,data} = useAuth();
 
 const authStore = useAuthStore();
+const { removeDuplicates } = useRemoveDuplicates();
 
 const nom =ref(data.value.nom)
 const prenoms = ref(data.value.prenoms)
@@ -62,18 +63,19 @@ const photo = ref(data.value.image)
 const links =ref([]);
 
 onMounted(() => {
-    authStore.data=data.value;
+ authStore.data=data.value;
 });
-links.value=authStore.data.menus;
+links.value= removeDuplicates(authStore.data.menus,'resourceName');
+console.log("links : ",removeDuplicates(links.value,'resourceName'));
+
+ 
 
 watch(() => authStore.data, (newValue, oldValue) => {
-  
-  console.log(oldValue);
-  console.log(newValue);
-  links.value=newValue.menus
+ 
+  //links.value=newValue.menus
+  links.value= removeDuplicates(newValue.menus,'resourceName');
 }, { deep: true });
  
- //  console.log(authStore.data.menus)
 
 const drawer = ref(null)
  

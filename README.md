@@ -1,3 +1,4 @@
 Projet de mise en place d'un POS
 
-afisu
+npm run dev -- -p 3001
+
