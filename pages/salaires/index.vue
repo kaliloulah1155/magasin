@@ -195,7 +195,7 @@ export default {
       canDelete: false,
     });
 
-  
+      
      
     return { authStore, salaireStore, token, accessRights };
   },

@@ -1,11 +1,11 @@
 <template>
     <div class="dashboard ma-4">
-        <NuxtPage title="Fournisseurs" />
+        <template v-if="accessRights.canView">
         <v-banner lines="one" color="warning">
             <template v-slot:text>
                 <h1 class="text-subtitle-1 text-grey">Fournisseurs</h1>
             </template>
-            <template v-slot:actions>
+            <template v-if="accessRights.canCreate" v-slot:actions>
                 <popup-client @saveItem="getItem" :profils="profils" :item_statut="item_statut"
                     :sexe_statut="sexe_statut" />
             </template>
@@ -102,10 +102,14 @@
                     </template>
 
                     <template v-slot:item.actions="{ item }">
-                        <v-icon size="small" class="me-2" @click="editItem(item)">
+                        <v-icon
+                        v-if="accessRights.canEdit" 
+                        size="small" class="me-2" @click="editItem(item)">
                             edit_note
                         </v-icon>
-                        <v-icon size="small" @click="deleteItem(item)">
+                        <v-icon 
+                         v-if="accessRights.canDelete"
+                        size="small" @click="deleteItem(item)">
                             delete
                         </v-icon>
                     </template>
@@ -113,6 +117,23 @@
                 </v-data-table>
             </v-card>
         </v-container>
+         </template>
+    <template v-else>
+      <v-sheet
+        class="d-flex align-center justify-center mt-4 flex-wrap text-center mx-auto px-4"
+        elevation="4"
+        height="250"
+        max-width="800"
+        width="100%"
+        rounded
+      >
+        <div>
+          <h2 class="text-h4 font-weight-black text-orange">
+            Vous n'avez pas les droits necessaires
+          </h2>
+        </div>
+      </v-sheet>
+    </template>
     </div>
     <v-snackbar v-model="snackbar" multi-line location="top" :color="err ? 'red-lighten-3' : 'green-lighten-3'">
         {{ msg }}
@@ -133,8 +154,17 @@ export default {
         })
         const authStore = useAuthStore()
         const fournisseurStore = useFournisseurStore()
-        const { token } = useAuth()
-        return { authStore, fournisseurStore, token }
+        const { data,token } = useAuth()
+        
+    const accessRights = reactive({
+       profil_id:data.value.profil_id,
+      canCreate: false,
+      canView: false,
+      canEdit: false,
+      canDelete: false,
+    });
+
+        return { authStore, fournisseurStore, token,accessRights }
     },
     data: () => ({
         dialog: false,
@@ -220,8 +250,32 @@ export default {
     created() {
         this.initialize()
         this.profils_list()
+        this.accessRights.canView=true;
+    this.checkUserAccess();
     },
     methods: {
+        async checkUserAccess(){
+      let checkjson = {
+        profil_id: this.accessRights.profil_id,
+        menu_libelle: "FOURNISSEURS",
+      };
+      if (this.token) {
+        const response = await useNuxtApp().$axios.post(
+          `${this.url}/test_permission`,
+          checkjson,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${this.token}`,
+            },
+          }
+        );
+        this.accessRights.canView = response.data[0].show;
+        this.accessRights.canCreate = response.data[1].add;
+        this.accessRights.canEdit = response.data[2].edit;
+        this.accessRights.canDelete = response.data[4].supp;
+      }
+    },
         async initialize() {
             if (this.token) {
                 const response = await useNuxtApp().$axios.get(`${this.url}/fournisseurs`, {
