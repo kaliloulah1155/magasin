@@ -40,7 +40,63 @@
                                                     <br>
                                                     <div class="mt-4">
                                                         <v-btn to="" color="blue-darken-2" variant="outlined">Mot de
-                                                            passe oublié ?</v-btn>
+                                                            passe oublié ?
+
+                                                            <v-dialog activator="parent" max-width="500">
+                                                                <template v-slot:default="{ isActive }">
+                                                                    <v-card rounded="lg">
+                                                                    <v-card-title class="d-flex justify-space-between align-center">
+                                                                        <div class="text-h5 text-medium-emphasis ps-2">
+                                                                            Réinitialisation de mot de passe
+                                                                        </div>
+
+                                                                        <v-btn
+                                                                        icon="mdi-close"
+                                                                        color="blue-darken-4"
+                                                                        variant="text"
+                                                                        @click="isActive.value = false"
+                                                                        ></v-btn>
+                                                                    </v-card-title>
+
+                                                                    <v-divider class="mb-4"></v-divider>
+
+                                                                    <v-card-text>
+                                                                        <div class="text-medium-emphasis mb-4">
+                                                                        Veuillez entrez votre mot de passe et vous allez recevoir un code de reilitialisation.
+                                                                        </div>
+
+                                                                        <div class="mb-2">Entrez votre adresse email</div>
+
+                                                                        <v-text-field label="Email" v-model="credentials.login" outlined
+                                                                            autofocus dense color="blue" autocomplete="false"
+                                                                            prepend-inner-icon="email"
+                                                                            placeholder="Entrer votre email">
+                                                                        </v-text-field>
+                                                                    </v-card-text>
+
+                                                                    <v-divider class="mt-2"></v-divider>
+
+                                                                    <v-card-actions class="my-2 d-flex justify-end">
+                                                                        <v-btn
+                                                                        class="text-none"
+                                                                        rounded="xl"
+                                                                        text="Annuler"
+                                                                        @click="isActive.value = false"
+                                                                        ></v-btn>
+
+                                                                        <v-btn
+                                                                        class="text-none"
+                                                                        color="blue-darken-4"
+                                                                        rounded="xl"
+                                                                        text="Envoyer"
+                                                                        variant="flat"
+                                                                        @click="isActive.value = false"
+                                                                        ></v-btn>
+                                                                    </v-card-actions>
+                                                                    </v-card>
+                                                                </template>
+                                                            </v-dialog>
+                                                        </v-btn>
                                                     </div>
                                                 </v-col>
                                             </v-row>
@@ -107,7 +163,7 @@
 
                                                 <v-chip class="ma-2" color="success" variant="outlined">
                                                     <v-icon icon="mdi-server-plus" start></v-icon>
-                                                    +225 07 73 83 27 78
+                                                    +225 01 73 83 27 78
                                                 </v-chip>
                                             </div>
                                         </v-card-text>
