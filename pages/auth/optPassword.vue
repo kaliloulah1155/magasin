@@ -3,7 +3,7 @@
     <div>
 
         <Head>
-            <Title>Connexion | GlobalShop plus</Title>
+            <Title>OPT | GlobalShop plus</Title>
             <Meta name="description" content="Création de compte utilisateur" />
         </Head>
         <v-container>
@@ -15,32 +15,57 @@
                                 <v-row>
                                     <v-col cols="12" sm="6">
                                         <v-card-text class="mt-12">
-                                            <h2 class="text-center">Connectez-vous à votre compte</h2>
                                             <v-row class="text-center d-flex justify-center">
                                                 <v-col cols="12" sm="10">
-                                                    <v-text-field label="Email" v-model="credentials.login" outlined
-                                                        autofocus dense color="blue" autocomplete="false" class="mt-16"
-                                                        prepend-inner-icon="email"
-                                                        placeholder="Entrer votre email"></v-text-field>
-                                                    <v-text-field v-model="credentials.password"
-                                                        :append-inner-icon="visible ? 'visibility_off' : 'visibility'"
-                                                        :type="visible ? 'text' : 'password'" label="Mot de passe "
-                                                        outlined dense color="blue" autocomplete="false"
-                                                        placeholder="Entrer votre mot de passe"
-                                                        prepend-inner-icon="lock"
-                                                        @click:append-inner="visible = !visible"></v-text-field>
 
+                                                    <v-sheet
+                                                        class="py-8 px-6 mx-auto ma-4 text-center"
+                                                        elevation="4"
+                                                        max-width="500"
+                                                        rounded="lg"
+                                                        width="100%"
+                                                    >
+                                                        <h3 class="text-h5">Verification de Code</h3>
 
+                                                        <div class="text-subtitle-2 font-weight-light mb-3">
+                                                            Veuillez saisir le code de vérification envoyé sur votre email
+                                                        </div>
+
+                                                        <v-otp-input
+                                                        v-model="otp"
+                                                        class="mb-8"
+                                                        divider="•"
+                                                        color="blue-darken-2"
+                                                        length="4"
+                                                        variant="outlined"
+                                                        ></v-otp-input>
+
+                                                        <div class="text-caption">
+                                                        <v-btn
+                                                            color="blue-darken-2"
+                                                            size="x-small"
+                                                            text="Envoyer un nouveau code"
+                                                            variant="text"
+                                                            @click="otp = ''"
+                                                        ></v-btn>
+                                                        </div>
+
+                                                    </v-sheet>
 
                                                     <div class="mt-2">
-                                                        <v-btn :loading="loading" @click="load" to="/dashboard"
-                                                            color="blue-darken-4" dark block tile
-                                                            @click.prevent="login">Se connecter</v-btn>
+                                                        <v-btn 
+                                                        :loading="loading" 
+                                                        @click="load" 
+                                                        to="newPassword"
+                                                        text="Valider"
+                                                        color="blue-darken-4" 
+                                                        dark block tile>
+                                                        </v-btn>
                                                     </div>
-                                                    <br>
-                                                    <div class="mt-4">
-                                                        <v-btn to="/auth/resetPassword" color="blue-darken-2" variant="outlined">Mot de
-                                                            passe oublié ?
+
+                                                    <div class="mt-2">
+                                                        <v-btn to="/resetPassword" color="blue-darken-2" variant="outlined">
+                                                            RETOUR
                                                         </v-btn>
                                                     </div>
                                                 </v-col>
@@ -71,13 +96,14 @@
                                     <v-col cols="12" sm="6" class="blue rounded-br-xl">
                                         <div style="padding:180px 0;">
                                             <v-card-text class="text-white">
-                                                <h1 class="text-center ">Votre compte existe déjà ? </h1>
+                                                <h1 class="text-center ">Mot de passe oublié ?</h1>
                                                 <br>
-                                                <h3 class="text-center">Veuillez vous connecter à votre compte</h3>
+                                                <h3 class="text-center">Vous être sur le point de réinitialiser le mot de passe </h3>
                                             </v-card-text>
                                             <div class="text-center">
-                                                <v-btn color="blue-darken-4" outlined dark @click="step--">SE
-                                                    CONNECTER</v-btn>
+                                                <v-btn color="blue-darken-4" outlined dark @click="step--">
+                                                    RETOUR
+                                                </v-btn>
                                             </div>
                                         </div>
                                     </v-col>
@@ -152,6 +178,7 @@ export default {
     },
    
     data: () => ({
+        otp: '',
         step: 1,
         loading: false,
         visible: false,
@@ -167,7 +194,7 @@ export default {
 
         load() {
             this.loading = true
-            setTimeout(() => (this.loading = false), 3000)
+            setTimeout(() => (this.loading = false), 2000)
         },
       
         async login() {

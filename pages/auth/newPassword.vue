@@ -15,32 +15,37 @@
                                 <v-row>
                                     <v-col cols="12" sm="6">
                                         <v-card-text class="mt-12">
-                                            <h2 class="text-center">Connectez-vous à votre compte</h2>
+                                            <h2 class="text-center">Changer votre mot de passe</h2>
                                             <v-row class="text-center d-flex justify-center">
                                                 <v-col cols="12" sm="10">
-                                                    <v-text-field label="Email" v-model="credentials.login" outlined
-                                                        autofocus dense color="blue" autocomplete="false" class="mt-16"
-                                                        prepend-inner-icon="email"
-                                                        placeholder="Entrer votre email"></v-text-field>
+                                                    <v-img src="/password-reset.jpg" aspect-ratio="2.7"></v-img>
                                                     <v-text-field v-model="credentials.password"
                                                         :append-inner-icon="visible ? 'visibility_off' : 'visibility'"
-                                                        :type="visible ? 'text' : 'password'" label="Mot de passe "
+                                                        :type="visible ? 'text' : 'password'" label="Nouveau mot de passe"
                                                         outlined dense color="blue" autocomplete="false"
-                                                        placeholder="Entrer votre mot de passe"
+                                                        placeholder="Nouveau mot de passe"
+                                                        prepend-inner-icon="lock"
+                                                        @click:append-inner="visible = !visible"></v-text-field>
+
+                                                    <v-text-field v-model="credentials.password"
+                                                        :append-inner-icon="visible ? 'visibility_off' : 'visibility'"
+                                                        :type="visible ? 'text' : 'password'" label="Confirmer mot de passe "
+                                                        outlined dense color="blue" autocomplete="false"
+                                                        placeholder="Confirmer mot de passe"
                                                         prepend-inner-icon="lock"
                                                         @click:append-inner="visible = !visible"></v-text-field>
 
 
 
                                                     <div class="mt-2">
-                                                        <v-btn :loading="loading" @click="load" to="/dashboard"
+                                                        <v-btn :loading="loading" @click="load" to=""
                                                             color="blue-darken-4" dark block tile
-                                                            @click.prevent="login">Se connecter</v-btn>
+                                                            @click.prevent="login">Confimer</v-btn>
                                                     </div>
                                                     <br>
                                                     <div class="mt-4">
-                                                        <v-btn to="/auth/resetPassword" color="blue-darken-2" variant="outlined">Mot de
-                                                            passe oublié ?
+                                                        <v-btn to="/" color="blue-darken-2" variant="outlined">
+                                                            Se connecter
                                                         </v-btn>
                                                     </div>
                                                 </v-col>
@@ -71,13 +76,14 @@
                                     <v-col cols="12" sm="6" class="blue rounded-br-xl">
                                         <div style="padding:180px 0;">
                                             <v-card-text class="text-white">
-                                                <h1 class="text-center ">Votre compte existe déjà ? </h1>
+                                                <h1 class="text-center ">Mot de passe oublié ?</h1>
                                                 <br>
-                                                <h3 class="text-center">Veuillez vous connecter à votre compte</h3>
+                                                <h3 class="text-center">Vous être sur le point de réinitialiser le mot de passe </h3>
                                             </v-card-text>
                                             <div class="text-center">
-                                                <v-btn color="blue-darken-4" outlined dark @click="step--">SE
-                                                    CONNECTER</v-btn>
+                                                <v-btn color="blue-darken-4" outlined dark @click="step--">
+                                                    RETOUR
+                                                </v-btn>
                                             </div>
                                         </div>
                                     </v-col>

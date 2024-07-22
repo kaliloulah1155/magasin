@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard ma-4">
     <template v-if="accessRights.canView">
-      <h1 class="text-subtitle-1 text-grey">Point of sales</h1>
+      <h1 class="text-grey">Points de vente</h1>
       <v-container>
         <!-- RECHERCHE PAR CATEGORIE-->
         <v-item-group mandatory>

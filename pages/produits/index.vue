@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard ma-4">
     <template v-if="accessRights.canView">
-      <v-banner lines="one" color="warning">
+      <v-banner lines="one" color="blue-darken-2">
         <template  v-slot:text>
           <h1 class="text-subtitle-1 text-grey">Produits</h1>
         </template>
