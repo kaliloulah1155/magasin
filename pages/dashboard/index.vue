@@ -1,16 +1,21 @@
 <template>
   <v-container fluid>
+    <div class="mt-6">
+      <!-- Wrap with ClientOnly -->
+      <ClientOnly>
 
-    <div>
-    <!-- Wrap with ClientOnly -->
-    <ClientOnly>
-      <BarChart />
-    </ClientOnly>
-    <!-- or use the `.client.vue` extension -->
-    <LineChart />
-  </div>
-    
-    </v-container>
+        
+          <BarChart />
+          
+          <LineChart />
+         
+         
+            
+            
+      </ClientOnly>
+      <!-- or use the `.client.vue` extension -->
+    </div>
+  </v-container>
 </template>
 
 <script setup>
