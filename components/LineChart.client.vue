@@ -2,7 +2,7 @@
 
 <template>
   <apexchart
-  class="w-25 h-100"
+  class="w-75 h-100"
     type="line"
     height="350"
     :options="chartOptions"

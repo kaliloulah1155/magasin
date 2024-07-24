@@ -1,11 +1,9 @@
-<template  >
-       
-       <v-app :theme="theme" id="inspire" class="zoomed-content">
-        
-                <Navbar />
-                <v-main>
-                        <slot />
-                </v-main>
+<template>
+        <v-app :theme="theme" id="inspire" class="zoomed-content">
+        <Navbar />
+        <v-main>
+                <slot />
+        </v-main>
         </v-app>
 </template>
 
@@ -22,8 +20,7 @@
 <style scoped>
 .zoomed-content {
         /*transform: scale(0.9);*/
-        zoom:70%;
-       
+        zoom:70%;   
 }
 </style>
  
