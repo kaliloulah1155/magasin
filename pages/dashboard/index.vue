@@ -113,28 +113,7 @@ if (status.value == "unauthenticated") {
 </script>
 
 <style scoped>
-.headline {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.v-card {
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(88, 8, 238, 0.909);
-}
-.v-card-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-}
-.v-card-subtitle {
-  text-align: center;
-  font-size: 20px;
-}
-.v-card-text {
-  text-align: center;
-}
+ 
 .custom-badge{
   font-size: 1rem!important;
 }
