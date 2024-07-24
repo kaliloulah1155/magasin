@@ -1,7 +1,7 @@
 <template>
     
     <nav>
-        <v-navigation-drawer app v-model="drawer" location="left" color="rgba(249, 232, 232, 0.8)">
+        <v-navigation-drawer app v-model="drawer" location="left"  color="blue-darken-4">
             <v-col class="text-center">
                 <v-img src="logo.png" alt="Logo Entreprise"></v-img>
             </v-col>
@@ -14,7 +14,7 @@
             <!-- BEGIN: Afficage des menus sidebar-->
             <nav class="ma-2">
                 <v-list>
-                    <v-list-item v-for="link in links" :key="link.resourceId" router :to="link.resourcePath" color="primary"
+                    <v-list-item v-for="link in links" :key="link.resourceId" router :to="link.resourcePath" color="green"
                         rounded="shaped">
                         <template v-slot:prepend>
                             <v-icon class="dark caption"   >{{ link.resourceIcon }}</v-icon>
@@ -28,7 +28,7 @@
             <!-- Bouton de deconnexion  -->
             <template v-slot:append>
                 <div class="pa-2">
-                    <v-btn @click.prevent="logout" color="rgba(243, 105, 127, 0.8)" block flat elevation="10">
+                    <v-btn @click.prevent="logout" color="blue-darken-4" block flat elevation="10">
                         D&Eacute;CONNEXION
                     </v-btn>
                 </div>
@@ -38,11 +38,12 @@
             <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" color="black"></v-app-bar-nav-icon>
 
             <v-app-bar-title>
-                <marquee behavior="" direction=""><b>GLOBAL SHOP PLUS :</b> Votre application de gestion de stock</marquee>
+                <marquee behavior="" direction=""><b>GLOBAL PLUS :</b> Votre application de gestion de stock</marquee>
             </v-app-bar-title>
 
             <v-spacer></v-spacer>
 
+            
         </v-app-bar>
     </nav>
 </template>

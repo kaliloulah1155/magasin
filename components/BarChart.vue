@@ -1,7 +1,6 @@
 
 <template>
-   
-  <apexchart class="w-25 h-100" type="bar" :options="chartOptions" :series="series"></apexchart>
+  <apexchart class="w-80 h-100" type="bar" :options="chartOptions" :series="series"></apexchart>
 </template>
 
 <script setup>
