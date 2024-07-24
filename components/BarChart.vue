@@ -1,9 +1,19 @@
 
 <template>
+   
   <apexchart class="w-25 h-100" type="bar" :options="chartOptions" :series="series"></apexchart>
 </template>
 
 <script setup>
+
+import { defineProps } from 'vue';
+const props = defineProps({
+  data: {
+    type: Array,
+    required: true,
+  }
+});
+
 const chartOptions = {
   chart: {
     id: 'bar-example',

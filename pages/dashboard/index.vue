@@ -5,12 +5,9 @@
       <ClientOnly>
 
         
-          <BarChart />
+          <BarChart  />
           
           <LineChart />
-         
-         
-            
             
       </ClientOnly>
       <!-- or use the `.client.vue` extension -->
@@ -27,7 +24,7 @@ definePageMeta({
 
 //Get Session of user
 const authStore = useAuthStore();
-const { status } = useAuth();
+const { data,status } = useAuth();
 
 if (status.value == "unauthenticated") {
   authStore.data = {};

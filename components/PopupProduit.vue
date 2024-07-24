@@ -43,7 +43,7 @@
 <script>    
 export default {
   emits: ['saveItem'],
-   props:{
+   props:{  
        list_cats:Array,
        fournisseurs:Array,
   },
