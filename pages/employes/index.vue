@@ -192,6 +192,8 @@
                   :src="item.image ? `${item.image}` : '/img/profil.png'"
                   height="64"
                   cover
+                  @click="openDialogImg(item.image)"
+                  class="clickable-image"
                 ></v-img>
               </v-card>
             </template>
@@ -240,6 +242,11 @@
       </v-btn>
     </template>
   </v-snackbar>
+  <v-dialog v-model="dialogImg" max-width="600">
+      <v-card>
+        <v-img :src="selectedImage ?  selectedImage : '/img/profil.png'" aspect-ratio="16/9"></v-img>
+      </v-card>
+    </v-dialog>
 </template>
 <script>
 import { useEmployeStore } from "../../stores/employe";
@@ -264,6 +271,8 @@ export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
+    dialogImg:false,
+    selectedImage:null,
     snackbar: false,
     msg: "",
     err: false,
@@ -590,6 +599,10 @@ export default {
         this.editedIndex = -1;
       });
     },
+    openDialogImg(image){
+            this.selectedImage = image;
+            this.dialogImg = true;
+        }
   },
   computed: {
     employeLength() {

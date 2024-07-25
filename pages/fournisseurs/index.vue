@@ -97,7 +97,7 @@
 
                     <template v-slot:item.image="{ item }">
                         <v-card class="my-2" elevation="2" rounded>
-                            <v-img :src="item.image ? `${item.image}` : '/img/profil.png'" height="64" cover></v-img>
+                            <v-img :src="item.image ? `${item.image}` : '/img/profil.png'" height="64"  cover  @click="openDialogImg(item.image)" class="clickable-image" ></v-img>
                         </v-card>
                     </template>
 
@@ -143,6 +143,11 @@
             </v-btn>
         </template>
     </v-snackbar>
+    <v-dialog v-model="dialogImg" max-width="600">
+      <v-card>
+        <v-img :src="selectedImage ?  selectedImage : '/img/profil.png'" aspect-ratio="16/9"></v-img>
+      </v-card>
+    </v-dialog>
 </template>
 <script>
 import { useFournisseurStore } from '../../stores/fournisseur'
@@ -169,6 +174,8 @@ export default {
     data: () => ({
         dialog: false,
         dialogDelete: false,
+        dialogImg:false,
+        selectedImage:null,
         snackbar: false,
         msg: '',
         err: false,
@@ -479,6 +486,10 @@ export default {
                 this.editedIndex = -1
             })
         },
+        openDialogImg(image){
+            this.selectedImage = image;
+            this.dialogImg = true;
+        }
     },
     computed: {
         fournisseurLength() {
@@ -490,4 +501,6 @@ export default {
     }
 }
 </script>
-<style scoped></style>
+<style scoped>
+
+</style>
