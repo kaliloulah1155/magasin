@@ -1,6 +1,5 @@
 <template>
   <apexchart
-    
     type="bar"
     :options="chartOptions"
     :series="series"
@@ -18,8 +17,8 @@ const series = [{
 // Options de configuration du graphique
 const chartOptions = {
   chart: {
-    type: 'bar',
-    height: 350,  // Assurez-vous que cette hauteur correspond à vos besoins
+    width: '100', // Pour s'assurer que le graphique occupe la largeur du conteneur
+    height: '100', // Ajustez la hauteur en fonction de vos besoins
   },
   plotOptions: {
     bar: {

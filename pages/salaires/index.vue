@@ -180,6 +180,9 @@
 import { useSalaireStore } from "../../stores/salaire";
 export default {
   setup() {
+    useHead({
+      title: "Salaires",
+    });
     definePageMeta({
       layout: "master",
     });
@@ -188,15 +191,13 @@ export default {
     const { data, token } = useAuth();
 
     const accessRights = reactive({
-       profil_id:data.value.profil_id,
+      profil_id: data.value.profil_id,
       canCreate: false,
       canView: false,
       canEdit: false,
       canDelete: false,
     });
 
-      
-     
     return { authStore, salaireStore, token, accessRights };
   },
   data: () => ({
@@ -260,12 +261,11 @@ export default {
   created() {
     this.initialize();
     this.employes_list();
-    this.accessRights.canView=true;
+    this.accessRights.canView = true;
     this.checkUserAccess();
-
   },
   methods: {
-    async checkUserAccess(){
+    async checkUserAccess() {
       let checkjson = {
         profil_id: this.accessRights.profil_id,
         menu_libelle: "SALAIRES",

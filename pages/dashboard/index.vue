@@ -168,29 +168,30 @@
       </v-col>
     </v-row>
     <v-row>
-        <!-- Wrap with ClientOnly -->
-        <ClientOnly>
-          <v-col cols="12" md="6" xs="12">
-            <v-card class="text-white py-4" color="">
-              <PieChart />
-            </v-card>
-          </v-col>
-          <v-col cols="12" md="6" xs="12" >
-            <v-card class="text-white py-4" color="">
-              <BarYChart />
-            </v-card>
-          </v-col>
-        </ClientOnly>
-        <!-- or use the `.client.vue` extension -->
-      </v-row>
-  </v-container>
-
- 
+      <!-- Wrap with ClientOnly -->
+      <ClientOnly>
+        <v-col cols="12" md="6" xs="12">
+          <v-card class="text-white py-4"  >
+            <PieChart />
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="6" xs="12">
+          <v-card class="text-white py-4" >
+            <BarYChart />
+          </v-card>
+        </v-col>
+      </ClientOnly>
+      <!-- or use the `.client.vue` extension -->
+    </v-row>
+  </v-container>  
 </template>
 
 <script setup>
 import { useAuthStore } from "../../stores/auth";
- 
+
+useHead({
+  title: "Dashboard",
+});
 definePageMeta({
   middleware: "auth",
   layout: "master",

@@ -154,6 +154,9 @@ import { useFournisseurStore } from '../../stores/fournisseur'
 import { useAuthStore } from '../../stores/auth'
 export default {
     setup() {
+        useHead({
+      title: "Fournisseurs",
+    });
         definePageMeta({
             layout: 'master'
         })

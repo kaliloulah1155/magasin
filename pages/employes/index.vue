@@ -253,6 +253,9 @@ import { useEmployeStore } from "../../stores/employe";
 import { useAuthStore } from "../../stores/auth";
 export default {
   setup() {
+    useHead({
+      title: "Employes",
+    });
     definePageMeta({
       layout: "master",
     });

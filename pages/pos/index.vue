@@ -421,6 +421,9 @@ import { usePosStore } from "../../stores/pos";
 
 export default {
   setup() {
+    useHead({
+      title: "Point de vente",
+    });
     definePageMeta({
       layout: "master",
     });

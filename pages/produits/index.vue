@@ -2,10 +2,10 @@
   <div class="dashboard ma-4">
     <template v-if="accessRights.canView">
       <v-banner lines="one" color="blue-darken-2">
-        <template  v-slot:text>
+        <template v-slot:text>
           <h1 class="text-subtitle-1 text-grey">Produits</h1>
         </template>
-        <template  v-if="accessRights.canCreate" v-slot:actions>
+        <template v-if="accessRights.canCreate" v-slot:actions>
           <popup-produit
             @saveItem="getItem"
             :list_cats="categories"
@@ -179,20 +179,28 @@
                   :src="item.image ? `${item.image}` : '/img/product.png'"
                   height="64"
                   cover
-                  @click="openDialogImg(item.image)" class="clickable-image"
+                  @click="openDialogImg(item.image)"
+                  class="clickable-image"
                 ></v-img>
               </v-card>
             </template>
 
             <template v-slot:item.actions="{ item }">
-              <v-icon 
-               v-if="accessRights.canEdit"
-              size="small" class="me-2" @click="editItem(item)">
+              <v-icon
+                v-if="accessRights.canEdit"
+                size="small"
+                class="me-2"
+                @click="editItem(item)"
+              >
                 edit_note
               </v-icon>
               <v-icon
-               v-if="accessRights.canDelete"
-              size="small" @click="deleteItem(item)"> delete </v-icon>
+                v-if="accessRights.canDelete"
+                size="small"
+                @click="deleteItem(item)"
+              >
+                delete
+              </v-icon>
             </template>
           </v-data-table>
         </v-card>
@@ -229,15 +237,21 @@
     </template>
   </v-snackbar>
   <v-dialog v-model="dialogImg" max-width="600">
-      <v-card>
-        <v-img :src="selectedImage ?  selectedImage : '/img/profil.png'" aspect-ratio="16/9"></v-img>
-      </v-card>
-    </v-dialog>
+    <v-card>
+      <v-img
+        :src="selectedImage ? selectedImage : '/img/profil.png'"
+        aspect-ratio="16/9"
+      ></v-img>
+    </v-card>
+  </v-dialog>
 </template>
 <script>
 import { useProduitStore } from "../../stores/produit";
 export default {
   setup() {
+    useHead({
+      title: "Produits",
+    });
     definePageMeta({
       layout: "master",
     });
@@ -256,8 +270,8 @@ export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
-    dialogImg:false,
-    selectedImage:null,
+    dialogImg: false,
+    selectedImage: null,
     snackbar: false,
     msg: "",
     err: false,
@@ -657,10 +671,10 @@ export default {
         this.editedIndex = -1;
       });
     },
-    openDialogImg(image){
-            this.selectedImage = image;
-            this.dialogImg = true;
-        }
+    openDialogImg(image) {
+      this.selectedImage = image;
+      this.dialogImg = true;
+    },
   },
   computed: {
     produitLength() {

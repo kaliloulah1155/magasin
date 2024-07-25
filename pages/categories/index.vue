@@ -214,6 +214,9 @@ import { useAuthStore } from "../../stores/auth";
 
 export default {
   setup() {
+    useHead({
+      title: "Catégories",
+    });
     definePageMeta({
       layout: "master",
     });

@@ -100,6 +100,9 @@
 <script>
 export default {
   setup() {
+    useHead({
+      title: "Profils",
+    });
     definePageMeta({
       layout: "master",
     });
