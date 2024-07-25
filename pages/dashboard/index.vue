@@ -113,7 +113,7 @@
              
             </div>
             <div class="float-right text-black mt-3">
-              <div class="text-h5 mt-5"> {{ moneyFormat(300000)}} F CFA </div>
+              <div class="text-h5 mt-3 pb-3"> {{ moneyFormat(300000)}} F CFA </div>
                </div>
           </template>
         </v-card>
