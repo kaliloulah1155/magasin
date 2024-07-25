@@ -167,33 +167,30 @@
         </v-text-field>
       </v-col>
     </v-row>
-  </v-container>
-
-  <v-container fluid>
-    <div class="mt-6">
-      <v-row>
+    <v-row>
         <!-- Wrap with ClientOnly -->
         <ClientOnly>
-          <v-col cols="" md="6">
-            <v-card class="white--text py-4" color="">
-              <BarChart />
+          <v-col cols="12" md="6" xs="12">
+            <v-card class="text-white py-4" color="">
+              <PieChart />
             </v-card>
           </v-col>
-
-          <v-col cols="" md="6">
-            <v-card class="white--text py-4" color="">
-              <LineChart />
+          <v-col cols="12" md="6" xs="12" >
+            <v-card class="text-white py-4" color="">
+              <BarYChart />
             </v-card>
           </v-col>
         </ClientOnly>
         <!-- or use the `.client.vue` extension -->
       </v-row>
-    </div>
   </v-container>
+
+ 
 </template>
 
 <script setup>
 import { useAuthStore } from "../../stores/auth";
+ 
 definePageMeta({
   middleware: "auth",
   layout: "master",

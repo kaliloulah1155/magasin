@@ -4,14 +4,14 @@
 </template>
 
 <script setup>
-
+/*
 import { defineProps } from 'vue';
 const props = defineProps({
   data: {
     type: Array,
     required: true,
   }
-});
+}); */
 
 const chartOptions = {
   chart: {
