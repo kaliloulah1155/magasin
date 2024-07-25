@@ -7,7 +7,7 @@
             </template>
   
         </v-banner>
-        <v-container class="my-5">
+        <v-container fluid class="my-5">
             <v-card flat>
                 <v-card-title class="d-flex align-center pe-2">
                     <v-icon icon="view_list"></v-icon>&nbsp;

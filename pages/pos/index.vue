@@ -2,10 +2,10 @@
   <div class="dashboard ma-4">
     <template v-if="accessRights.canView">
       <h1 class="text-grey">Points de vente</h1>
-      <v-container>
+      <v-container fluid>
         <!-- RECHERCHE PAR CATEGORIE-->
         <v-item-group mandatory>
-          <v-container>
+          <v-container fluid>
             <v-row align="center" justify="center">
               <v-col cols="auto">
                 <v-btn

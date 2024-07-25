@@ -1,17 +1,18 @@
 <template>
   <v-container fluid>
-    <v-row>
+    <v-row class="d-flex justify-center">
       <!-- Carte pour les ventes -->
       <v-col cols="12" md="3">
         <v-card
-          border="opacity-50 sm"
           class="mx-auto h-100"
-          max-width="360"
           rounded="xl"
-          variant="text"
+          variant="flat"
+          elevation="3"
+          hover
+          href="/produits"
         >
           <template v-slot:title>
-            <div class="font-weight-bold text-h6 text-center">Produits</div>
+            <div class="font-weight-bold text-h5 text-center">Produits</div>
           </template>
           <template v-slot:text>
             <div class="d-flex justify-center justify-space-around mt-3">
@@ -51,23 +52,91 @@
       </v-col>
       <!-- Carte pour l'augmentation des ventes -->
       <v-col cols="12" md="3">
-        <v-card class="white--text py-4" color="teal-darken-4">
-          <v-card-title> Revenu Total </v-card-title>
-          <v-card-text class="text-h3 mt-5"> 23,569 </v-card-text>
+        <v-card  
+          class="mx-auto h-100"
+          color="primary"
+          rounded="xl"
+          variant="tonal"
+          elevation="3"
+          hover
+           href="/depenses"
+          >
+          <template v-slot:title>
+            <div class="font-weight-bold text-h5 text-black text-center">Dépenses</div>
+          </template>
+         
+          <template v-slot:text>
+            <div class="float-left text-black mt-3">
+              <div class="text-subtitle-1">
+                Nombre (
+                <v-badge color="brown-lighten-5" text-color="black" inline>
+                  <template #badge>
+                    <span class="custom-badge">0</span>
+                  </template>
+                </v-badge>
+                )
+              </div>
+             
+            </div>
+            <div class="float-right text-black mt-3">
+              <div class="text-h5 mt-5"> {{ moneyFormat(2000)}} F CFA </div>
+               </div>
+          </template>
         </v-card>
       </v-col>
       <!-- Carte pour le nombre total de clients -->
       <v-col cols="12" md="3">
-        <v-card class="white--text py-4" color="blue-darken-4">
-          <v-card-title> Revenu Total </v-card-title>
-          <v-card-text class="text-h3 mt-5"> 23,569 </v-card-text>
+        <v-card  
+          class="mx-auto h-100"
+          color="error"
+          rounded="xl"
+          variant="tonal"
+          elevation="3"
+          hover
+           href="/salaires"
+          >
+          <template v-slot:title>
+            <div class="font-weight-bold text-h5 text-black text-center">Salaires</div>
+          </template>
+         
+          <template v-slot:text>
+            <div class="float-left text-black mt-3">
+              <div class="text-subtitle-1">
+                Nombre de personne (
+                <v-badge color="brown-lighten-5" text-color="black" inline>
+                  <template #badge>
+                    <span class="custom-badge">2</span>
+                  </template>
+                </v-badge>
+                )
+              </div>
+             
+            </div>
+            <div class="float-right text-black mt-3">
+              <div class="text-h5 mt-5"> {{ moneyFormat(300000)}} F CFA </div>
+               </div>
+          </template>
         </v-card>
       </v-col>
       <!-- Carte pour le nombre de nouveaux utilisateurs -->
       <v-col cols="12" md="3">
-        <v-card class="white--text py-4" color="red-darken-4">
-          <v-card-title> Revenu Total </v-card-title>
-          <v-card-text class="text-h3 mt-5"> 23,569 </v-card-text>
+        <v-card  
+          class="mx-auto h-100"
+          color="#00FF00"
+          rounded="xl"
+          variant="tonal"
+          elevation="3"
+          
+          >
+          <template v-slot:title>
+            <div class="font-weight-bold text-h5 text-black text-center">Bénéfice</div>
+          </template>
+         
+          <template v-slot:text>
+            <div class="text-center text-black mt-3">
+              <div class="text-h5 mt-5"> {{ moneyFormat(500000)}} F CFA </div>
+               </div>
+          </template>
         </v-card>
       </v-col>
     </v-row>

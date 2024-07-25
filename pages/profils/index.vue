@@ -16,7 +16,7 @@
           >
         </template>
       </v-banner>
-      <v-container class="my-5">
+      <v-container fluid class="my-5">
         <div class="d-flex justify-center mb-6">
           <v-sheet class="ma-2 pa-2">
             <Select
