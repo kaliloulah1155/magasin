@@ -3,13 +3,16 @@
     <nav>
         <v-navigation-drawer app v-model="drawer" location="left"  color="blue-darken-4">
             <v-col class="text-center">
-                <v-img src="logo.png" alt="Logo Entreprise"></v-img>
+                <v-img src="logo.png" alt="Logo Entreprise" ></v-img>
             </v-col>
             <v-col>
                 <v-list>
-                    <v-list-item :prepend-avatar="photo" :title="`${nom} ${prenoms}`" :subtitle="profil">
+                    <v-list-item :prepend-avatar="photo" 
+                    :title="`${nom} ${prenoms}`" :subtitle="profil"
+                    @click="openDialogImg(photo)" class="clickable-image"
+                    >
                     </v-list-item>
-                </v-list>
+                </v-list>   
             </v-col>
             <!-- BEGIN: Afficage des menus sidebar-->
             <nav class="ma-2">
@@ -45,6 +48,11 @@
 
             
         </v-app-bar>
+        <v-dialog v-model="dialogImg" max-width="600">
+      <v-card>
+        <v-img :src="selectedImage ?  selectedImage : '/img/profil.png'" aspect-ratio="16/9"></v-img>
+      </v-card>
+    </v-dialog>
     </nav>
 </template>
 
@@ -61,6 +69,9 @@ const nom =ref(data.value.nom)
 const prenoms = ref(data.value.prenoms)
 const profil =ref(data.value.profile_name)
 const photo = ref(data.value.image)
+
+const dialogImg=ref(false);
+const selectedImage=ref(null);
 
 const links =ref([]);
 
@@ -94,4 +105,9 @@ const logout=async()=>{
        console.log("error", error);
     }
 }
+
+const openDialogImg=(image)=>{
+            selectedImage.value = image;
+            dialogImg.value = true;
+        }
 </script>
