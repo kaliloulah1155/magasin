@@ -146,7 +146,7 @@
       </v-col>
     </v-row>
     <v-row class="d-flex justify-center">
-      <v-col cols="6" md="3">
+      <v-col cols="3">
         <v-text-field
           v-model="dt_debut"
           type="date"
@@ -159,7 +159,7 @@
           </template>
         </v-text-field>
       </v-col>
-      <v-col cols="6" md="3">
+      <v-col cols="3">
         <v-text-field v-model="dt_fin" type="date" variant="outlined" clearable>
           <template v-slot:label>
             <span class="dt-custom-label text-h6">Date de fin</span>
@@ -167,23 +167,47 @@
         </v-text-field>
       </v-col>
     </v-row>
-    <v-row>
-      <!-- Wrap with ClientOnly -->
-      <ClientOnly>
-        <v-col cols="12" md="6" xs="12">
-          <v-card class="text-white py-4"  >
-            <PieChart />
-          </v-card>
-        </v-col>
-        <v-col cols="12" md="6" xs="12">
-          <v-card class="text-white py-4" >
-            <BarYChart />
-          </v-card>
-        </v-col>
-      </ClientOnly>
-      <!-- or use the `.client.vue` extension -->
-    </v-row>
-  </v-container>  
+
+    <!-- Wrap with ClientOnly -->
+    <ClientOnly>
+      <v-container>
+        <v-tabs
+          v-model="tab"
+          bg-color="deep-purple-darken-4"
+          align-tabs="center"
+          center-active
+        >
+          <v-tab value="one">Mes Ventes journalières</v-tab>
+          <v-tab value="two">Produits critiques et à réapprovisionner</v-tab>
+          <v-tab value="three">Top 10 des produits</v-tab>
+          <v-tab value="four">Top 10 des ventes</v-tab>
+        </v-tabs>
+        <v-window v-model="tab">
+          <v-window-item value="one"> 
+             <TabDaily />
+          </v-window-item>
+          <v-window-item value="two">
+              <TabRupture />
+          </v-window-item>
+          <v-window-item value="three">
+            <v-row justify="center" class="mt-3">
+              <v-col cols="12" class="w-100" md="8" xs="12">
+                <PieChart />
+              </v-col>
+            </v-row>
+          </v-window-item>
+          <v-window-item value="four">
+            <v-row justify="center" class="mt-3" >
+              <v-col cols="12" md="8" xs="12">
+                <BarYChart />
+              </v-col>
+            </v-row>
+          </v-window-item>
+        </v-window>
+      </v-container>
+    </ClientOnly>
+    <!-- or use the `.client.vue` extension -->
+  </v-container>
 </template>
 
 <script setup>
@@ -207,10 +231,16 @@ if (status.value == "unauthenticated") {
 
 const dt_debut = ref(null);
 const dt_fin = ref(null);
+
+let tab = ref("four");
 </script>
 
 <style scoped>
 .custom-badge {
   font-size: 1rem !important;
+}
+
+.chart-container {
+  height: 400px;
 }
 </style>

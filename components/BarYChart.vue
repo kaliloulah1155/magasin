@@ -7,18 +7,20 @@
 </template>
 
 <script setup>
- 
-
-// Données du graphique
 const series = [{
   data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
 }];
 
-// Options de configuration du graphique
 const chartOptions = {
   chart: {
-    width: '100', // Pour s'assurer que le graphique occupe la largeur du conteneur
-    height: '100', // Ajustez la hauteur en fonction de vos besoins
+    width: '100%', // Utilisez des pourcentages pour la largeur
+    height: 400, // Ajustez la hauteur selon vos besoins
+    toolbar: { 
+      show: true,
+       tools:{
+        download:true
+       }
+     }
   },
   plotOptions: {
     bar: {
@@ -62,24 +64,28 @@ const chartOptions = {
     }
   },
   title: {
-    text: 'Custom DataLabels',
+    text: "Top 10 des produits ayant été le plus vendus",
     align: 'center',
     floating: true
   },
   subtitle: {
-    text: 'Category Names as DataLabels inside bars',
+    text: "Produits et Montants Correspondants",
     align: 'center',
   },
   tooltip: {
     theme: 'dark',
     x: {
-      show: false
+      show: false // Cache l'axe X dans le tooltip
     },
     y: {
       title: {
         formatter: function () {
-          return '';
+          return ''; // Ne pas afficher de titre pour l'axe Y
         }
+      },
+      formatter: function (val, opts) {
+        const category = opts.w.globals.labels[opts.dataPointIndex];
+        return `${category}: ${val}`; // Format du tooltip
       }
     }
   }
