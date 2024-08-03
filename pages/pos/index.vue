@@ -46,7 +46,7 @@
         <v-card flat>
           <v-data-iterator
             :items="produits"
-            :items-per-page="13"
+            :items-per-page="18"
             :search="search"
           >
             <template v-slot:header>
@@ -363,7 +363,7 @@
               </v-row>
 
               <v-toolbar
-               v-if="accessRights.canCreate"
+                v-if="accessRights.canCreate"
                 color="rgba(0,0,0,0)"
                 flat
                 class="d-flex justify-center"

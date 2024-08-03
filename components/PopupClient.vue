@@ -1,5 +1,5 @@
 <template>
-  <v-dialog width="500" transition="dialog-bottom-transition">
+  <v-dialog max-width="750px" transition="dialog-bottom-transition">
     <template v-slot:activator="{ props }">
       <v-btn v-bind="props" text="Ajouter" variant="flat" color="blue-lighten-4" size="small"></v-btn>
     </template>
@@ -8,24 +8,47 @@
       <v-card title="Ajouter un nouveau client">
         <v-card-text>
           <v-form class="px-3" ref="form">
-            <v-text-field label="Nom" color="primary" clearable variant="outlined" v-model="nom"
+            <v-row>
+              <v-col cols="12" md="4" sm="6">
+                <v-text-field label="Nom" color="primary" clearable variant="outlined" v-model="nom"
               :rules="inputRules"></v-text-field>
-            <v-text-field label="Prénoms" color="primary" clearable variant="outlined" v-model="prenoms"
+              </v-col>
+              <v-col cols="12" md="4" sm="6">
+                <v-text-field label="Prénoms" color="primary" clearable variant="outlined" v-model="prenoms"
               :rules="inputRules"></v-text-field>
-              <v-text-field label="Adresse" color="primary" clearable variant="outlined" v-model="adresse"
+              </v-col>
+              <v-col cols="12" md="4" sm="6">
+                <v-text-field label="Adresse" color="primary" clearable variant="outlined" v-model="adresse"
                 :rules="inputRules"></v-text-field>
-            <v-text-field label="E-mail" class="mt-2" color="primary" clearable variant="outlined" v-model="email"
+              </v-col>
+              <v-col cols="12" md="4" sm="6">
+                <v-text-field label="E-mail" class="mt-2" color="primary" clearable variant="outlined" v-model="email"
               :rules="emailRules"></v-text-field>
-            <v-select label="Sexe" class="mt-2" color="primary" variant="outlined" v-model="sexe" :items="sexe_statut"
+              </v-col>
+              <v-col cols="12" md="4" sm="6">
+                <v-select label="Sexe" class="mt-2" color="primary" variant="outlined" v-model="sexe" :items="sexe_statut"
               item-title="libelle" item-value="code" return-object></v-select>
-            <v-text-field label="Téléphone" class="mt-2" color="primary" clearable variant="outlined" v-model="telephone"
+              </v-col>
+              
+              <v-col cols="12" md="4" sm="6">
+                <v-text-field label="Téléphone" class="mt-2" color="primary" clearable variant="outlined" v-model="telephone"
               :rules="telephoneRules"></v-text-field>
-            <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
-              variant="outlined"></v-file-input>
-            <v-select label="Profil" class="mt-2" color="primary" variant="outlined" v-model="profil" :items="profils"
+              </v-col>
+              
+              <v-col cols="12" md="4" sm="6">
+                <v-select label="Profil" class="mt-2" color="primary" variant="outlined" v-model="profil" :items="profils"
               item-title="libelle" item-value="id" return-object  :rules="[v => !!v || 'Le profil est requis']"></v-select>
+              </v-col>
+              <v-col cols="12" md="4" sm="6">
             <v-select label="Statut" class="mt-2" color="primary" variant="outlined" v-model="editedItem.statut"
               :items="item_statut" item-title="libelle" item-value="id" return-object></v-select>
+              </v-col>
+              <v-col cols="12" md="4" sm="6">
+                <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
+              variant="outlined"></v-file-input>
+              </v-col>
+
+            </v-row>
           </v-form>
         </v-card-text>
         <v-card-actions>

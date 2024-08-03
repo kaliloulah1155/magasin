@@ -32,7 +32,7 @@
                                                     <br>
                                                     <div class="mt-2">
                                                         <v-btn to="/" color="blue-darken-2" variant="outlined">
-                                                            Se connecter
+                                                            RETOUR
                                                         </v-btn>
                                                     </div>
                                                 </v-col>

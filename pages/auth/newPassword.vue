@@ -21,17 +21,17 @@
                                                     <v-img src="/password-reset.jpg" aspect-ratio="2.7"></v-img>
                                                     <v-text-field v-model="credentials.password"
                                                         :append-inner-icon="visible ? 'visibility_off' : 'visibility'"
-                                                        :type="visible ? 'text' : 'password'" label="Nouveau mot de passe"
-                                                        outlined dense color="blue" autocomplete="false"
-                                                        placeholder="Nouveau mot de passe"
+                                                        :type="visible ? 'text' : 'password'"
+                                                        label="Nouveau mot de passe" outlined dense color="blue"
+                                                        autocomplete="false" placeholder="Nouveau mot de passe"
                                                         prepend-inner-icon="lock"
                                                         @click:append-inner="visible = !visible"></v-text-field>
 
                                                     <v-text-field v-model="credentials.password"
                                                         :append-inner-icon="visible ? 'visibility_off' : 'visibility'"
-                                                        :type="visible ? 'text' : 'password'" label="Confirmer mot de passe "
-                                                        outlined dense color="blue" autocomplete="false"
-                                                        placeholder="Confirmer mot de passe"
+                                                        :type="visible ? 'text' : 'password'"
+                                                        label="Confirmer mot de passe " outlined dense color="blue"
+                                                        autocomplete="false" placeholder="Confirmer mot de passe"
                                                         prepend-inner-icon="lock"
                                                         @click:append-inner="visible = !visible"></v-text-field>
 
@@ -78,7 +78,8 @@
                                             <v-card-text class="text-white">
                                                 <h1 class="text-center ">Mot de passe oublié ?</h1>
                                                 <br>
-                                                <h3 class="text-center">Vous être sur le point de réinitialiser le mot de passe </h3>
+                                                <h3 class="text-center">Vous être sur le point de réinitialiser le mot
+                                                    de passe </h3>
                                             </v-card-text>
                                             <div class="text-center">
                                                 <v-btn color="blue-darken-4" outlined dark @click="step--">
