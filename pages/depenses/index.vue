@@ -8,7 +8,7 @@
         <template v-if="accessRights.canCreate" v-slot:actions>
           <popup-depense @saveItem="getItem" />
         </template>
-      </v-banner>
+      </v-banner>  
       <v-container fluid class="my-5">
         <v-card flat>
           <v-card-title class="d-flex align-center pe-2">

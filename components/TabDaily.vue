@@ -5,7 +5,7 @@
     :items="items" 
     :headers="headers"
      ></v-data-table>
-  </div>
+  </div>   
 </template>
 
 <script>
