@@ -191,7 +191,7 @@
                 </v-card>
               </v-col>
 
-              <v-col cols="auto">
+              <v-col v-if="accessRights.canPrint" cols="auto">
                 <v-card
                   class="mx-auto"
                   @click="printTicket"
@@ -437,6 +437,7 @@ export default {
       canView: false,
       canEdit: false,
       canDelete: false,
+      canPrint: false,
     });
 
     return { token, router, posStore, accessRights };
@@ -550,10 +551,12 @@ export default {
             },
           }
         );
+       
         this.accessRights.canView = response.data[0].show;
         this.accessRights.canCreate = response.data[1].add;
         this.accessRights.canEdit = response.data[2].edit;
         this.accessRights.canDelete = response.data[4].supp;
+        this.accessRights.canPrint = response.data[6].prt;
       }
     },
     initialize() {

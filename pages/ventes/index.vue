@@ -10,8 +10,6 @@
               rounded="xl"
               variant="tonal"
               elevation="3"
-              hover
-              href="/ventes"
             >
               <template v-slot:title>
                 <div class="font-weight-bold text-h5 text-black text-center">
@@ -25,7 +23,7 @@
                     Nombre (
                     <v-badge color="brown-lighten-5" text-color="black" inline>
                       <template #badge>
-                        <span class="custom-badge">2</span>
+                        <span class="custom-badge">{{ nbre_vente }}</span>
                       </template>
                     </v-badge>
                     )
@@ -33,7 +31,7 @@
                 </div>
                 <div class="float-right text-black mt-3">
                   <div class="text-h5 mt-3 pb-3">
-                    {{ moneyFormat(300000) }} F CFA
+                    {{ moneyFormat(montant_vente) }} F CFA
                   </div>
                 </div>
               </template>
@@ -99,21 +97,146 @@
                 v-model:search="search"
                 :items="orders"
                 :headers="headers"
+                :loading="orderLength > 0 ? false : true"
+                :sort-by="[{ key: 'created_at', order: 'desc' }]"
               >
                 <!--BEGIN::Detail de la vente-->
                 <template v-slot:top>
                   <v-spacer></v-spacer>
-                  <v-dialog v-model="dialogDetail" max-width="500px">
+                  <v-dialog v-model="dialogDetail" max-width="800px">
+                    <template v-slot:default="{ isActive }">
+                      <v-card>
+                        <template v-slot:title>
+                          <h3 class="custom-title text-uppercase">
+                            Détail de la vente
+                          
+                          </h3>
+                          <v-card-text>
+                            <v-row>
+                              <v-col cols="12" md="6" sm="6">
+                                {{  editedItem }}
+                                <span
+                                  class="font-weight-bold text-decoration-underline"
+                                  >Date de création
+                                </span>
+                                : 20/12/2024 09:09:00
+                              </v-col>
+                              <v-col cols="12" md="6" sm="6">
+                                <span
+                                  class="font-weight-bold text-decoration-underline"
+                                  >Moyen de paiement
+                                </span>
+                                : ESPECE
+                              </v-col>
+                            </v-row>
+                            <v-row>
+                              <v-col cols="12" md="6" sm="6">
+                                <span
+                                  class="font-weight-bold text-decoration-underline"
+                                  >Client</span
+                                >
+                                : ABD KONE
+                              </v-col>
+                              <v-col cols="12" md="6" sm="6">
+                                <span
+                                  class="font-weight-bold text-decoration-underline"
+                                  >ID Transaction</span
+                                >
+                                : 1239229292
+                              </v-col>
+                            </v-row>
+                            <v-row>
+                              <v-col cols="12" md="6" sm="6">
+                                <span
+                                  class="font-weight-bold text-decoration-underline"
+                                  >Caissier(e)</span
+                                >
+                                : AZD KONE
+                              </v-col>
+                              <v-col cols="12" md="6" sm="6">
+                                <span
+                                  class="font-weight-bold text-decoration-underline"
+                                  >Montant</span
+                                >
+                                : 50000 FCFA
+                              </v-col>
+                            </v-row>
+                            <v-row>
+                              <v-col cols="12" md="6" sm="6">
+                                <span
+                                  class="font-weight-bold text-decoration-underline"
+                                  >TVA(%)</span
+                                >
+                                : 12
+                              </v-col>
+                              <v-col cols="12" md="6" sm="6">
+                                <span
+                                  class="font-weight-bold text-decoration-underline"
+                                  >Remise</span
+                                >
+                                : 500 F CFA
+                              </v-col>
+                            </v-row>
+                            <v-row>
+                              <v-col cols="12" md="6" sm="6">
+                                <span
+                                  class="font-weight-bold text-decoration-underline"
+                                  >Espèce</span
+                                >
+                                : 100 F CFA
+                              </v-col>
+                              <v-col cols="12" md="6" sm="6">
+                                <span
+                                  class="font-weight-bold text-decoration-underline"
+                                  >Monnaie</span
+                                >
+                                : 5000 FCFA
+                              </v-col>
+                            </v-row>
+                            <v-row>
+                              <v-col cols="12" md="6" sm="6">
+                                <span
+                                  class="font-weight-bold text-decoration-underline"
+                                  >Nombre de produits</span
+                                >
+                                : 10
+                              </v-col>
+                            </v-row>
+                            <v-container>
+                              <v-divider class="mt-1"></v-divider>
+                              <v-icon icon="view_list"></v-icon>&nbsp; Liste des
+                              produits
+                              <v-data-table
+                                items-per-page="10"
+                                v-model:search="search_item"
+                                :items="orders_item"
+                                :headers="headers_item"
+                              ></v-data-table>
+                            </v-container>
+                          </v-card-text>
+                          <v-card-actions>
+                            <v-row justify="center">
+                              <v-btn
+                                text="FERMER"
+                                variant="elevated"
+                                color="error"
+                                @click="isActive.value = false"
+                                size="small"
+                              ></v-btn>
+                            </v-row>
+                          </v-card-actions>
+                        </template>
+                      </v-card>
+                    </template>
                   </v-dialog>
                 </template>
                 <!--END::Detail de la vente-->
 
                 <template v-slot:item.actions="{ item }">
-                 
                   <v-icon
                     v-if="accessRights.canDetail"
                     size="small"
-                      class="me-3"
+                    class="me-3"
                     @click="detailItem(item)"
                     title="Détail"
                   >
@@ -121,8 +244,8 @@
                   </v-icon>
                   <v-icon
                     size="small"
-                  
-                    @click="printItem(id)"
+                    v-if="accessRights.canPrint"
+                    @click="printItem(item)"
                     title="Imprimer"
                   >
                     print
@@ -151,6 +274,19 @@
       </v-sheet>
     </template>
   </div>
+  <v-snackbar
+    v-model="snackbar"
+    multi-line
+    location="top"
+    :color="err ? 'red-lighten-3' : 'green-lighten-3'"
+  >
+    {{ msg }}
+    <template v-slot:actions>
+      <v-btn color="white" variant="text" @click="snackbar = false">
+        Fermer
+      </v-btn>
+    </template>
+  </v-snackbar>
 </template>
 <script>
 import { useVenteStore } from "../../stores/vente";
@@ -173,6 +309,7 @@ export default {
       canEdit: false,
       canDelete: false,
       canDetail: false,
+      canPrint: false,
     });
 
     return { venteStore, token, accessRights };
@@ -182,17 +319,16 @@ export default {
     dt_debut: null,
     dt_fin: null,
     search: "",
+    search_item: "",
+    snackbar: false,
+    msg: "",
+    err: false,
     dialogDetail: false,
     editedIndex: -1,
-    editedItem: {
-      id: 0,
-      transaction_id: "",
-      full_customer: "",
-      full_creator: "",
-      methodpaid: "",
-      order_amount: "",
-      created_at: "",
-    },
+    url: useRuntimeConfig().public.apiBase,
+    nbre_vente: 0,
+    montant_vente: 0,
+    editedItem: {},
     defaultItem: {
       id: 0,
       transaction_id: "",
@@ -202,32 +338,54 @@ export default {
       order_amount: "",
       created_at: "",
     },
-    orders: [
-      {
-        transaction_id: "AEZ222",
-        full_customer: "Abd Ali",
-        full_creator: "Ala Jean",
-        methodpaid: "ESPECE",
-        order_amount: 100,
-        created_at: "12/12/2020 10:00:00",
-      },
-      {
-        transaction_id: "AEZ223",
-        full_customer: "AZA Nouri",
-        full_creator: "Ala Max",
-        methodpaid: "ESPECE",
-        order_amount: 2000,
-        created_at: "13/11/2020 12:00:15",
-      },
-    ],
+    orders: [],
     headers: [
       { title: "ID Transaction", key: "transaction_id" },
-      { title: "Client", key: "full_customer" },
-      { title: "Vendeur", key: "full_creator" },
+      {
+        title: "Client",
+        key: "full_customer",
+
+        value: (item) => `${item.client_nom} ${item.client_prenoms}`,
+      },
+      {
+        title: "Caissier(e)",
+        key: "full_creator",
+        value: (item) => `${item.createur_nom} ${item.createur_prenoms}`,
+      },
       { title: "Moyen de paiement", key: "methodpaid" },
-      { title: "Montant", key: "order_amount" },
-      { title: "Date", align: "start", key: "created_at" },
+      {
+        title: "Montant( F CFA )",
+        key: "order_amount",
+        value: (item) => moneyFormat(item.order_amount),
+      },
+      {
+        title: "Date",
+        align: "start",
+        key: "created_at",
+        value: (item) => formatDateTime(item.created_at),
+      },
       { title: "Actions", key: "actions", sortable: false },
+    ],
+    //Table produits
+    headers_item: [
+      { title: "Produits", key: "produit" },
+      { title: "Quantité", key: "qte" },
+      { title: "Prix", key: "price" },
+      { title: "Montant", key: "price_by_qte" },
+    ],
+    orders_item: [
+      {
+        produit: "Baterie",
+        qte: 2,
+        price: 12,
+        price_by_qte: 240,
+      },
+      {
+        produit: "Baterie 22",
+        qte: 3,
+        price: 13,
+        price_by_qte: 250,
+      },
     ],
   }),
   watch: {
@@ -236,6 +394,7 @@ export default {
     },
   },
   created() {
+    this.initialize();
     this.accessRights.canView = true;
     this.checkUserAccess();
   },
@@ -256,24 +415,59 @@ export default {
             },
           }
         );
-        console.log(response.data);
         this.accessRights.canView = response.data[0].show;
         this.accessRights.canCreate = response.data[1].add;
         this.accessRights.canEdit = response.data[2].edit;
         this.accessRights.canDetail = response.data[3].det;
         this.accessRights.canDelete = response.data[4].supp;
+        this.accessRights.canPrint = response.data[6].prt;
       }
     },
-    detailItem(item) {
-      this.editedItem = this.orders.indexOf(item);
-      this.editedIndex = Object.assign({}, item);
-      this.dialogDetail = true;
+    async initialize() {
+      if (this.token) {
+        const response = await useNuxtApp().$axios.get(`${this.url}/orders`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${this.token}`,
+          },
+        });
+        console.log(" toutes les commandes", response.data.data);
+
+        this.nbre_vente = response.data.data.summary.total_transactions;
+        this.montant_vente = response.data.data.summary.total_sum;
+
+        //this.orders=response.data.data.orders
+        if (response.data.data.orders.length > 0) {
+          // this.salaires = response.data.data;
+          console.log(response.data.data.orders);
+          this.orders = response.data.data.orders;
+        }
+      } else {
+        this.afficherCnx();
+      }
     },
-    detailItemConfirm() {
-      this.$nextTick(() => {
-        this.detailData(this.editedIndex.id);
-      });
-      this.closeDetail();
+    async detailItem(item) {
+      if (item.order_id > 0) {
+        if (this.token) {
+          const response = await useNuxtApp().$axios.get(
+            `${this.url}/orders/${item.order_id}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `${this.token}`,
+              },
+            }
+          );
+          console.log("detail vente", response.data.data);
+          console.log("detail ",editedItem, response.data.data.detail[0]);
+             this.editedItem=response.data.data.detail[0];
+
+             this.dialogDetail = true;
+        } else {
+          this.afficherCnx();
+        }
+      }
+      
     },
     closeDetail() {
       this.dialogDetail = false;
@@ -282,12 +476,23 @@ export default {
         this.editedIndex = -1;
       });
     },
-    async detailData(id) {},
-    printItem(id) {
-      alert("imprimer");
+
+    printItem(item) {
+      if (item.order_id > 0) {
+        window.open(`${this.url}/printOrder/${item.order_id}`, "_blank");
+      }
+    },
+    afficherCnx() {
+      this.msg = "Connectez - vous! ou réessayez la connexion";
+      this.err = true;
+      this.snackbar = true;
     },
   },
-  computed: {},
+  computed: {
+    orderLength() {
+      return this.orders.length;
+    },
+  },
 };
 </script>
 <style scoped></style>

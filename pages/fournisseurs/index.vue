@@ -6,7 +6,7 @@
                 <h1 class="text-subtitle-1 text-grey">Fournisseurs</h1>
             </template>
             <template v-if="accessRights.canCreate" v-slot:actions>
-                <popup-client @saveItem="getItem" :profils="profils" :item_statut="item_statut"
+                <popup-fournisseur @saveItem="getItem" :profils="profils" :item_statut="item_statut"
                     :sexe_statut="sexe_statut" />
             </template>
         </v-banner>

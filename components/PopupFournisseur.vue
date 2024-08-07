@@ -5,7 +5,7 @@
     </template>
 
     <template v-slot:default="{ isActive }">
-      <v-card title="Ajouter un nouveau fournisseur">
+      <v-card title="Ajouter un nouveau fournisseur">  
         <v-card-text>
           <v-form class="px-3" ref="form">
             <v-text-field label="Nom" color="primary" clearable variant="outlined" v-model="nom"
