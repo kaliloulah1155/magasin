@@ -111,7 +111,7 @@
                 v-model:search="search"
                 :items="orders"
                 :headers="headers"
-                :loading="orderLength > 0 ? false : true"
+                 
                 :sort-by="[{ key: 'created_at', order: 'desc' }]"
               >
                 <!--BEGIN::Detail de la vente-->
