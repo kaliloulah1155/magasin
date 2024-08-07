@@ -3,7 +3,7 @@
     <template v-if="accessRights.canView">
       <v-banner lines="one" color="warning">
         <template v-slot:text>
-          <h1 class="text-subtitle-1 text-grey">Stocks</h1>
+          <h1 class="text-grey mb-4">Stocks</h1>
         </template>
       </v-banner>
       <v-container fluid class="my-5">

@@ -30,16 +30,16 @@
               v-model="telephone" :rules="telephoneRules"></v-text-field>
             </v-col>
             <v-col cols="12" md="4" sm="6">
-              <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
-              variant="outlined"></v-file-input>
-            </v-col>
-            <v-col cols="12" md="4" sm="6">
               <v-select label="Profil" class="mt-2" color="primary" variant="outlined" v-model="profil" :items="profils"
               item-title="libelle" item-value="id" return-object></v-select>
             </v-col>
             <v-col cols="12" md="4" sm="6">
               <v-select label="Statut" class="mt-2" color="primary" variant="outlined" v-model="editedItem.statut"
               :items="item_statut" item-title="libelle" item-value="id" return-object></v-select>
+            </v-col>
+            <v-col cols="12" md="4" sm="6">
+              <v-file-input label="Photo" v-model="photo" accept="image/*" show-size counter
+              variant="outlined"></v-file-input>
             </v-col>
           </v-row>
           </v-form>

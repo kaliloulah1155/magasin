@@ -3,7 +3,7 @@
     <template v-if="accessRights.canView">
       <v-banner lines="one" color="warning">
         <template v-slot:text>
-          <h1 class="text-subtitle-1 text-grey">Employés</h1>
+          <h1 class="text-grey mb-4">Employés</h1>
         </template>
         <template v-if="accessRights.canCreate" v-slot:actions>
           <popup-employe
@@ -42,88 +42,106 @@
           >
             <template v-slot:top>
               <v-spacer></v-spacer>
-              <v-dialog v-model="dialog" max-width="500px">
+              <v-dialog v-model="dialog" max-width="750">
                 <v-card>
                   <v-card-title>
                     <span class="text-h5">{{ formTitle }}</span>
                   </v-card-title>
                   <v-card-text>
                     <v-form class="px-3" ref="form">
-                      <v-text-field
-                        label="Nom"
-                        color="primary"
-                        clearable
-                        variant="outlined"
-                        v-model="editedItem.nom"
-                        :rules="inputRules"
-                      ></v-text-field>
-                      <v-text-field
-                        label="Prénoms"
-                        color="primary"
-                        clearable
-                        variant="outlined"
-                        v-model="editedItem.prenoms"
-                        :rules="inputRules"
-                      ></v-text-field>
-                      <v-text-field
-                        label="E-mail"
-                        class="mt-2"
-                        color="primary"
-                        clearable
-                        variant="outlined"
-                        v-model="editedItem.email"
-                        :rules="emailRules"
-                      ></v-text-field>
-                      <v-select
-                        label="Sexe"
-                        class="mt-2"
-                        color="primary"
-                        variant="outlined"
-                        v-model="editedItem.lib_sexe"
-                        :items="sexe_statut"
-                        item-title="libelle"
-                        item-value="id"
-                        return-object
-                      ></v-select>
-                      <v-text-field
-                        label="Téléphone"
-                        class="mt-2"
-                        color="primary"
-                        clearable
-                        variant="outlined"
-                        v-model="editedItem.telephone"
-                        :rules="telephoneRules"
-                      ></v-text-field>
-                      <v-file-input
-                        label="Photo"
-                        v-model="photo"
-                        accept="image/*"
-                        show-size
-                        counter
-                        variant="outlined"
-                      ></v-file-input>
-                      <v-select
-                        label="Profil"
-                        class="mt-2"
-                        color="primary"
-                        variant="outlined"
-                        v-model="editedItem.profil_id"
-                        :items="profils"
-                        item-title="libelle"
-                        item-value="id"
-                        return-object
-                      ></v-select>
-                      <v-select
-                        label="Statut"
-                        class="mt-2"
-                        color="primary"
-                        variant="outlined"
-                        v-model="editedItem.statut"
-                        :items="item_statut"
-                        item-title="libelle"
-                        item-value="id"
-                        return-object
-                      ></v-select>
+                      <v-row>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-text-field
+                            label="Nom"
+                            color="primary"
+                            clearable
+                            variant="outlined"
+                            v-model="editedItem.nom"
+                            :rules="inputRules"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-text-field
+                            label="Prénoms"
+                            color="primary"
+                            clearable
+                            variant="outlined"
+                            v-model="editedItem.prenoms"
+                            :rules="inputRules"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-text-field
+                            label="E-mail"
+                            class="mt-2"
+                            color="primary"
+                            clearable
+                            variant="outlined"
+                            v-model="editedItem.email"
+                            :rules="emailRules"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-select
+                            label="Sexe"
+                            class="mt-2"
+                            color="primary"
+                            variant="outlined"
+                            v-model="editedItem.lib_sexe"
+                            :items="sexe_statut"
+                            item-title="libelle"
+                            item-value="id"
+                            return-object
+                          ></v-select>
+                        </v-col>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-text-field
+                            label="Téléphone"
+                            class="mt-2"
+                            color="primary"
+                            clearable
+                            variant="outlined"
+                            v-model="editedItem.telephone"
+                            :rules="telephoneRules"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-select
+                            label="Profil"
+                            class="mt-2"
+                            color="primary"
+                            variant="outlined"
+                            v-model="editedItem.profil_id"
+                            :items="profils"
+                            item-title="libelle"
+                            item-value="id"
+                            return-object
+                          ></v-select>
+                        </v-col>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-select
+                            label="Statut"
+                            class="mt-2"
+                            color="primary"
+                            variant="outlined"
+                            v-model="editedItem.statut"
+                            :items="item_statut"
+                            item-title="libelle"
+                            item-value="id"
+                            return-object
+                          ></v-select>
+                        </v-col>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-file-input
+                            label="Photo"
+                            v-model="photo"
+                            accept="image/*"
+                            show-size
+                            counter
+                            variant="outlined"
+                          ></v-file-input>
+                        </v-col>
+                      </v-row>
                     </v-form>
                   </v-card-text>
                   <v-card-actions>

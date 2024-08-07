@@ -3,7 +3,7 @@
     <template v-if="accessRights.canView">
       <v-banner lines="one" color="blue-darken-2">
         <template v-slot:text>
-          <h1 class="text-subtitle-1 text-grey">Produits</h1>
+          <h1 class="text-grey mb-4">Produits</h1>
         </template>
         <template v-if="accessRights.canCreate" v-slot:actions>
           <popup-produit
@@ -48,81 +48,97 @@
 
             <template v-slot:top>
               <v-spacer></v-spacer>
-              <v-dialog v-model="dialog" max-width="500px">
+              <v-dialog v-model="dialog" max-width="750">
                 <v-card>
                   <v-card-title>
                     <span class="text-h5">{{ formTitle }}</span>
                   </v-card-title>
                   <v-card-text>
                     <v-form class="px-3" ref="form">
-                      <v-text-field
-                        label="Libellé"
-                        color="primary"
-                        clearable
-                        variant="outlined"
-                        v-model="editedItem.libelle"
-                        :rules="inputRules"
-                      ></v-text-field>
-                      <v-text-field
-                        label="Prix d'achat"
-                        class="mt-2"
-                        color="primary"
-                        clearable
-                        variant="outlined"
-                        v-model="editedItem.buying_price"
-                        :rules="digitRules"
-                      ></v-text-field>
-                      <v-text-field
-                        label="Prix de vente"
-                        class="mt-2"
-                        color="primary"
-                        clearable
-                        variant="outlined"
-                        v-model="editedItem.selling_price"
-                        :rules="digitRules"
-                      ></v-text-field>
-                      <v-select
-                        label="Fournisseur"
-                        class="mt-2"
-                        color="primary"
-                        variant="outlined"
-                        v-model="editedItem.fournisseur"
-                        :items="fournisseurs"
-                        item-title="fullname"
-                        item-value="id"
-                        return-object
-                      ></v-select>
-                      <v-combobox
-                        label="Catégories"
-                        chips
-                        multiple
-                        clearable
-                        class="mt-2"
-                        color="primary"
-                        variant="outlined"
-                        v-model="editedItem.categories"
-                        :items="categories"
-                        item-title="libelle"
-                        item-value="id"
-                        return-object
-                      ></v-combobox>
-                      <v-file-input
-                        label="Image"
-                        v-model="photo"
-                        accept="image/*"
-                        show-size
-                        counter
-                        variant="outlined"
-                      ></v-file-input>
-                      <v-text-field
-                        label="Quantité"
-                        class="mt-2"
-                        color="primary"
-                        clearable
-                        variant="outlined"
-                        v-model="editedItem.quantite"
-                        :rules="digitRules"
-                      ></v-text-field>
+                      <v-row>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-text-field
+                            label="Libellé"
+                            color="primary"
+                            clearable
+                            variant="outlined"
+                            v-model="editedItem.libelle"
+                            :rules="inputRules"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-text-field
+                            label="Prix d'achat"
+                            class="mt-2"
+                            color="primary"
+                            clearable
+                            variant="outlined"
+                            v-model="editedItem.buying_price"
+                            :rules="digitRules"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-text-field
+                            label="Prix de vente"
+                            class="mt-2"
+                            color="primary"
+                            clearable
+                            variant="outlined"
+                            v-model="editedItem.selling_price"
+                            :rules="digitRules"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-select
+                            label="Fournisseur"
+                            class="mt-2"
+                            color="primary"
+                            variant="outlined"
+                            v-model="editedItem.fournisseur"
+                            :items="fournisseurs"
+                            item-title="fullname"
+                            item-value="id"
+                            return-object
+                          ></v-select>
+                        </v-col>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-combobox
+                            label="Catégories"
+                            chips
+                            multiple
+                            clearable
+                            class="mt-2"
+                            color="primary"
+                            variant="outlined"
+                            v-model="editedItem.categories"
+                            :items="categories"
+                            item-title="libelle"
+                            item-value="id"
+                            return-object
+                          ></v-combobox>
+                        </v-col>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-text-field
+                            label="Quantité"
+                            class="mt-2"
+                            color="primary"
+                            clearable
+                            variant="outlined"
+                            v-model="editedItem.quantite"
+                            :rules="digitRules"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4" sm="6">
+                          <v-file-input
+                            label="Image"
+                            v-model="photo"
+                            accept="image/*"
+                            show-size
+                            counter
+                            variant="outlined"
+                          ></v-file-input>
+                        </v-col>
+                      </v-row>
                     </v-form>
                   </v-card-text>
                   <v-card-actions>
