@@ -42,7 +42,8 @@
           <v-col cols="3">
             <v-text-field
               v-model="dt_debut"
-              type="date"
+              type="datetime-local"
+              step="1"
               variant="outlined"
               clearable
               class="w-2"
@@ -55,7 +56,8 @@
           <v-col cols="3">
             <v-text-field
               v-model="dt_fin"
-              type="date"
+              type="datetime-local"
+              step="1"
               variant="outlined"
               clearable
             >
@@ -71,9 +73,21 @@
               color="green"
               class="mt-3"
               title="Filtrage"
+              @click="filtrage"
             ></v-btn>
           </v-col>
         </v-row>
+        <v-row align="center" justify="center">
+              <v-col cols="auto">
+                <v-btn   
+                  size="x-small"
+                  icon="autorenew"
+                  color="green"
+                  title="Rafraichissement de la liste des ventes"
+                  @click="refraichir"
+                ></v-btn>
+              </v-col>
+            </v-row>
         <v-row justify="center" class="mt-3">
           <v-col cols="12" class="w-100" md="12" xs="12">
             <v-card flat>
@@ -109,24 +123,22 @@
                         <template v-slot:title>
                           <h3 class="custom-title text-uppercase">
                             Détail de la vente
-                          
                           </h3>
                           <v-card-text>
                             <v-row>
                               <v-col cols="12" md="6" sm="6">
-                                {{  editedItem }}
                                 <span
                                   class="font-weight-bold text-decoration-underline"
                                   >Date de création
                                 </span>
-                                : 20/12/2024 09:09:00
+                                : {{ formatDateTime(editedItem.created_at) }}
                               </v-col>
                               <v-col cols="12" md="6" sm="6">
                                 <span
                                   class="font-weight-bold text-decoration-underline"
                                   >Moyen de paiement
                                 </span>
-                                : ESPECE
+                                : {{ editedItem.methodpaid }}
                               </v-col>
                             </v-row>
                             <v-row>
@@ -135,14 +147,15 @@
                                   class="font-weight-bold text-decoration-underline"
                                   >Client</span
                                 >
-                                : ABD KONE
+                                : {{ editedItem.client_nom }}
+                                {{ editedItem.client_prenoms }}
                               </v-col>
                               <v-col cols="12" md="6" sm="6">
                                 <span
                                   class="font-weight-bold text-decoration-underline"
                                   >ID Transaction</span
                                 >
-                                : 1239229292
+                                : {{ editedItem.transaction_id }}
                               </v-col>
                             </v-row>
                             <v-row>
@@ -151,14 +164,16 @@
                                   class="font-weight-bold text-decoration-underline"
                                   >Caissier(e)</span
                                 >
-                                : AZD KONE
+                                : {{ editedItem.createur_nom }}
+                                {{ editedItem.createur_prenoms }}
                               </v-col>
                               <v-col cols="12" md="6" sm="6">
                                 <span
                                   class="font-weight-bold text-decoration-underline"
                                   >Montant</span
                                 >
-                                : 50000 FCFA
+                                : {{ moneyFormat(editedItem.order_amount) }} F
+                                CFA
                               </v-col>
                             </v-row>
                             <v-row>
@@ -167,14 +182,14 @@
                                   class="font-weight-bold text-decoration-underline"
                                   >TVA(%)</span
                                 >
-                                : 12
+                                : {{ moneyFormat(editedItem.tva) }}
                               </v-col>
                               <v-col cols="12" md="6" sm="6">
                                 <span
                                   class="font-weight-bold text-decoration-underline"
                                   >Remise</span
                                 >
-                                : 500 F CFA
+                                : {{ moneyFormat(editedItem.remise) }} F CFA
                               </v-col>
                             </v-row>
                             <v-row>
@@ -183,14 +198,14 @@
                                   class="font-weight-bold text-decoration-underline"
                                   >Espèce</span
                                 >
-                                : 100 F CFA
+                                : {{ moneyFormat(editedItem.espece) }} F CFA
                               </v-col>
                               <v-col cols="12" md="6" sm="6">
                                 <span
                                   class="font-weight-bold text-decoration-underline"
                                   >Monnaie</span
                                 >
-                                : 5000 FCFA
+                                : {{ moneyFormat(editedItem.monnaie) }} FCFA
                               </v-col>
                             </v-row>
                             <v-row>
@@ -199,7 +214,7 @@
                                   class="font-weight-bold text-decoration-underline"
                                   >Nombre de produits</span
                                 >
-                                : 10
+                                : {{ moneyFormat(nbre_item) }}
                               </v-col>
                             </v-row>
                             <v-container>
@@ -327,6 +342,7 @@ export default {
     editedIndex: -1,
     url: useRuntimeConfig().public.apiBase,
     nbre_vente: 0,
+    nbre_item: 0,
     montant_vente: 0,
     editedItem: {},
     defaultItem: {
@@ -369,24 +385,15 @@ export default {
     //Table produits
     headers_item: [
       { title: "Produits", key: "produit" },
-      { title: "Quantité", key: "qte" },
-      { title: "Prix", key: "price" },
-      { title: "Montant", key: "price_by_qte" },
-    ],
-    orders_item: [
+      { title: "Quantité", key: "qte", value: (item) => moneyFormat(item.qte) },
+      { title: "Prix", key: "price", value: (item) => moneyFormat(item.price) },
       {
-        produit: "Baterie",
-        qte: 2,
-        price: 12,
-        price_by_qte: 240,
-      },
-      {
-        produit: "Baterie 22",
-        qte: 3,
-        price: 13,
-        price_by_qte: 250,
+        title: "Montant",
+        key: "price_by_qte",
+        value: (item) => moneyFormat(item.price_by_qte),
       },
     ],
+    orders_item: [],
   }),
   watch: {
     dialogDetail(val) {
@@ -431,20 +438,47 @@ export default {
             Authorization: `${this.token}`,
           },
         });
-        console.log(" toutes les commandes", response.data.data);
 
         this.nbre_vente = response.data.data.summary.total_transactions;
         this.montant_vente = response.data.data.summary.total_sum;
-
-        //this.orders=response.data.data.orders
         if (response.data.data.orders.length > 0) {
-          // this.salaires = response.data.data;
-          console.log(response.data.data.orders);
           this.orders = response.data.data.orders;
         }
       } else {
         this.afficherCnx();
       }
+    },
+    async filtrage() {
+      if (this.dt_debut && this.dt_fin) {
+        if (this.token) {
+          const response = await useNuxtApp().$axios.get(
+            `${this.url}/orders?start_date=${formatDateTimeSecond(
+              this.dt_debut
+            )}&end_date=${formatDateTimeSecond(this.dt_fin)}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `${this.token}`,
+              },
+            }
+          );
+
+          this.nbre_vente = response.data.data.summary.total_transactions;
+          this.montant_vente = response.data.data.summary.total_sum;
+          if (response.data.data.orders.length > 0) {
+            this.orders = response.data.data.orders;
+          } else {
+            this.orders = [];
+          }
+        } else {
+          this.afficherCnx();
+        }
+      }
+    },
+    async refraichir(){
+      this.initialize();
+      this.dt_debut=null;
+      this.dt_fin=null;
     },
     async detailItem(item) {
       if (item.order_id > 0) {
@@ -458,16 +492,18 @@ export default {
               },
             }
           );
-          console.log("detail vente", response.data.data);
-          console.log("detail ",editedItem, response.data.data.detail[0]);
-             this.editedItem=response.data.data.detail[0];
 
-             this.dialogDetail = true;
+          this.nbre_item =
+            response.data.data.items.original.data.nbre_item.number_item;
+          this.editedItem = response.data.data.detail[0];
+
+          this.orders_item = response.data.data.items.original.data.panier;
+
+          this.dialogDetail = true;
         } else {
           this.afficherCnx();
         }
       }
-      
     },
     closeDetail() {
       this.dialogDetail = false;
