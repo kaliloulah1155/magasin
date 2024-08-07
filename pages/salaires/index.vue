@@ -3,7 +3,7 @@
     <template v-if="accessRights.canView">
       <v-banner lines="one" color="warning">
         <template v-slot:text>
-          <h1 class="text-subtitle-1 text-grey">Salaires</h1>
+          <h1 class="text-grey mb-4">Salaires</h1>
         </template>
 
         <template v-if="accessRights.canCreate" v-slot:actions>

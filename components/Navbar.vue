@@ -1,5 +1,4 @@
-<template>
-    
+<template> 
     <nav>
         <v-navigation-drawer app v-model="drawer" location="left"  color="blue-darken-4">
             <v-col class="text-center">
@@ -7,11 +6,13 @@
             </v-col>
             <v-col>
                 <v-list>
+                    <v-divider :thickness="7" color="success"></v-divider>
                     <v-list-item :prepend-avatar="photo" 
                     :title="`${nom} ${prenoms}`" :subtitle="profil"
                     @click="openDialogImg(photo)" class="clickable-image"
                     >
                     </v-list-item>
+                    <v-divider :thickness="7" color="success"></v-divider>
                 </v-list>   
             </v-col>
             <!-- BEGIN: Afficage des menus sidebar-->
@@ -31,7 +32,7 @@
             <!-- Bouton de deconnexion  -->
             <template v-slot:append>
                 <div class="pa-2">
-                    <v-btn @click.prevent="logout" color="blue-darken-4" block flat elevation="10">
+                    <v-btn @click.prevent="logout" color="red-darken-4" block flat elevation="10">
                         D&Eacute;CONNEXION
                     </v-btn>
                 </div>
@@ -41,11 +42,14 @@
             <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" color="black"></v-app-bar-nav-icon>
 
             <v-app-bar-title>
-                <marquee behavior="" direction=""><b>GLOBAL PLUS :</b> Votre application de gestion de stock</marquee>
+                <h3>GLOBAL PLUS : Votre application de gestion de stock et des inventaires</h3>
             </v-app-bar-title>
 
             <v-spacer></v-spacer>
 
+            <template v-slot:append>
+                
+            </template>
             
         </v-app-bar>
         <v-dialog v-model="dialogImg" max-width="600">

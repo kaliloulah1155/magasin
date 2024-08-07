@@ -3,7 +3,8 @@
     <template v-if="accessRights.canView">
       <v-banner lines="one" color="warning">
         <template v-slot:text>
-          <h1 class="text-subtitle-1 text-grey">Catégories</h1>
+          <h1 class="text-grey mb-4">Catégories</h1>
+          
         </template>
         <template v-slot:actions>
           <popup-categorie @saveItem="getItem" :parent_cats="parents" />

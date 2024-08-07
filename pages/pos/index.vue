@@ -46,11 +46,11 @@
         <v-card flat>
           <v-data-iterator
             :items="produits"
-            :items-per-page="18"
+            :items-per-page="24"
             :search="search"
           >
             <template v-slot:header>
-              <v-toolbar class="px-2">
+              <v-toolbar class="d-flex justify-end px-2">
                 <v-text-field
                   v-model="search"
                   clearable
@@ -58,7 +58,7 @@
                   hide-details
                   placeholder="Rechercher un produit"
                   prepend-inner-icon="magnify"
-                  style="max-width: 300px"
+                  style="max-width:300px"
                   variant="solo"
                 ></v-text-field>
               </v-toolbar>
@@ -276,13 +276,14 @@
           </v-row>
           <!--END::Articles-->
           <v-row>
-            <v-col class="ma-1">
+            <v-col class="ma-6">
               <v-row>
-                <v-col sm="12" md="4" lg="6" xl="8"> TOTAL </v-col>
+                <v-col sm="12" md="4" lg="6" xl="8"> <b>TOTAL</b> </v-col>
                 <v-col sm="12" md="4" lg="6" xl="8">
                   {{ moneyFormat(grand_total) }} F CFA
                 </v-col>
               </v-row>
+              <!-- 
               <v-row>
                 <v-col sm="12" md="4" lg="6" xl="8">
                   <span>TVA(%)</span>
@@ -296,47 +297,51 @@
                   />
                 </v-col>
               </v-row>
+              -->
               <v-row>
-                <v-col sm="12" md="4" lg="6" xl="8"> REMISE(F CFA) </v-col>
+                <v-col sm="12" md="4" lg="6" xl="8"> <b>REMISE (F CFA)</b> </v-col>
                 <v-col sm="12" md="4" lg="6" xl="8">
                   <v-text-field
                     type="number"
                     v-model="vremise"
+                    variant="solo"
                     class=""
                     style="width: 10rem"
                   />
                 </v-col>
               </v-row>
               <v-row>
-                <v-col sm="12" md="4" lg="6" xl="8"> ESPECE(F CFA) </v-col>
+                <v-col sm="12" md="4" lg="6" xl="8"> <b>ESPECE (F CFA)</b> </v-col>
                 <v-col sm="12" md="4" lg="6" xl="8">
                   <v-text-field
                     type="number"
                     v-model="vespece"
+                    variant="solo"
                     class=""
                     style="width: 10rem"
                   />
                 </v-col>
               </v-row>
               <v-row>
-                <v-col sm="12" md="4" lg="6" xl="8"> MONNAIE(F CFA) </v-col>
+                <v-col sm="12" md="4" lg="6" xl="8"> <b>MONNAIE(F CFA)</b> </v-col>
                 <v-col sm="12" md="4" lg="6" xl="8">
                   <v-text-field
                     type="number"
                     disabled
                     v-model="vmonnaie"
+                    variant="solo"
                     class=""
                     style="width: 10rem"
                   />
                 </v-col>
               </v-row>
               <v-row>
-                <v-col sm="12" md="4" lg="6" xl="8"> CLIENT </v-col>
+                <v-col sm="12" md="4" lg="6" xl="8"> <b>CLIENT</b> </v-col>
                 <v-col sm="12" md="4" lg="6" xl="8">
                   <v-autocomplete
                     v-model="editedItem.client"
                     color="primary"
-                    variant="outlined"
+                    variant="solo"
                     clearable
                     :items="clients"
                     item-title="fullname"
@@ -347,12 +352,12 @@
                 </v-col>
               </v-row>
               <v-row>
-                <v-col sm="12" md="4" lg="6" xl="8"> MOYEN DE PAIEMENT </v-col>
+                <v-col sm="12" md="4" lg="6" xl="8"> <b>MOYEN DE PAIEMENT</b> </v-col>
                 <v-col sm="12" md="4" lg="6" xl="8">
                   <v-select
                     v-model="editedItem.moyen_p"
                     color="primary"
-                    variant="outlined"
+                    variant="solo"
                     :items="moyen_payments"
                     item-title="libelle"
                     item-value="id"
